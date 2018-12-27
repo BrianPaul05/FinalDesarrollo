@@ -186,14 +186,14 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
 
-            String sql = "INSERTO INTO ENCOMIENDAS (COD_ENCOMIENDA, COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERTO INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
             PreparedStatement psd = cn.prepareStatement(sql);
-            psd.setString(1, txtN_Documento.getText());
-            psd.setString(2, txtCodigoViaje.getText());
-            psd.setString(3, txtRemitente.getText());
-            psd.setString(4, txtDestinatario.getText());
-            psd.setString(5, txtCosto.getText());
-            psd.setString(6, txtContenido.getText());
+            
+            psd.setString(1, txtCodigoViaje.getText());
+            psd.setString(2, txtRemitente.getText());
+            psd.setString(3, txtDestinatario.getText());
+            psd.setString(4, txtCosto.getText());
+            psd.setString(5, txtContenido.getText());
             String estado1 = null;
             if (jCheckBox_Estado1.isSelected()) {
                 estado1 = "ENVIADO";
