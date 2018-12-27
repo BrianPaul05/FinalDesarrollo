@@ -31,7 +31,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoEmpleado
      */
-    DefaultTableModel modelo;
+   DefaultTableModel modelo;
 
     public IngresoEmpleado() {
         initComponents();
@@ -100,7 +100,31 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
         return dato1 + " " + dato2;
     }
+ public String cargarClave() {
+       String dato="";
+        try {
 
+            String sql = "";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            sql = "select contrasena from personal WHERE CED_PER = '" + txtCedula.getText() + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                //codmar.add(rs.getString("MAR_COD"));
+                dato = rs.getString("contrasena");
+              
+
+            }
+
+            cn.close();
+            // Thread.sleep(150);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return dato;
+    }
     public Date cargarFecha(String dato) {
         Date fecha = null;
         try {
@@ -142,6 +166,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                     txtDireccion.setText(tblPersonal.getValueAt(fila, 4).toString().trim());
                     txtTelefono.setText(tblPersonal.getValueAt(fila, 5).toString().trim());
                     txtCorreo.setText(tblPersonal.getValueAt(fila, 6).toString().trim());
+                    txtClave.setText(cargarClave());
                     jdcIngreso.setDate(cargarFecha("FEC_ING_PER"));
                     jdcNacimiento.setDate(cargarFecha("FEC_NAC_PER"));
                     cbxEmpleado.setSelectedItem(cargarComboCargoPersonal());
@@ -321,24 +346,13 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 mail = txtCorreo.getText().toLowerCase();
                 cedula = txtCedula.getText();
                 id_tipo_personal = idTipoPersonal();
-
+                Date fec1 = jdcIngreso.getDate();
+                Date fec2 = jdcNacimiento.getDate();
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
+              + " values('" +cedula +"','" +nom1 +"','" +nom2 +"','" +ape1 +"','" +ape2 +"','" +fec2 +"','" +fec1 +"','" +direccion +"','" +id_tipo_personal +"','" +telefono +"','" +mail +"','" +estado +"','" +clave +"')";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                psd.setString(1, cedula);
-                psd.setString(2, nom1);
-                psd.setString(3, nom2);
-                psd.setString(4, ape1);
-                psd.setString(5, ape2);
-                psd.setString(6, fechaNacimiento());
-                psd.setString(7, fechaIngreso());
-                psd.setString(8, direccion);
-                psd.setString(9, id_tipo_personal);
-                psd.setString(10, telefono);
-                psd.setString(11, mail);
-                psd.setString(12, estado);
-                psd.setString(13, clave);
 
                 int n = psd.executeUpdate();
 
@@ -391,6 +405,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         txtDireccion.setText("");
         txtCorreo.setText("");
         txtTelefono.setText("");
+        txtClave.setText("");
         jdcIngreso.setDate(null);
         jdcNacimiento.setDate(null);
         cbxEmpleado.setSelectedIndex(0);
@@ -424,6 +439,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         txtDireccion.setEnabled(false);
         txtTelefono.setEnabled(false);
         cbxEmpleado.setEnabled(false);
+        txtClave.setEnabled(false);
     }
 
     public void activarCampos() {
@@ -436,6 +452,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         txtDireccion.setEnabled(true);
         txtTelefono.setEnabled(true);
         cbxEmpleado.setEnabled(true);
+        txtClave.setEnabled(true);
     }
 
     public void bloquearCed() {
@@ -449,6 +466,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         txtTelefono.setEnabled(true);
         cbxEmpleado.setEnabled(true);
         btnGuardar.setEnabled(false);
+        txtClave.setEnabled(true);
     }
 
     /**
@@ -563,11 +581,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jdcIngreso.setMaxSelectableDate(new java.util.Date(1577858519000L));
         jdcIngreso.setMinSelectableDate(new java.util.Date(1262325719000L));
 
-        try {
-            txtTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##########"))));
 
         try {
             txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
