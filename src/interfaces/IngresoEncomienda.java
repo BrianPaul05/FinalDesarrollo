@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -152,8 +154,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             minutos = calendario.get(Calendar.MINUTE);
             segundos = calendario.get(Calendar.SECOND);
 
-            System.out.println("la hora es ; " + hora + ":" + minutos + ":" + segundos);
-
             String codOfiOrigen, nomOfiDestino;
             codOfiOrigen = codParaEncomienda;
             nomOfiDestino = String.valueOf(jComboBox_Destino.getSelectedItem());
@@ -174,32 +174,40 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             ResultSet rs = psd.executeQuery(sql);
 
             //+++++++++++++++++++++++++++++++++++++++++
-            String fecActual, horSal = "";
-            java.sql.Date fecSalida;
+            String horSal = "";
+            java.sql.Date FEC_SALIDA;
+            int cond = 0;
 
-            fecActual = obtenerFechaActual();
-            fecSalida = convetirdorFecha(jDateChooser_FechaSalida.getDate());
+            FEC_SALIDA = convetirdorFecha(jDateChooser_FechaSalida.getDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-            while (rs.next()) {
-                horSal = rs.getString("HORA_SALIDA");
+            try {
+                Date date1 = sdf.parse(FEC_SALIDA.toString());
+                Date date2 = sdf.parse(obtenerFechaActual());
+                cond = date1.compareTo(date2);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }           
 
-                int cond;
-
-                cond = fecActual.compareTo(fecSalida.toString());
-                if (cond < 0) {
-                    JOptionPane.showMessageDialog(null, "Error: Fecha incorrecta");
-                } else if (cond > 0) {
+            if (cond < 0) {
+                JOptionPane.showMessageDialog(null, "Error: Fecha incorrecta");
+            } else if (cond > 0) {
+                while (rs.next()) {
+                    horSal = rs.getString("HORA_SALIDA");
                     jComboBox_HoraSalida.addItem(horSal);
-                } else {
+                }
+            } else if (cond == 0){
+                while (rs.next()) {
                     //8:30 - 10:20
                     //Verifica si la hora actual s antes de la hora de salida, solo se carga en el combo las horas superiores
                     boolean isBeforeHour = LocalTime.parse(hora + ":" + minutos + ":" + segundos).isBefore(LocalTime.parse(horSal));
                     if (isBeforeHour) {
+                        horSal = rs.getString("HORA_SALIDA");
                         jComboBox_HoraSalida.addItem(horSal);
                     }
                 }
-
             }
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
