@@ -1,15 +1,12 @@
 package Conexion;
 
-import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 public class Conexion {
 
     //private Connection connect = null;
-String url = "jdbc:postgresql://localhost:5432/viajes";
+    String url = "jdbc:postgresql://localhost:5432/viajes";
     String user = "postgres";
     String pwd = "1234";
     Connection conectar = null;
