@@ -35,15 +35,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         try {
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
-
-            String sql2 = "select OFI.NEXTVAL from dual";
-            Statement psd2 = cn.createStatement();
-            ResultSet rs2 = psd2.executeQuery(sql2);
-            String cod = "";
-
-            while (rs2.next()) {
-                cod = rs2.getString("NEXTVAL");
-            }
+            
 
             if (txtNombreOficina.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ingrese el nombre de la oficina");
@@ -61,15 +53,13 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Ingrese la dirección de la oficina");
                 txtDireccion.requestFocus();
             } else {
-                String sql = "INSERT INTO OFICINAS (COD_OFI, NOM_OFI, UBICACION, TELEFONO, ESTADO, DIRECCION) VALUES(?,?,?,?,?,?)";
-                PreparedStatement psd = cn.prepareStatement(sql);
-
-                psd.setString(1, cod);
-                psd.setString(2, txtNombreOficina.getText());
-                psd.setString(3, txtUbicacion.getText());
-                psd.setString(4, txtTelefono.getText());
-                psd.setString(5, "S");
-                psd.setString(6, txtDireccion.getText());
+                String sql = "INSERT INTO OFICINAS (NOM_OFI, UBICACION, TELEFONO, ESTADO, DIRECCION) VALUES(?,?,?,?,?)";
+                PreparedStatement psd = cn.prepareStatement(sql);                
+                psd.setString(1, txtNombreOficina.getText());
+                psd.setString(2, txtUbicacion.getText());
+                psd.setString(3, txtTelefono.getText());
+                psd.setString(4, "S");
+                psd.setString(5, txtDireccion.getText());
 
                 int n = psd.executeUpdate();
                 if (n > 0) {
