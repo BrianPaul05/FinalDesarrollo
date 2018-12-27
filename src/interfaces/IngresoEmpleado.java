@@ -31,7 +31,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoEmpleado
      */
-     DefaultTableModel modelo;
+    DefaultTableModel modelo;
 
     public IngresoEmpleado() {
         initComponents();
@@ -94,14 +94,14 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             }
 
             cn.close();
-           // Thread.sleep(150);
+            // Thread.sleep(150);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return dato1 + " " + dato2;
     }
 
-    public Date cargarFecha(String dato)  {
+    public Date cargarFecha(String dato) {
         Date fecha = null;
         try {
 
@@ -113,12 +113,12 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             ResultSet rs = psd.executeQuery(sql);
 
             while (rs.next()) {
-             
+
                 fecha = rs.getDate(dato);
             }
 
             cn.close();
-           // Thread.sleep(150);
+            // Thread.sleep(150);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -313,6 +313,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 String nom2 = sepNom[1];
                 String ape1 = sepApe[0];
                 String ape2 = sepApe[1];
+                char[] aux = txtClave.getPassword();
+                String clave = new String(aux);
 
                 direccion = txtDireccion.getText().toUpperCase();
                 telefono = txtTelefono.getText();
@@ -322,7 +324,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
 
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+                sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
                 psd.setString(1, cedula);
                 psd.setString(2, nom1);
@@ -336,6 +338,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 psd.setString(10, telefono);
                 psd.setString(11, mail);
                 psd.setString(12, estado);
+                psd.setString(13, clave);
 
                 int n = psd.executeUpdate();
 
@@ -486,6 +489,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jdcIngreso = new com.toedter.calendar.JDateChooser();
         txtTelefono = new javax.swing.JFormattedTextField();
         txtCedula = new javax.swing.JFormattedTextField();
+        jLabel68 = new javax.swing.JLabel();
+        txtClave = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
@@ -570,6 +575,9 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
 
+        jLabel68.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel68.setText("Contraseña:");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -593,34 +601,40 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel66))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel64)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel67)
-                                .addGap(29, 29, 29)))
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(38, 38, 38))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtNombre)
-                                .addComponent(txtApellido)
-                                .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtNombre)
+                                            .addComponent(txtApellido)
+                                            .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addGap(45, 45, 45)
+                                                .addComponent(jLabel68)
+                                                .addGap(24, 24, 24))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel64)
+                                                    .addComponent(jLabel66))
+                                                .addGap(18, 18, 18))))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(txtCorreo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtDireccion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(167, 167, 167)))
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtClave))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel67)
+                        .addGap(211, 211, 211))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -647,26 +661,33 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jdcNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jdcIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jdcIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbxEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel64)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel66)))
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel64)
-                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel63))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel65))
+                        .addComponent(jLabel63)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel65)
+                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel66)
-                            .addComponent(cbxEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel68)
+                                .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(51, 153, 255));
@@ -744,7 +765,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnActualizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -802,7 +823,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -926,6 +947,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel67;
+    private javax.swing.JLabel jLabel68;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -937,6 +959,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtNombre;
