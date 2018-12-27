@@ -37,7 +37,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         desactivarTextos();
         cargarOrigenEncomienda();
         cargarComboDestino();
-        cargarFechaSalida();
     }
 
     private void cargarValoresPorDefecto() {
@@ -101,7 +100,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         }
     }
 
-    private void cargarComboDestino() {
+    public void cargarComboDestino() {
 
         try {
             Conexion cc = new Conexion();
@@ -131,36 +130,41 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         }
     }
 
-    private void cargarFechaSalida() {
+    public void cargarFechaSalida() {
 
         try {
-            String destino = "";
-            destino = String.valueOf(jComboBox_Destino.getSelectedItem());
+
             Calendar calendario = new GregorianCalendar();
             int hora, minutos, segundos;
             hora = calendario.get(Calendar.HOUR_OF_DAY);
             minutos = calendario.get(Calendar.MINUTE);
             segundos = calendario.get(Calendar.SECOND);
+
             System.out.println("la hora es ; " + hora + ":" + minutos + ":" + segundos);
-            
+
             String codOfiOrigen, nomOfiDestino;
             codOfiOrigen = codParaEncomienda;
             nomOfiDestino = String.valueOf(jComboBox_Destino.getSelectedItem());
+
+            System.out.println(codOfiOrigen + " ;;;;; " + nomOfiDestino);
+
             String sql = "SELECT HORA_SALIDA "
                     + "FROM FRECUENCIAS "
                     + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
                     + "                         FROM RUTAS "
-                    + "                         WHERE COD_OFI_ORI = '" + codOfiOrigen + "' "
+                    + "                         WHERE COD_OFI_ORI = " + codOfiOrigen + " "
                     + "                         AND COD_OFI_DES = (SELECT COD_OFI "
                     + "                                                 FROM OFICINAS "
-                    + "                                                 WHERE NOM_OFI = '" + nomOfiDestino + "'))";
+                    + "                                                 WHERE UBICACION = '" + nomOfiDestino + "'))";
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
-            
-            while(rs.next()){
-                jComboBox_HoraSalida.addItem(rs.getString("HORA_SALIDA"));
+            String horSal="";
+            while (rs.next()) {
+                horSal = rs.getString("HORA_SALIDA");
+                jComboBox_HoraSalida.addItem(horSal);
+                System.out.println(horSal);
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -291,6 +295,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setText("Destino");
 
+        jComboBox_Destino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
         jComboBox_Destino.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox_DestinoItemStateChanged(evt);
@@ -425,8 +430,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel13.setText("$");
-
-        jComboBox_HoraSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout PanelPrincipalLayout = new javax.swing.GroupLayout(PanelPrincipal);
         PanelPrincipal.setLayout(PanelPrincipalLayout);
@@ -599,6 +602,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
     private void jComboBox_DestinoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox_DestinoItemStateChanged
         cargarFechaSalida();
+        JOptionPane.showMessageDialog(null, "Funciona el evento . . . .  .");
     }//GEN-LAST:event_jComboBox_DestinoItemStateChanged
 
     /**
