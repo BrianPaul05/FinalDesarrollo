@@ -132,16 +132,39 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     }
 
     private void cargarFechaSalida() {
-        String destino = "";
-        destino = String.valueOf(jComboBox_Destino.getSelectedItem());
 
-        Calendar calendario = new GregorianCalendar();
-        int hora, minutos, segundos;
-        hora = calendario.get(Calendar.HOUR_OF_DAY);
-        minutos = calendario.get(Calendar.MINUTE);
-        segundos = calendario.get(Calendar.SECOND);
-        
-        System.out.println("la hora es ; "+ hora+":"+minutos+":"+segundos);
+        try {
+            String destino = "";
+            destino = String.valueOf(jComboBox_Destino.getSelectedItem());
+            Calendar calendario = new GregorianCalendar();
+            int hora, minutos, segundos;
+            hora = calendario.get(Calendar.HOUR_OF_DAY);
+            minutos = calendario.get(Calendar.MINUTE);
+            segundos = calendario.get(Calendar.SECOND);
+            System.out.println("la hora es ; " + hora + ":" + minutos + ":" + segundos);
+            
+            String codOfiOrigen, nomOfiDestino;
+            codOfiOrigen = codParaEncomienda;
+            nomOfiDestino = String.valueOf(jComboBox_Destino.getSelectedItem());
+            String sql = "SELECT HORA_SALIDA "
+                    + "FROM FRECUENCIAS "
+                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
+                    + "                         FROM RUTAS "
+                    + "                         WHERE COD_OFI_ORI = '" + codOfiOrigen + "' "
+                    + "                         AND COD_OFI_DES = (SELECT COD_OFI "
+                    + "                                                 FROM OFICINAS "
+                    + "                                                 WHERE NOM_OFI = '" + nomOfiDestino + "'))";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            
+            while(rs.next()){
+                jComboBox_HoraSalida.addItem(rs.getString("HORA_SALIDA"));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
 
     private void guardarEncomienda() {
@@ -230,9 +253,9 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         btnBorrar3 = new javax.swing.JButton();
         txtCodigoViaje = new javax.swing.JTextField();
         txtFechaEmision = new javax.swing.JTextField();
-        txtFechaSalida = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtOrigen = new javax.swing.JTextField();
+        jComboBox_HoraSalida = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
 
         jScrollPane1.setViewportView(jEditorPane1);
@@ -267,6 +290,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setText("Destino");
+
+        jComboBox_Destino.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox_DestinoItemStateChanged(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel10.setText("Hora Salida");
@@ -397,6 +426,8 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel13.setText("$");
 
+        jComboBox_HoraSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout PanelPrincipalLayout = new javax.swing.GroupLayout(PanelPrincipal);
         PanelPrincipal.setLayout(PanelPrincipalLayout);
         PanelPrincipalLayout.setHorizontalGroup(
@@ -450,12 +481,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                                         .addComponent(txtOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE))
                                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jCheckBox_Estado1)
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                                 .addComponent(jLabel4)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(txtFechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(jComboBox_HoraSalida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                                 .addGap(117, 117, 117)
                                                 .addComponent(jComboBox_Destino, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -487,7 +518,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                     .addComponent(txtDestinatario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel4)
-                    .addComponent(txtFechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox_HoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCodigoViaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -566,6 +597,10 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBorrar3ActionPerformed
 
+    private void jComboBox_DestinoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox_DestinoItemStateChanged
+        cargarFechaSalida();
+    }//GEN-LAST:event_jComboBox_DestinoItemStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -607,6 +642,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox jCheckBox_Estado1;
     private javax.swing.JCheckBox jCheckBox_Estado2;
     private javax.swing.JComboBox<String> jComboBox_Destino;
+    private javax.swing.JComboBox<String> jComboBox_HoraSalida;
     private com.toedter.calendar.JDateChooser jDateChooser_FechaLlegada;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
@@ -632,7 +668,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtCosto;
     private javax.swing.JTextField txtDestinatario;
     private javax.swing.JTextField txtFechaEmision;
-    private javax.swing.JTextField txtFechaSalida;
     private javax.swing.JTextField txtHoraLlegada;
     private javax.swing.JTextField txtHoraSalida;
     private javax.swing.JTextField txtN_Documento;
