@@ -6,6 +6,8 @@
 package interfaces;
 
 import Conexion.Conexion;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -37,7 +38,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         codParaEncomienda = codEncomienda;
         initComponents();
         cargarValoresPorDefecto();
-//        cargarNumDocumento();
         desactivarTextos();
         cargarOrigenEncomienda();
         cargarComboDestino();
@@ -103,7 +103,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         }
     }
 
-    public void cargarComboDestino() {
+    private void cargarComboDestino() {
 
         try {
             Conexion cc = new Conexion();
@@ -137,17 +137,15 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         /*
         Convierte la fecha de jDataChooser al formato 2018-12-27
          */
-
         java.sql.Date regreso;
         regreso = new java.sql.Date(Ingreso.getTime());
         return regreso;
     }
 
-    public void cargarFechaSalida() {
+    public void cargarHoraSalida() {
         jComboBox_HoraSalida.removeAllItems();
         jComboBox_HoraSalida.addItem("Seleccione");
         try {
-
             Calendar calendario = new GregorianCalendar();
             int hora, minutos, segundos;
             hora = calendario.get(Calendar.HOUR_OF_DAY);
@@ -157,8 +155,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             String codOfiOrigen, nomOfiDestino;
             codOfiOrigen = codParaEncomienda;
             nomOfiDestino = String.valueOf(jComboBox_Destino.getSelectedItem());
-
-            System.out.println(codOfiOrigen + " ;;;;; " + nomOfiDestino);
 
             String sql = "SELECT HORA_SALIDA "
                     + "FROM FRECUENCIAS "
@@ -173,9 +169,8 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
 
-            //+++++++++++++++++++++++++++++++++++++++++
-            String horSal = "";
             java.sql.Date FEC_SALIDA;
+            String horSalida = "";
             int cond = 0;
 
             FEC_SALIDA = convetirdorFecha(jDateChooser_FechaSalida.getDate());
@@ -185,29 +180,26 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 Date date1 = sdf.parse(FEC_SALIDA.toString());
                 Date date2 = sdf.parse(obtenerFechaActual());
                 cond = date1.compareTo(date2);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }           
 
-            if (cond < 0) {
-                JOptionPane.showMessageDialog(null, "Error: Fecha incorrecta");
-            } else if (cond > 0) {
-                while (rs.next()) {
-                    horSal = rs.getString("HORA_SALIDA");
-                    jComboBox_HoraSalida.addItem(horSal);
+                if (cond < 0) {
+                    jComboBox_HoraSalida.addItem("NO HAY HORARIOS");
                 }
-            } else if (cond == 0){
-                while (rs.next()) {
-                    //8:30 - 10:20
-                    //Verifica si la hora actual s antes de la hora de salida, solo se carga en el combo las horas superiores
-                    boolean isBeforeHour = LocalTime.parse(hora + ":" + minutos + ":" + segundos).isBefore(LocalTime.parse(horSal));
-                    if (isBeforeHour) {
-                        horSal = rs.getString("HORA_SALIDA");
-                        jComboBox_HoraSalida.addItem(horSal);
+                if (cond > 0) {
+                    while (rs.next()) {
+                        horSalida = rs.getString("HORA_SALIDA");
+                        jComboBox_HoraSalida.addItem(horSalida);
                     }
                 }
-            }
+                if(cond == 0){
+                    while (rs.next()) {
+                        horSalida = rs.getString("HORA_SALIDA");
+                        jComboBox_HoraSalida.addItem(horSalida);
+                    }
+                }
 
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -474,6 +466,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel13.setText("$");
 
+        jComboBox_HoraSalida.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jComboBox_HoraSalidaFocusGained(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelPrincipalLayout = new javax.swing.GroupLayout(PanelPrincipal);
         PanelPrincipal.setLayout(PanelPrincipalLayout);
         PanelPrincipalLayout.setHorizontalGroup(
@@ -515,19 +513,19 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                                 .addComponent(jLabel10)
                                                 .addGap(262, 262, 262)
-                                                .addComponent(txtCodigoViaje))
+                                                .addComponent(txtCodigoViaje, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel4)
                                                     .addComponent(jLabel8)
                                                     .addComponent(jLabel9))
                                                 .addGap(13, 13, 13)
-                                                .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jComboBox_Destino, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jDateChooser_FechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jComboBox_HoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(0, 170, Short.MAX_VALUE)))
+                                                .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jDateChooser_FechaSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(txtOrigen)
+                                                    .addComponent(jComboBox_Destino, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jComboBox_HoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                         .addGap(52, 52, 52))
                                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                         .addComponent(jCheckBox_Estado1)
@@ -596,6 +594,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        jDateChooser_FechaSalida.getDateEditor().addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent e) {
+                jComboBox_Destino.setSelectedIndex(0);
+            }
+        });
+
         jPanel3.setBackground(new java.awt.Color(51, 153, 255));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -650,8 +654,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBorrar3ActionPerformed
 
+    private void jComboBox_HoraSalidaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox_HoraSalidaFocusGained
+
+    }//GEN-LAST:event_jComboBox_HoraSalidaFocusGained
+
     private void jComboBox_DestinoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox_DestinoItemStateChanged
-        cargarFechaSalida();
+        cargarHoraSalida();
     }//GEN-LAST:event_jComboBox_DestinoItemStateChanged
 
     /**
