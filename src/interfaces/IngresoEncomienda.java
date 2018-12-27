@@ -37,7 +37,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         desactivarTextos();
         cargarOrigenEncomienda();
         cargarComboDestino();
-        
+        cargarFechaSalida();
     }
 
     private void cargarValoresPorDefecto() {
@@ -141,7 +141,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         minutos = calendario.get(Calendar.MINUTE);
         segundos = calendario.get(Calendar.SECOND);
         
-        System.out.println("la hora es ; "+ hora+""+minutos+""+segundos);
+        System.out.println("la hora es ; "+ hora+":"+minutos+":"+segundos);
     }
 
     private void guardarEncomienda() {
