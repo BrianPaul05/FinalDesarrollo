@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -36,7 +37,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         desactivarTextos();
         cargarOrigenEncomienda();
         cargarComboDestino();
-        System.out.println("Desde la laptop dell n15");
+        
     }
 
     private void cargarValoresPorDefecto() {
@@ -129,12 +130,18 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, ex);
         }
     }
-    
-    private void cargarFechaSalida(){
-        String destino ="";
+
+    private void cargarFechaSalida() {
+        String destino = "";
         destino = String.valueOf(jComboBox_Destino.getSelectedItem());
+
+        Calendar calendario = new GregorianCalendar();
+        int hora, minutos, segundos;
+        hora = calendario.get(Calendar.HOUR_OF_DAY);
+        minutos = calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND);
         
-        
+        System.out.println("la hora es ; "+ hora+""+minutos+""+segundos);
     }
 
     private void guardarEncomienda() {
