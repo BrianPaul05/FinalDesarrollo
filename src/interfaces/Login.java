@@ -5,7 +5,15 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -23,6 +31,54 @@ public class Login extends javax.swing.JFrame {
         this.setTitle("INGRESO AL SISTEMA");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+    }
+
+    private boolean comprobarCuenta(String usu, String con) {
+        int n = 0;
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "SELECT CED_PER , CONTRASENA "
+                    + "FROM PERSONAL "
+                    + "WHERE CED_PER = '" + usu + "' "
+                    + "AND CONTRASENA = '" + con + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                n = n + 1;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (n > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private String obtenerCodigoOficina(String usu) {
+        String codigo= "";
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "SELECT COD_OFI_PER "
+                    + "FROM PERSONAL_OFICINA "
+                    + "WHERE CED_PERSONAL_PER = '" + usu + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                codigo = rs.getString("COD_OFI_PER");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return codigo;
     }
 
     /**
@@ -220,9 +276,18 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_ingresarMouseEntered
 
     private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
-        PrimeraInterface pi = new PrimeraInterface();
-              pi.setVisible(true);
-              this.dispose();
+
+        boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
+        if (condicion) {
+            String codOfi = obtenerCodigoOficina(usuario.getText());
+            PrimeraInterface pi = new PrimeraInterface(codOfi);
+            pi.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "El usuario no existe");
+            usuario.setText(null);
+            contraseña.setText(null);
+        }
     }//GEN-LAST:event_ingresarActionPerformed
 
     private void contraseñaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contraseñaMouseEntered
@@ -273,4 +338,5 @@ public class Login extends javax.swing.JFrame {
     private org.edisoncor.gui.panel.Panel panel1;
     public static volatile javax.swing.JTextField usuario;
     // End of variables declaration//GEN-END:variables
+
 }

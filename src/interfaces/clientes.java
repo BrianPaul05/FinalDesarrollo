@@ -5,20 +5,177 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Roberto Altamirano
  */
-public class clientes extends javax.swing.JInternalFrame {
+public class clientes extends javax.swing.JFrame {
 
     /**
      * Creates new form clientes
      */
-    public clientes() {
+    public clientes() throws ClassNotFoundException {
         initComponents();
+        cargarTablaClientes("");
+        cargarModificar();
+        desactivarBotones();
+        bloquearCampos();
+    }
+    DefaultTableModel modelo;
+
+    public void limpiarcampos() {
+        txtApellido.setText("");
+        txtNombre.setText("");
+        txtCedula.setText("");
+    }
+
+    public void bloquearCampos() {
+        txtApellido.setEnabled(false);
+        txtCedula.setEnabled(false);
+        txtNombre.setEnabled(false);
+    }
+
+    public void activarCampos() {
+        txtApellido.setEnabled(true);
+        txtCedula.setEnabled(true);
+        txtNombre.setEnabled(true);
+    }
+
+    public void desactivarBotones() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(false);
+        btnSalir.setEnabled(true);
+    }
+
+    public void activarBotones() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnSalir.setEnabled(true);
+    }
+
+    public void cargarTablaClientes(String dato){
+
+        try {
+            String titulos[] = {"CÉDULA", "NOMBRE", "APELLIDO"};
+            String registro[] = new String[3];
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "SELECT * FROM CLIENTES  WHERE EST_CLI='S' and CED_CLI LIKE'%" + dato + "%'";
+            modelo = new DefaultTableModel(null, titulos);
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                registro[0] = rs.getString("CED_CLI");
+                registro[1] = rs.getString("NOM_CLI");
+                registro[2] = rs.getString("APE_CLI");
+                modelo.addRow(registro);
+            }
+
+            tblClientes.setModel(modelo);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+    }
+
+    public void guardarCliente() throws ClassNotFoundException {
+        String estado = "S";
+        if (txtCedula.getText().length() < 10) {
+            JOptionPane.showMessageDialog(null, "Cédula Incorrecta");
+            txtCedula.requestFocus();
+        } else if (txtNombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Datos...");
+        } else if (txtApellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Datos...");
+        } else {
+
+            try {
+
+                String sql = "";
+                String nombre, apellido, cedula;
+
+                nombre = txtNombre.getText();
+                apellido = txtApellido.getText();
+                cedula = txtCedula.getText();
+
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                sql = "insert into CLIENTES(CED_CLI,NOM_CLI,APE_CLI,EST_CLI) values(?,?,?,?)";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                psd.setString(1, cedula);
+                psd.setString(2, nombre);
+                psd.setString(3, apellido);
+                psd.setString(4, estado);
+
+                int n = psd.executeUpdate();// ncuantas  filas se inserto
+
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(this, "Guardado Correctamente");
+
+                }
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+    }
+
+    public void borrar() throws SQLException {
+
+        if (JOptionPane.showConfirmDialog(new JInternalFrame(), "Estas seguro de borar el  registro", "Ventana Borrar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+            String dato = "N";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "UPDATE CLIENTES set EST_CLI='" + dato + "'WHERE CED_CLI='" + txtCedula.getText() + "'";
+            PreparedStatement psd = cn.prepareStatement(sql);
+            int n = psd.executeUpdate();
+            if (n > 0) {
+                JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
+                cargarTablaClientes("");
+                limpiarcampos();
+            }
+
+        }
+    }
+
+    public void cargarModificar() {
+
+        tblClientes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                if (tblClientes.getSelectedRow() != -1) {  /// si no esta seleccioando  nada  en la  tabla
+                    //  activarCampos();
+                    //  botonActualizar();
+                    int fila = tblClientes.getSelectedRow();//  tomar la  posicion
+
+                    txtCedula.setText(tblClientes.getValueAt(fila, 0).toString().trim());
+                    txtNombre.setText(tblClientes.getValueAt(fila, 1).toString().trim());
+                    txtApellido.setText(tblClientes.getValueAt(fila, 2).toString().trim());
+                }
+                activarCampos();
+            }
+        });
     }
 
     /**
@@ -37,21 +194,21 @@ public class clientes extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtCedula = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        btnSalir1 = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblClientes = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
@@ -82,7 +239,7 @@ public class clientes extends javax.swing.JInternalFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -92,10 +249,10 @@ public class clientes extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("CEDULA");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtCedula.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtCedulaActionPerformed(evt);
             }
         });
 
@@ -105,9 +262,9 @@ public class clientes extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("APELLIDO");
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtApellido.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/images.jpeg"))); // NOI18N
         jLabel5.setText("jLabel5");
@@ -139,6 +296,7 @@ public class clientes extends javax.swing.JInternalFrame {
 
         btnGuardar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.setToolTipText("");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
@@ -153,11 +311,11 @@ public class clientes extends javax.swing.JInternalFrame {
             }
         });
 
-        btnSalir1.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnSalir1.setText("Salir");
-        btnSalir1.addActionListener(new java.awt.event.ActionListener() {
+        btnSalir.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir1ActionPerformed(evt);
+                btnSalirActionPerformed(evt);
             }
         });
 
@@ -181,7 +339,7 @@ public class clientes extends javax.swing.JInternalFrame {
                 .addGap(45, 45, 45)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
-                .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
@@ -194,12 +352,12 @@ public class clientes extends javax.swing.JInternalFrame {
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
-                    .addComponent(btnSalir1)
+                    .addComponent(btnSalir)
                     .addComponent(btnBorrar))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -207,10 +365,16 @@ public class clientes extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tblClientes);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("BUSCAR");
+
+        jTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField4KeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -231,12 +395,12 @@ public class clientes extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel1))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(67, 67, 67)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -267,13 +431,13 @@ public class clientes extends javax.swing.JInternalFrame {
                         .addGap(23, 23, 23)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(51, 51, 51)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel5))
                 .addGap(32, 32, 32)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,37 +466,56 @@ public class clientes extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtCedulaActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiarcampos();
+        activarCampos();
+        activarBotones();
+        txtCedula.requestFocus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
+        try {
+            guardarCliente();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(clientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-
+        limpiarcampos();
+        desactivarBotones();
+        bloquearCampos();
+        //txtCedula.requestFocus(); 
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            borrar();        // TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(clientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
-    private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
         if (JOptionPane.showConfirmDialog(this, "¿Desea salir?",
-            "Ventana Salir",
-            JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
-        this.dispose();
+                "Ventana Salir",
+                JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
+            this.dispose();
         }
         //para cerrar la ventana
         //exit 0 se sale de todo el sistema
-    }//GEN-LAST:event_btnSalir1ActionPerformed
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void jTextField4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyReleased
+        cargarTablaClientes(jTextField4.getText());
+    }//GEN-LAST:event_jTextField4KeyReleased
 
     /**
      * @param args the command line arguments
@@ -360,7 +543,11 @@ public class clientes extends javax.swing.JInternalFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new clientes().setVisible(true);
+                try {
+                    new clientes().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(clientes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -370,7 +557,7 @@ public class clientes extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton btnSalir1;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -386,10 +573,10 @@ public class clientes extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

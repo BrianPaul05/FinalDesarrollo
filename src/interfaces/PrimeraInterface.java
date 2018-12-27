@@ -6,6 +6,8 @@
 package interfaces;
 
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -19,12 +21,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
     /**
      * Creates new form PrimeraInterface
      */
-    public PrimeraInterface() {
+    
+    String codEncomiendaOficina;
+    
+    public PrimeraInterface(String codOficina) {
+        codEncomiendaOficina = codOficina;
         initComponents();
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
-        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);        
     }
 
     /**
@@ -571,12 +576,17 @@ public class PrimeraInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_ClientesMouseExited
 
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
-        clientes c = new clientes();
-        principal.add(c);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = c.getSize();
-        c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        c.setVisible(true);
+        try {
+            clientes c = new clientes();
+            
+            principal.add(c);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = c.getSize();
+            c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            c.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_ClientesActionPerformed
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered
@@ -669,7 +679,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void Incidentes2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Incidentes2ActionPerformed
         // TODO add your handling code here:
-        IngresoEncomienda ie = new IngresoEncomienda();
+        IngresoEncomienda ie = new IngresoEncomienda(codEncomiendaOficina);
         principal.add(ie);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = ie.getSize();
@@ -863,7 +873,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PrimeraInterface().setVisible(true);
+                
             }
         });
     }
