@@ -124,7 +124,7 @@
                                           <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <Component id="jCheckBox_Estado1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jCheckBox_EstadoEnviado" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -199,15 +199,20 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jCheckBox_Estado1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jCheckBox_EstadoEnviado" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
@@ -343,7 +348,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JCheckBox" name="jCheckBox_Estado1">
+        <Component class="javax.swing.JCheckBox" name="jCheckBox_EstadoEnviado">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -377,11 +382,14 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jDateChooser_FechaLlegada" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="jCheckBox_Estado2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="101" max="32767" attributes="0"/>
+                          <Component id="jCheckBox_EstadoEntregado" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtHora" min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtMinuto" min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtSegundo" min="-2" pref="30" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="txtHoraLlegada" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -396,9 +404,13 @@
                           <Component id="jDateChooser_FechaLlegada" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="txtHoraLlegada" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtHora" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtMinuto" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSegundo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace pref="10" max="32767" attributes="0"/>
-                      <Component id="jCheckBox_Estado2" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBox_EstadoEntregado" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -412,7 +424,7 @@
                 <Property name="text" type="java.lang.String" value="Fecha Entrega"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="jCheckBox_Estado2">
+            <Component class="javax.swing.JCheckBox" name="jCheckBox_EstadoEntregado">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -425,7 +437,11 @@
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser_FechaLlegada">
             </Component>
-            <Component class="javax.swing.JTextField" name="txtHoraLlegada">
+            <Component class="javax.swing.JTextField" name="txtHora">
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtMinuto">
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtSegundo">
             </Component>
           </SubComponents>
         </Container>

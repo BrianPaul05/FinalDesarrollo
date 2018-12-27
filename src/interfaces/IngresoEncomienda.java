@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -190,10 +191,16 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                         jComboBox_HoraSalida.addItem(horSalida);
                     }
                 }
-                if(cond == 0){
+                if (cond == 0) {
                     while (rs.next()) {
                         horSalida = rs.getString("HORA_SALIDA");
-                        jComboBox_HoraSalida.addItem(horSalida);
+                        //8:30 - 10:20
+                        //Verifica si la hora actual s antes de la hora de salida, solo se carga en el combo las horas superiores
+                        boolean isBeforeHour = LocalTime.parse(hora + ":" + minutos + ":" + segundos).isBefore(LocalTime.parse(horSalida));
+                        if (isBeforeHour) {
+
+                            jComboBox_HoraSalida.addItem(horSalida);
+                        }
                     }
                 }
 
@@ -206,44 +213,72 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
     }
 
+    private boolean comprobarFechaLlegada(Date salida, Date llegada) {
+        if (llegada.before(salida)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private void guardarEncomienda() {
-        try {
-            Conexion cc = new Conexion();
-            Connection cn = cc.conexion();
 
-            String sql = "INSERTO INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
-            PreparedStatement psd = cn.prepareStatement(sql);
+        if (txtRemitente.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese la cédula del remitente");
+            txtRemitente.requestFocus();
+        } else if (txtDestinatario.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese la cédula del destinatario");
+            txtDestinatario.requestFocus();
+        } else if (txtCosto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese el costo");
+            txtDestinatario.requestFocus();
+        } else {
+            try {
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
 
-            psd.setString(1, txtCodigoViaje.getText());
-            psd.setString(2, txtRemitente.getText());
-            psd.setString(3, txtDestinatario.getText());
-            psd.setString(4, txtCosto.getText());
-            psd.setString(5, txtContenido.getText());
-            String estado1 = null;
-            if (jCheckBox_Estado1.isSelected()) {
-                estado1 = "ENVIADO";
-            } else {
-                estado1 = "NO ENVIADO";
+                String sql = "INSERTO INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
+                PreparedStatement psd = cn.prepareStatement(sql);
+
+                psd.setString(1, txtCodigoViaje.getText());
+                psd.setString(2, txtRemitente.getText());
+                psd.setString(3, txtDestinatario.getText());
+                psd.setString(4, txtCosto.getText());
+                psd.setString(5, txtContenido.getText());
+                String estEnviado;
+                if (jCheckBox_EstadoEnviado.isSelected()) {
+                    estEnviado = "ENVIADO";
+                } else {
+                    estEnviado = "NO ENVIADO";
+                }
+                psd.setString(7, estEnviado);
+
+                String estLlegada = null;
+                if (jCheckBox_EstadoEntregado.isSelected()) {
+                    estLlegada = "ENTREGADO";
+                } else {
+                    estLlegada = "NO ENTREGADO";
+                }
+
+                psd.setString(8, estLlegada);
+                boolean condFechaLlegada = comprobarFechaLlegada(jDateChooser_FechaSalida.getDate(), jDateChooser_FechaLlegada.getDate());
+                if (condFechaLlegada) {
+                    psd.setDate(9, convetirdorFecha(jDateChooser_FechaLlegada.getDate()));
+                } else {
+                    JOptionPane.showMessageDialog(null, "LA FECHA DE LLEGADA ES INCORRECTA . . . !");
+                }
+
+                String hora = txtHora + "" + txtMinuto + "" + txtSegundo;
+
+                psd.setString(10, hora);
+                int n = psd.executeUpdate();
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(null, "Encomienda guardada");
+                }
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
             }
-            psd.setString(7, estado1);
-
-            String estado2 = null;
-            if (jCheckBox_Estado2.isSelected()) {
-                estado2 = "ENTREGADO";
-            } else {
-                estado2 = "NO ENTREGADO";
-            }
-
-            psd.setString(8, estado2);
-            psd.setString(9, estado2);
-            psd.setString(10, estado2);
-            int n = psd.executeUpdate();
-            if (n > 0) {
-                JOptionPane.showMessageDialog(null, "Encomienda guardada");
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
         }
     }
 
@@ -277,12 +312,14 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel11 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtContenido = new javax.swing.JTextArea();
-        jCheckBox_Estado1 = new javax.swing.JCheckBox();
+        jCheckBox_EstadoEnviado = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jCheckBox_Estado2 = new javax.swing.JCheckBox();
+        jCheckBox_EstadoEntregado = new javax.swing.JCheckBox();
         jDateChooser_FechaLlegada = new com.toedter.calendar.JDateChooser();
-        txtHoraLlegada = new javax.swing.JTextField();
+        txtHora = new javax.swing.JTextField();
+        txtMinuto = new javax.swing.JTextField();
+        txtSegundo = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         btnNuevo3 = new javax.swing.JButton();
         btnGuardar3 = new javax.swing.JButton();
@@ -347,9 +384,9 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         txtContenido.setRows(5);
         jScrollPane2.setViewportView(txtContenido);
 
-        jCheckBox_Estado1.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox_Estado1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jCheckBox_Estado1.setText("ENVIADO");
+        jCheckBox_EstadoEnviado.setBackground(new java.awt.Color(255, 255, 255));
+        jCheckBox_EstadoEnviado.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jCheckBox_EstadoEnviado.setText("ENVIADO");
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ENTREGA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
@@ -357,9 +394,9 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel12.setText("Fecha Entrega");
 
-        jCheckBox_Estado2.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox_Estado2.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jCheckBox_Estado2.setText("ENTREGADO");
+        jCheckBox_EstadoEntregado.setBackground(new java.awt.Color(255, 255, 255));
+        jCheckBox_EstadoEntregado.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jCheckBox_EstadoEntregado.setText("ENTREGADO");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -371,10 +408,13 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jDateChooser_FechaLlegada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBox_EstadoEntregado)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jCheckBox_Estado2)
-                        .addGap(0, 101, Short.MAX_VALUE))
-                    .addComponent(txtHoraLlegada))
+                        .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMinuto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSegundo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -385,9 +425,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                     .addComponent(jLabel12)
                     .addComponent(jDateChooser_FechaLlegada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtHoraLlegada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMinuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSegundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jCheckBox_Estado2))
+                .addComponent(jCheckBox_EstadoEntregado))
         );
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
@@ -528,7 +571,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                         .addGap(52, 52, 52))
                                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                        .addComponent(jCheckBox_Estado1)
+                                        .addComponent(jCheckBox_EstadoEnviado)
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -582,12 +625,15 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                             .addComponent(jLabel13)))
                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jCheckBox_Estado1)))
+                        .addComponent(jCheckBox_EstadoEnviado)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(97, 97, 97))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPrincipalLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -700,8 +746,8 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar3;
     private javax.swing.JButton btnNuevo3;
     private javax.swing.JButton btnSalir4;
-    private javax.swing.JCheckBox jCheckBox_Estado1;
-    private javax.swing.JCheckBox jCheckBox_Estado2;
+    private javax.swing.JCheckBox jCheckBox_EstadoEntregado;
+    private javax.swing.JCheckBox jCheckBox_EstadoEnviado;
     private javax.swing.JComboBox<String> jComboBox_Destino;
     private javax.swing.JComboBox<String> jComboBox_HoraSalida;
     private com.toedter.calendar.JDateChooser jDateChooser_FechaLlegada;
@@ -730,10 +776,12 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtCosto;
     private javax.swing.JTextField txtDestinatario;
     private javax.swing.JTextField txtFechaEmision;
-    private javax.swing.JTextField txtHoraLlegada;
+    private javax.swing.JTextField txtHora;
+    private javax.swing.JTextField txtMinuto;
     private javax.swing.JTextField txtN_Documento;
     private javax.swing.JTextField txtOrigen;
     private javax.swing.JTextField txtRemitente;
+    private javax.swing.JTextField txtSegundo;
     // End of variables declaration//GEN-END:variables
 
 }
