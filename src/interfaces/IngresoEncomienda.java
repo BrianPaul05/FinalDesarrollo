@@ -36,7 +36,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         desactivarTextos();
         cargarOrigenEncomienda();
         cargarComboDestino();
-        System.out.println("");
+        System.out.println("Desde la laptop dell n15");
     }
 
     private void cargarValoresPorDefecto() {
