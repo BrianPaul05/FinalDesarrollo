@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,12 +76,11 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
     public String obtenerFechaActual() {
         String dia, mes, año, fecha;
-
         Calendar c = Calendar.getInstance();
         dia = Integer.toString(c.get(Calendar.DATE));
         mes = Integer.toString(c.get(Calendar.MONTH) + 1);
         año = Integer.toString(c.get(Calendar.YEAR));
-        fecha = dia + "/" + mes + "/" + año;
+        fecha = año + "-" + mes + "-" + dia;
         return fecha;
     }
 
@@ -131,6 +131,16 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         }
     }
 
+    public java.sql.Date convetirdorFecha(Date Ingreso) {
+        /*
+        Convierte la fecha de jDataChooser al formato 2018-12-27
+         */
+
+        java.sql.Date regreso;
+        regreso = new java.sql.Date(Ingreso.getTime());
+        return regreso;
+    }
+
     public void cargarFechaSalida() {
         jComboBox_HoraSalida.removeAllItems();
         jComboBox_HoraSalida.addItem("Seleccione");
@@ -162,18 +172,33 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             Connection cn = cc.conexion();
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
-            String fecha, horSal = "";
-            
-            fecha = obtenerFechaActual();
-            
+
+            //+++++++++++++++++++++++++++++++++++++++++
+            String fecActual, horSal = "";
+            java.sql.Date fecSalida;
+
+            fecActual = obtenerFechaActual();
+            fecSalida = convetirdorFecha(jDateChooser_FechaSalida.getDate());
+
             while (rs.next()) {
                 horSal = rs.getString("HORA_SALIDA");
-                //8:30 - 10:20
-                //Compara la hora actual con las horas de salidas, solo se carga en el combo las horas superiores
-                boolean isBeforeHour = LocalTime.parse(hora + ":" + minutos + ":" + segundos).isBefore(LocalTime.parse(horSal));                
-                if(isBeforeHour){
-                jComboBox_HoraSalida.addItem(horSal);
+
+                int cond;
+
+                cond = fecActual.compareTo(fecSalida.toString());
+                if (cond < 0) {
+                    JOptionPane.showConfirmDialog(null, "Error: Fecha incorrecta");
+                } else if (cond > 0) {
+                    jComboBox_HoraSalida.addItem(horSal);
+                } else {
+                    //8:30 - 10:20
+                    //Verifica si la hora actual s antes de la hora de salida, solo se carga en el combo las horas superiores
+                    boolean isBeforeHour = LocalTime.parse(hora + ":" + minutos + ":" + segundos).isBefore(LocalTime.parse(horSal));
+                    if (isBeforeHour) {
+                        jComboBox_HoraSalida.addItem(horSal);
+                    }
                 }
+
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -188,7 +213,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
             String sql = "INSERTO INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
             PreparedStatement psd = cn.prepareStatement(sql);
-            
+
             psd.setString(1, txtCodigoViaje.getText());
             psd.setString(2, txtRemitente.getText());
             psd.setString(3, txtDestinatario.getText());
