@@ -468,6 +468,16 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(false);
         txtClave.setEnabled(true);
     }
+  
+
+    public void soloNumeros(java.awt.event.KeyEvent evt) {
+        char c;
+        c = evt.getKeyChar();
+        if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo nÃºmeros");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -505,10 +515,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jLabel67 = new javax.swing.JLabel();
         jdcNacimiento = new com.toedter.calendar.JDateChooser();
         jdcIngreso = new com.toedter.calendar.JDateChooser();
-        txtTelefono = new javax.swing.JFormattedTextField();
-        txtCedula = new javax.swing.JFormattedTextField();
         jLabel68 = new javax.swing.JLabel();
         txtClave = new javax.swing.JPasswordField();
+        txtCedula = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
@@ -581,16 +591,26 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jdcIngreso.setMaxSelectableDate(new java.util.Date(1577858519000L));
         jdcIngreso.setMinSelectableDate(new java.util.Date(1262325719000L));
 
-        txtTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##########"))));
-
-        try {
-            txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-
         jLabel68.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel68.setText("Contraseña:");
+
+        txtClave.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtClaveKeyTyped(evt);
+            }
+        });
+
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
+
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -613,9 +633,12 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                         .addComponent(jLabel61)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel67)
+                        .addGap(211, 211, 211))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
@@ -642,13 +665,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                                         .addGap(167, 167, 167)))
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
-                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtClave))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel67)
-                        .addGap(211, 211, 211))))
+                                    .addComponent(txtClave)
+                                    .addComponent(txtTelefono)))
+                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -677,12 +697,12 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jdcIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbxEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel64)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel64)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel66)))
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -907,6 +927,31 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
+    private void txtClaveKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveKeyTyped
+        if(txtClave.getPassword().length>=4){
+            JOptionPane.showMessageDialog(this, "Error Máximo 4 Caracteres");
+            evt.consume();
+        }  
+    }//GEN-LAST:event_txtClaveKeyTyped
+
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
+        if(txtCedula.getText().length()>=10){
+            JOptionPane.showMessageDialog(this, "Error Máximo 10 Caracteres");
+            evt.consume();
+        }
+        soloNumeros(evt);
+        
+    }//GEN-LAST:event_txtCedulaKeyTyped
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+       
+        if(txtTelefono.getText().length()>=10){
+            JOptionPane.showMessageDialog(this, "Error Máximo 10 Caracteres");
+            evt.consume();
+        }
+         soloNumeros(evt);
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -972,11 +1017,11 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblPersonal;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscar;
-    private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JTextField txtCedula;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JFormattedTextField txtTelefono;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
