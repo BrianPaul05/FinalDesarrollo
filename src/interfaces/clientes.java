@@ -177,6 +177,15 @@ public class clientes extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void soloNumeros(java.awt.event.KeyEvent evt) {
+        char c;
+        c = evt.getKeyChar();
+        if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -211,7 +220,7 @@ public class clientes extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
-        txtCedula = new javax.swing.JFormattedTextField();
+        txtCedula = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -247,13 +256,13 @@ public class clientes extends javax.swing.JFrame {
         jLabel1.setText("CLIENTES");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("CEDULA");
+        jLabel2.setText("CEDULA :");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setText("NOMBRE");
+        jLabel3.setText("NOMBRE :");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setText("APELLIDO");
+        jLabel4.setText("APELLIDO :");
 
         txtNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -369,11 +378,11 @@ public class clientes extends javax.swing.JFrame {
             }
         });
 
-        try {
-            txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -510,6 +519,10 @@ public class clientes extends javax.swing.JFrame {
         cargarTablaClientes(txtBuscar.getText());
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
+        soloNumeros(evt);
+    }//GEN-LAST:event_txtCedulaKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -569,7 +582,7 @@ public class clientes extends javax.swing.JFrame {
     private javax.swing.JTable tblClientes;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscar;
-    private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

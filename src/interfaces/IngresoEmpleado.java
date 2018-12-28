@@ -489,7 +489,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         c = evt.getKeyChar();
         if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
             evt.consume();
-            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo nÃºmeros");
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
         }
     }
 
