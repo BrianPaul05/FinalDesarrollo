@@ -7,10 +7,16 @@ package interfaces;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import Conexion.*;
 
 /**
  *
@@ -23,6 +29,275 @@ public class IngresoBus extends javax.swing.JInternalFrame {
      */
     public IngresoBus() {
         initComponents();
+    }
+     public void desactivarTextos(){
+        txtCodigoBus.setEnabled(false);
+        txtPlaca.setEnabled(false);
+        txtNumeroBus.setEnabled(false);
+        txtAño.setEnabled(false);
+        cbxCapacidad.setEnabled(false);
+        cbxEstado.setEnabled(false);
+    }
+           
+     public void activarTextos(){
+        txtCodigoBus.setEnabled(true);
+        txtPlaca.setEnabled(true);
+        txtNumeroBus.setEnabled(true);
+        txtAño.setEnabled(true);
+        cbxCapacidad.setEnabled(true);
+        cbxEstado.setEnabled(true);
+    }
+     
+    public void desactivarBotones(){
+        btnNuevo.setEnabled(true);
+        btnSalir1.setEnabled(true);
+        btnBorrar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnGuardar.setEnabled(false);
+    } 
+     public void activarBotones(){
+        btnNuevo.setEnabled(false);
+        btnSalir1.setEnabled(false);
+        btnBorrar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnGuardar.setEnabled(true);
+    } 
+    public void limpiarTextos(){
+        txtCodigoBus.setText("");
+        txtPlaca.setText("");
+        txtNumeroBus.setText("");
+        txtAño.setText("");
+        cbxCapacidad.setSelectedIndex(0);
+        cbxEstado.setSelectedIndex(0);
+    }
+    public void codigoBus(){
+        try {
+            String sql = "";
+            String count = "";
+            int codigo;
+            Conexion cn = new Conexion();
+            Connection n = cn.conexion();
+            sql = "SELECT COUNT(COD_BUS) FROM BUS";
+            Statement psd = n.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                count = rs.getString("COUNT(COD_BUS)");
+            }
+            codigo = Integer.valueOf(count)+1;
+            txtCodigoBus.setText(String.valueOf(codigo));
+        } catch (SQLException ex) {
+            Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     public void guardarBus(){
+         String sql = "";
+         if(txtPlaca.getText()== null){
+             JOptionPane.showMessageDialog(this, "Ingrese la placa");
+         }else  if(txtNumeroBus.getText()== null){
+             JOptionPane.showMessageDialog(this, "Ingrese numero de bus");
+         } else if(txtAño.getText()== null){
+             JOptionPane.showMessageDialog(this, "Ingrese el año");
+         }else   if(cbxCapacidad.getSelectedIndex() == 0){
+             JOptionPane.showMessageDialog(this, "Seleccione la capacidad");
+         }else if(cbxEstado.getSelectedIndex() == 0){
+             JOptionPane.showMessageDialog(this, "Seleccione el estado");
+         }else{
+             
+             try {
+                 Conexion cn = new Conexion();
+                 Connection n = cn.conexion(); 
+                 sql = "INSERT INTO BUS(COD_BUS, PLACA, NUM_BUS, ANIO, ESTADO_BUS, CAPACIDAD_BUS, ESTADO) VALUES(?,?,?,?,?,?,?)";
+                PreparedStatement psd = n.prepareStatement(sql);
+                
+                psd.setString(1, txtCodigoBus.getText());
+                psd.setString(2, txtPlaca.getText());
+                psd.setString(3, txtNumeroBus.getText());
+                psd.setString(4, txtAño.getText());
+                psd.setString(5, cbxEstado.getSelectedItem().toString());
+                psd.setString(6, cbxCapacidad.getSelectedItem().toString());
+                psd.setString(7, "S");
+
+                 int m = psd.executeUpdate();
+                if (m > 0) {
+                    JOptionPane.showMessageDialog(this, "Se Inserto corerctamente el Auto");
+                    limpiarTextos();
+                    desactivarBotones();
+                    desactivarTextos();
+                }
+                 
+             } catch (SQLException ex) {
+                 Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
+             }
+         }
+         
+     }
+     DefaultTableModel model;
+      public void cargarTablaBus(String Placa) {
+        try {
+            String titulos[] = {"CODIGO", "PLACA", "NUMERO", "AÑO", "ESTADO", "CAPACIDAD"};
+            String registros[] = new String[7];             //7 columnas
+            String sql = "";
+            Conexion cc = new Conexion();                   //Primero hago la conexion
+            Connection cn = cc.conexion();
+            sql = "select COD_BUS, \n"
+                    + "PLACA,\n"
+                    + "NUM_BUS, \n"
+                    + "ANIO, \n"
+                    + "ESTADO_BUS,\n"
+                    + "CAPACIDAD_BUS \n"
+                    + "FROM bus "
+                    + "where PLACA  LIKE '%" + Placa + "%'"
+                    + "AND ESTADO = 'S' ";
+            model = new DefaultTableModel(null, titulos);
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                registros[0] = rs.getString("COD_BUS");
+                registros[1] = rs.getString("PLACA");
+                registros[2] = rs.getString("NUM_BUS");
+                registros[3] = rs.getString("ANIO");
+                registros[4] = rs.getString("ESTADO_BUS");
+                registros[5] = rs.getString("CAPACIDAD_BUS");
+                model.addRow(registros);
+            }
+            tblBuses.setModel(model);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    public void cargarModificar() {
+        tblBuses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                if (tblBuses.getSelectedRow() != -1) {
+                    activarTextos();
+                    botonesActualizar();
+                    int fila = tblBuses.getSelectedRow();
+                    txtCodigoBus.setText(tblBuses.getValueAt(fila, 0).toString());
+                    txtPlaca.setText(tblBuses.getValueAt(fila, 1).toString());
+                    txtNumeroBus.setText(tblBuses.getValueAt(fila, 2).toString());
+                    txtAño.setText(tblBuses.getValueAt(fila, 3).toString());
+                    cbxEstado.setSelectedItem(tblBuses.getValueAt(fila, 4).toString());
+                    cbxCapacidad.setSelectedItem(tblBuses.getValueAt(fila, 5).toString());
+                    txtPlaca.setEnabled(false);
+                    txtCodigoBus.setEnabled(false);
+                    txtAño.setEnabled(false);
+                }
+
+            }
+        });
+
+    }
+
+    public void botonesActualizar(){
+        btnBorrar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnModificar.setEnabled(true);
+        btnNuevo.setEnabled(false);
+        btnSalir1.setEnabled(true);
+    }
+
+    public void controlPlaca(java.awt.event.KeyEvent evt) {
+         
+        char c = evt.getKeyChar();
+
+        if ((c >= 32 && c <= 44) || (c >= 58 && c <= 64) || (c >= 91 && c <= 255)
+                || txtPlaca.getText().length() > 6) {
+            evt.consume();
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(this, "ERROR Formato de Placa no Válido");
+        }
+
+    }
+
+    public void controlAño(java.awt.event.KeyEvent evt) {
+        char caracter = evt.getKeyChar();//  metodos propios // obtener  la  tecla que yo  presiono ,  char un caracter 
+        String texto = txtAño.getText();
+        if (((caracter < '0')
+                || //  solo numeros
+                (caracter > '9'))
+                &&// solo numero y no letras  
+                (caracter != '\b') && (caracter != '.')) { //   no haya  espacio
+            evt.consume();// ignorar el evento del  teclado 
+        }
+    }
+
+    public void modificar() throws ClassNotFoundException {
+        try {
+            String sql = "";
+            Conexion cc = new Conexion();                   //Primero hago la conexion
+            Connection cn = cc.conexion();
+            sql = "update bus set NUM_BUS = '" + txtNumeroBus.getText() + "' ,"
+                    + " ESTADO_BUS = '" + cbxEstado.getSelectedItem() + "' ,"
+                    + " CAPACIDAD_BUS = '" + cbxCapacidad.getSelectedItem() + "'"
+                    + "where COD_BUS = '" + txtCodigoBus.getText() + "'";
+            PreparedStatement psd = cn.prepareCall(sql);
+            int n = psd.executeUpdate();
+            if (n > 0) {
+                JOptionPane.showMessageDialog(this, "Se modifico correctamente");
+                cargarTablaBus("");
+                desactivarTextos();
+                limpiarTextos();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+    }
+     public void controlNumeroBus(java.awt.event.KeyEvent evt) {
+        char caracter = evt.getKeyChar();//  metodos propios // obtener  la  tecla que yo  presiono ,  char un caracter 
+        String texto = txtNumeroBus.getText();
+        if (((caracter < '1')
+                || //  solo numeros
+                (caracter > '9'))
+                &&// solo numero y no letras  
+                (caracter != '\b') && (caracter != '.')) { //   no haya  espacio
+            evt.consume();// ignorar el evento del  teclado 
+        }
+    }
+      public void controlAnio(java.awt.event.KeyEvent evt) {
+        char caracter = evt.getKeyChar();//  metodos propios // obtener  la  tecla que yo  presiono ,  char un caracter 
+        String texto = txtAño.getText();
+        if (((caracter < '0')
+                || //  solo numeros
+                (caracter > '9'))
+                &&// solo numero y no letras  
+                (caracter != '\b') && (caracter != '.')) { //   no haya  espacio
+            evt.consume();// ignorar el evento del  teclado 
+        }
+         if (txtAño.getText().length() == 4) {
+            evt.consume();
+            
+        }
+    }
+        public void borrar() {
+          
+        if (JOptionPane.showConfirmDialog(this,
+                "Estas seguro de borrar el registro",
+                "Borrar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            try {
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                String sql = "update bus set ESTADO ='"+"N"+"' where COD_BUS = '" + txtCodigoBus.getText() + "'";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
+                  cargarTablaBus("");
+                   limpiarTextos();
+//                int n = psd.executeUpdate();
+//                if (n > 0) {
+//                    JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
+//                    cargarTablaBus("");
+//                    limpiarTextos();
+//                    desactivarBotones();
+//                    desactivarTextos();
+//                }
+            } catch (SQLException ex) {
+                Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 //    public void enviarDatos() {
@@ -94,25 +369,28 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtCodigoBus = new javax.swing.JTextField();
-        txtPlaca = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtNumeroBus = new javax.swing.JTextField();
         txtAño = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtEstadoBus = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtCapacidad = new javax.swing.JTextField();
-        txtEstado = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        cbxEstado = new javax.swing.JComboBox<>();
+        cbxCapacidad = new javax.swing.JComboBox<>();
+        txtPlaca = new javax.swing.JFormattedTextField();
         jPanel5 = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSalir1 = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblBuses = new javax.swing.JTable();
+        txtPlacaB = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -135,11 +413,20 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel3.setText("Número Bus");
 
+        txtNumeroBus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNumeroBusKeyTyped(evt);
+            }
+        });
+
+        txtAño.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAñoKeyTyped(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel4.setText("Año");
-
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel5.setText("Estado Bus");
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel6.setText("Capacidad");
@@ -147,79 +434,83 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel7.setText("Estado");
 
+        cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Activo", "Inactivo" }));
+
+        cbxCapacidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "40", "42", "45", "48" }));
+
+        try {
+            txtPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("UUU-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel2)
-                                .addGap(31, 31, 31))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)))
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtCodigoBus)
-                            .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3))
                         .addGap(25, 25, 25)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtNumeroBus, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtNumeroBus, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .addComponent(txtCodigoBus, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .addComponent(txtPlaca))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEstadoBus, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(26, 26, 26))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(25, 25, 25)
+                        .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(35, 35, 35))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtCodigoBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txtCodigoBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(25, 25, 25)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtNumeroBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtEstadoBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtNumeroBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbxCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(65, 92, Short.MAX_VALUE))))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -265,34 +556,47 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             }
         });
 
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(30, 30, 30)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73)
+                .addGap(34, 34, 34)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73)
+                .addGap(32, 32, 32)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
                 .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addGap(20, 20, 20))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNuevo)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnSalir1)
-                    .addComponent(btnBorrar))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnNuevo)
+                            .addComponent(btnGuardar)
+                            .addComponent(btnCancelar)
+                            .addComponent(btnSalir1)
+                            .addComponent(btnBorrar))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel7.setBackground(new java.awt.Color(0, 153, 255));
@@ -308,6 +612,29 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
+        jLabel10.setText("Buscar por Placa  :");
+
+        tblBuses.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(tblBuses);
+
+        try {
+            txtPlacaB.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("UUU-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtPlacaB.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPlacaBKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -315,32 +642,51 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(246, 246, 246)
-                        .addComponent(jLabel9))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(128, 128, 128)
-                        .addComponent(jLabel8))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(263, 263, 263)
+                                .addComponent(jLabel9))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(123, 123, 123)
+                                .addComponent(jLabel8))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPlacaB, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 794, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(jLabel9)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
+                .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtPlacaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGap(52, 52, 52))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -358,15 +704,18 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        activarTextos();
+        activarBotones();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
+          guardarBus();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-
+        limpiarTextos();
+        desactivarBotones();
+        desactivarTextos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
@@ -382,7 +731,33 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
+         borrar();
     }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void txtAñoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAñoKeyTyped
+        // TODO add your handling code here:
+        controlAnio(evt);
+    }//GEN-LAST:event_txtAñoKeyTyped
+
+    private void txtNumeroBusKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumeroBusKeyTyped
+        // TODO add your handling code here:
+        controlNumeroBus(evt);
+    }//GEN-LAST:event_txtNumeroBusKeyTyped
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+         try {
+            // TODO add your handling code here:
+            modificar();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void txtPlacaBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlacaBKeyReleased
+        // TODO add your handling code here:
+         cargarTablaBus(txtPlacaB.getText());
+    }//GEN-LAST:event_txtPlacaBKeyReleased
 
     /**
      * @param args the command line arguments
@@ -426,13 +801,16 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir1;
+    private javax.swing.JComboBox<String> cbxCapacidad;
+    private javax.swing.JComboBox<String> cbxEstado;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -441,12 +819,12 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblBuses;
     private javax.swing.JTextField txtAño;
-    private javax.swing.JTextField txtCapacidad;
     private javax.swing.JTextField txtCodigoBus;
-    private javax.swing.JTextField txtEstado;
-    private javax.swing.JTextField txtEstadoBus;
     private javax.swing.JTextField txtNumeroBus;
-    private javax.swing.JTextField txtPlaca;
+    private javax.swing.JFormattedTextField txtPlaca;
+    private javax.swing.JFormattedTextField txtPlacaB;
     // End of variables declaration//GEN-END:variables
 }
