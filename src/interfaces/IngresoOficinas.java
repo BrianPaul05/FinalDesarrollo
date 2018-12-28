@@ -40,7 +40,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         Tabla_Oficina.getTableHeader().setReorderingAllowed(false);
         Tabla_Oficina.getTableHeader().setResizingAllowed(false);
         cargarModificarTabla();
-        bloquearTextos();
+        desactivarTextos();
     }
 
     private void guardarOficina() {
@@ -57,8 +57,11 @@ public class IngresoOficinas extends javax.swing.JFrame {
             } else if (txtTelefono.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ingrese el telefono de la oficina");
                 txtTelefono.requestFocus();
-            } else if (txtTelefono.getText().length() != 10) {
-                JOptionPane.showMessageDialog(null, "Revise el número de teléfono");
+            } else if (txtTelefono.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Ingrese un número de teléfono");
+                txtTelefono.requestFocus();
+            } else if (txtTelefono.getText().length() < 9 || txtTelefono.getText().length() > 10) {
+                JOptionPane.showMessageDialog(null, "El número de cifras del número de teléfono es incorrecto");
                 txtTelefono.requestFocus();
             } else if (txtDireccion.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ingrese la dirección de la oficina");
@@ -75,7 +78,10 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(null, "OFICINA GUARDADA CORRECTAMENTE");
+                    desactivarBotones();
+                    desactivarTextos();
                     limpiarTextos();
+                    CargarTablaOficinas("");
                 }
 
             }
@@ -90,46 +96,39 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtTelefono.setText(null);
         txtDireccion.setText(null);
     }
-    
-    private void bloquearTextos() {
-        txtNombreOficina.setEnabled(false);
-        txtUbicacion.setEnabled(false);
-        txtTelefono.setEnabled(false);
-        txtDireccion.setEnabled(false);
-    }
-    
+
     private void activarTextos() {
         txtNombreOficina.setEnabled(true);
         txtUbicacion.setEnabled(true);
         txtTelefono.setEnabled(true);
         txtDireccion.setEnabled(true);
     }
-    
+
     public void desactivarTextos() {
         txtNombreOficina.setEnabled(false);
         txtUbicacion.setEnabled(false);
         txtTelefono.setEnabled(false);
         txtDireccion.setEnabled(false);
     }
-    
+
     private void activarBotonesNuevo() {
         jButton_Nuevo.setEnabled(false);
         jButton_Guardar.setEnabled(true);
         jButton_Actualizar.setEnabled(false);
         jButton_Cancelar.setEnabled(true);
-        jButton_Eliminar.setEnabled(false); 
+        jButton_Eliminar.setEnabled(false);
         jButton_Salir.setEnabled(false);
     }
-    
+
     public void desactivarBotones() {
         jButton_Nuevo.setEnabled(true);
         jButton_Guardar.setEnabled(false);
         jButton_Actualizar.setEnabled(false);
         jButton_Cancelar.setEnabled(false);
-        jButton_Eliminar.setEnabled(false);       
+        jButton_Eliminar.setEnabled(false);
         jButton_Salir.setEnabled(true);
     }
-    
+
     public void botonesActualizar() {
         jButton_Nuevo.setEnabled(false);
         jButton_Guardar.setEnabled(false);
@@ -246,65 +245,59 @@ public class IngresoOficinas extends javax.swing.JFrame {
         }
         return true;
     }
-    
-    
+
     private void cargarModificarTabla() {
         Tabla_Oficina.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             //Override cuando se sobrecarga un metodo o sobrecarga de valores ---- se lo pone con el obejtivo de liberar memoria
             public void valueChanged(ListSelectionEvent e) {
                 if (Tabla_Oficina.getSelectedRow() != -1) {
-                    activarTextos();    
+                    activarTextos();
                     botonesActualizar();
                     int fila = Tabla_Oficina.getSelectedRow();
-                    codigoOficinaTabla= Tabla_Oficina.getValueAt(fila, 0).toString().trim();
+                    codigoOficinaTabla = Tabla_Oficina.getValueAt(fila, 0).toString().trim();
                     //trim para los espacios en blanco                                       
                     txtNombreOficina.setText(Tabla_Oficina.getValueAt(fila, 1).toString().trim());
                     txtUbicacion.setText(Tabla_Oficina.getValueAt(fila, 2).toString().trim());
                     txtTelefono.setText(Tabla_Oficina.getValueAt(fila, 3).toString().trim());
                     txtDireccion.setText(Tabla_Oficina.getValueAt(fila, 4).toString().trim());
-                                        
+
                 }
             }
         });
-    }
+    } 
 
-    
-//    private void eliminarOficina() {
-//        if (JOptionPane.showConfirmDialog(new JInternalFrame(),
-//                "¿ ESTA SEGURO DE BORRAR EL REGISTRO DE OFICINA ?",
-//                "Ventana Borrar",
-//                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//            boolean cond1, cond2;
-//            if (obtCodigoOficina(txtUbicacion.getText(), txtDireccion.getText())) {
-//                try {
-//                    Conexion cc = new Conexion();
-//                    Connection cn = cc.conexion();
-//
-//                    String sql = "";
-//                    sql = "update OFICINAS set ESTADO = 'N' where COD_OFI='" + txtPlaca.getText() + "'";
-//                    PreparedStatement psd = cn.prepareStatement(sql);
-//                    int n = psd.executeUpdate();
-//                    if (n > 0) {
-//                        JOptionPane.showMessageDialog(this, "REGISTRO ELIMINADO . . . . !");
-//                        CargarTablaAutos("");
-//                        limpiarTextos();
-//                        desactivarTextos();
-//                        desactivarBotones();
-//                        cargarModelo();
-//                        jcbxMarca.setSelectedIndex(0);
-//                        ComboMarcaTabla();
-//                    }
-//                } catch (SQLException ex) {
-//                    JOptionPane.showMessageDialog(this, ex);
-//                }
-//
-//            } else {
-//                JOptionPane.showMessageDialog(null, "NO SE PUEDE ELIMINAR EL REGISTRO . . . !"
-//                        + "PRIMERO DEBE ELIMINAR LAS FILAS DEPENDIENTES DE LA TABLA VIAJES.");
-//            }
-//        }
-//    }
+    private void eliminarOficina() {
+        if (JOptionPane.showConfirmDialog(new JInternalFrame(),
+                "¿ ESTA SEGURO DE BORRAR EL REGISTRO DE OFICINA ?",
+                "Ventana Borrar",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (condEliOfi1(codigoOficinaTabla) && condEliOfi2(codigoOficinaTabla)) {
+                try {
+                    Conexion cc = new Conexion();
+                    Connection cn = cc.conexion();
+
+                    String sql = "";
+                    sql = "update OFICINAS set ESTADO = 'N' where COD_OFI='" + codigoOficinaTabla + "'";
+                    PreparedStatement psd = cn.prepareStatement(sql);
+                    int n = psd.executeUpdate();
+                    if (n > 0) {
+                        JOptionPane.showMessageDialog(this, "REGISTRO ELIMINADO . . . . !");
+                        CargarTablaOficinas("");
+                        limpiarTextos();
+                        desactivarTextos();
+                        desactivarBotones();
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "NO SE PUEDE ELIMINAR EL REGISTRO . . . ! "
+                        + "PRIMERO DEBE ELIMINAR LAS FILAS DEPENDIENTES DE LA TABLA OFICINA !");
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -372,6 +365,11 @@ public class IngresoOficinas extends javax.swing.JFrame {
             }
         });
 
+        txtTelefono.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTelefonoFocusLost(evt);
+            }
+        });
         txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtTelefonoKeyTyped(evt);
@@ -639,7 +637,6 @@ public class IngresoOficinas extends javax.swing.JFrame {
 
     private void jButton_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_GuardarActionPerformed
         guardarOficina();
-        bloquearTextos();
     }//GEN-LAST:event_jButton_GuardarActionPerformed
 
     private void txtNombreOficinaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreOficinaKeyTyped
@@ -696,7 +693,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_ActualizarActionPerformed
 
     private void jButton_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_EliminarActionPerformed
-//        eliminarOficina();
+        eliminarOficina();
     }//GEN-LAST:event_jButton_EliminarActionPerformed
 
     private void jButton_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NuevoActionPerformed
@@ -708,9 +705,13 @@ public class IngresoOficinas extends javax.swing.JFrame {
     private void jButton_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CancelarActionPerformed
         limpiarTextos();
         desactivarTextos();
-        desactivarBotones();        
+        desactivarBotones();
         Tabla_Oficina.clearSelection();
     }//GEN-LAST:event_jButton_CancelarActionPerformed
+
+    private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
+
+    }//GEN-LAST:event_txtTelefonoFocusLost
 
     /**
      * @param args the command line arguments
