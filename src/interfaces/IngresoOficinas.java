@@ -87,7 +87,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         }
     }
 
-    public void limpiarTextos() {
+    private void limpiarTextos() {
         txtNombreOficina.setText(null);
         txtUbicacion.setText(null);
         txtTelefono.setText(null);
@@ -101,7 +101,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtDireccion.setEnabled(true);
     }
 
-    public void desactivarTextos() {
+    private void desactivarTextos() {
         txtNombreOficina.setEnabled(false);
         txtUbicacion.setEnabled(false);
         txtTelefono.setEnabled(false);
@@ -117,7 +117,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(false);
     }
 
-    public void desactivarBotones() {
+    private void desactivarBotones() {
         jButton_Nuevo.setEnabled(true);
         jButton_Guardar.setEnabled(false);
         jButton_Actualizar.setEnabled(false);
@@ -126,7 +126,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(true);
     }
 
-    public void botonesActualizar() {
+    private void botonesActualizar() {
         jButton_Nuevo.setEnabled(false);
         jButton_Guardar.setEnabled(false);
         jButton_Actualizar.setEnabled(true);
@@ -135,7 +135,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(true);
     }
 
-    public void CargarTablaOficinas(String dato) {
+    private void CargarTablaOficinas(String dato) {
         try {
             String[] titulos = {"CODIGO", "NOMBRE", "UBICACIÓN", "TELÉFONO", "DIRECCIÓN"};
             String[] registros = new String[5];
