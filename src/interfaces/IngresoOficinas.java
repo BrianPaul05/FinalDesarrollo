@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DELL GAMER
  */
-public class IngresoOficinas extends javax.swing.JFrame {
+public class IngresoOficinas extends javax.swing.JInternalFrame {
 
     DefaultTableModel model;
     String codigoOficinaTabla;
@@ -34,7 +34,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
      */
     public IngresoOficinas() {
         initComponents();
-        setLocationRelativeTo(this);
+//        setLocationRelativeTo(this);
         PlaceHolder holder = new PlaceHolder(txtTelefono, "Teléfono con el codigo de la ciudad");
         CargarTablaOficinas("");
         Tabla_Oficina.getTableHeader().setReorderingAllowed(false);
@@ -495,6 +495,11 @@ public class IngresoOficinas extends javax.swing.JFrame {
 
         jButton_Salir.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jButton_Salir.setText("Salir");
+        jButton_Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_SalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -749,6 +754,10 @@ public class IngresoOficinas extends javax.swing.JFrame {
     private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
 
     }//GEN-LAST:event_txtTelefonoFocusLost
+
+    private void jButton_SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton_SalirActionPerformed
 
     /**
      * @param args the command line arguments

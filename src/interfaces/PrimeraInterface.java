@@ -749,7 +749,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void oficinasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oficinasActionPerformed
         // TODO add your handling code here:
-        Oficina o = new Oficina();
+        IngresoOficinas o = new IngresoOficinas();
         principal.add(o);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = o.getSize();
