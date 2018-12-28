@@ -31,7 +31,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoEmpleado
      */
-   DefaultTableModel modelo;
+    DefaultTableModel modelo;
 
     public IngresoEmpleado() {
         initComponents();
@@ -44,16 +44,15 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }
 
-    public int edad() {
-        Calendar fecha = new GregorianCalendar();
-
-        int anio = fecha.get(Calendar.YEAR);
-        int mes = fecha.get(Calendar.MONTH);
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-        // System.out.println(anio+ " " + mes+ " "+ dia );
-        return Integer.valueOf(anio + " " + mes + " " + dia);
-    }
-
+//    public int edad() {
+//        Calendar fecha = new GregorianCalendar();
+//
+//        int anio = fecha.get(Calendar.YEAR);
+//        int mes = fecha.get(Calendar.MONTH);
+//        int dia = fecha.get(Calendar.DAY_OF_MONTH);
+//        // System.out.println(anio+ " " + mes+ " "+ dia );
+//        return Integer.valueOf(anio + " " + mes + " " + dia);
+//    }
     public void borrar() throws SQLException {
 
         if (JOptionPane.showConfirmDialog(new JInternalFrame(), "Estas seguro de borar el  registro", "Ventana Borrar",
@@ -100,8 +99,9 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
         return dato1 + " " + dato2;
     }
- public String cargarClave() {
-       String dato="";
+
+    public String cargarClave() {
+        String dato = "";
         try {
 
             String sql = "";
@@ -114,7 +114,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 //codmar.add(rs.getString("MAR_COD"));
                 dato = rs.getString("contrasena");
-              
 
             }
 
@@ -125,6 +124,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
         return dato;
     }
+
     public Date cargarFecha(String dato) {
         Date fecha = null;
         try {
@@ -265,6 +265,13 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         return fecha;
     }
 
+    public int edadPesonal() {
+        Calendar cal = Calendar.getInstance();
+        String year = Integer.toString(jdcNacimiento.getCalendar().get(Calendar.YEAR));
+        int anioActual = cal.get(Calendar.YEAR);
+        return (anioActual - Integer.valueOf(year));
+    }
+
     public void actualizarPersonal() throws ClassNotFoundException {
         if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
@@ -274,6 +281,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Telefono Incorrecto");
         } else if (cbxEmpleado.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado");
+        } else if (txtClave.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
         } else {
 
             try {
@@ -301,10 +310,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
     }
 
-    public void guardarPersonal() throws ClassNotFoundException {
+     public void guardarPersonal() throws ClassNotFoundException {
         String estado = "S";
         if (txtCedula.getText().length() < 10) {
-            JOptionPane.showMessageDialog(null, "Cédula Incorrecta");
+            JOptionPane.showMessageDialog(null, "Cédula Incorrecta..");
             txtCedula.requestFocus();
         } else if (txtNombre.getText().isEmpty() || !txtNombre.getText().contains(" ")) {
             JOptionPane.showMessageDialog(null, "Ingrese Nombres...");
@@ -312,16 +321,20 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Ingrese Apellidos...");
         } else if (jdcNacimiento.getCalendar() == null) {
             JOptionPane.showMessageDialog(null, "Falta Fecha Nacimiento...");
+        } else if (edadPesonal() < 18) {
+            JOptionPane.showMessageDialog(null, "Debe ser Mayor de Edad...");
         } else if (jdcIngreso.getCalendar() == null) {
             JOptionPane.showMessageDialog(null, "Falta Fecha de Ingreso...");
         } else if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
         } else if (txtCorreo.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese Correo");
+            JOptionPane.showMessageDialog(null, "Ingrese Correo...");
         } else if (txtTelefono.getText().isEmpty() || txtTelefono.getText().length() < 10) {
-            JOptionPane.showMessageDialog(null, "Telefono Incorrecto");
+            JOptionPane.showMessageDialog(null, "Telefono Incorrecto...");
         } else if (cbxEmpleado.getSelectedItem().equals("SELECCIONE")) {
-            JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado");
+            JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado..");
+        } else if (txtClave.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
         } else {
 
             try {
@@ -351,7 +364,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
                 sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
-              + " values('" +cedula +"','" +nom1 +"','" +nom2 +"','" +ape1 +"','" +ape2 +"','" +fec2 +"','" +fec1 +"','" +direccion +"','" +id_tipo_personal +"','" +telefono +"','" +mail +"','" +estado +"','" +clave +"')";
+                        + " values('" + cedula + "','" + nom1 + "','" + nom2 + "','" + ape1 + "','" + ape2 + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + clave + "')";
                 PreparedStatement psd = cn.prepareStatement(sql);
 
                 int n = psd.executeUpdate();
@@ -359,6 +372,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
                 }
+                limpiarCampos();
+                bloquearCampos();
                 cn.close();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -468,7 +483,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(false);
         txtClave.setEnabled(true);
     }
-  
 
     public void soloNumeros(java.awt.event.KeyEvent evt) {
         char c;
@@ -928,28 +942,28 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void txtClaveKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveKeyTyped
-        if(txtClave.getPassword().length>=4){
+        if (txtClave.getPassword().length >= 4) {
             JOptionPane.showMessageDialog(this, "Error Máximo 4 Caracteres");
             evt.consume();
-        }  
+        }
     }//GEN-LAST:event_txtClaveKeyTyped
 
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
-        if(txtCedula.getText().length()>=10){
+        if (txtCedula.getText().length() >= 10) {
             JOptionPane.showMessageDialog(this, "Error Máximo 10 Caracteres");
             evt.consume();
         }
         soloNumeros(evt);
-        
+
     }//GEN-LAST:event_txtCedulaKeyTyped
 
     private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
-       
-        if(txtTelefono.getText().length()>=10){
+
+        if (txtTelefono.getText().length() >= 10) {
             JOptionPane.showMessageDialog(this, "Error Máximo 10 Caracteres");
             evt.consume();
         }
-         soloNumeros(evt);
+        soloNumeros(evt);
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
     /**
