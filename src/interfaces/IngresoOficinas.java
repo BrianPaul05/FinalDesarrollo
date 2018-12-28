@@ -15,12 +15,15 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DELL GAMER
  */
 public class IngresoOficinas extends javax.swing.JFrame {
+
+    DefaultTableModel model;
 
     /**
      * Creates new form IngresoClientes
@@ -29,13 +32,15 @@ public class IngresoOficinas extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(this);
         PlaceHolder holder = new PlaceHolder(txtTelefono, "Teléfono con el codigo de la ciudad");
+        CargarTablaOficinas("");
+        Tabla_Oficina.getTableHeader().setReorderingAllowed(false);
+        Tabla_Oficina.getTableHeader().setResizingAllowed(false);
     }
 
     private void guardarOficina() {
         try {
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
-            
 
             if (txtNombreOficina.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ingrese el nombre de la oficina");
@@ -54,7 +59,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 txtDireccion.requestFocus();
             } else {
                 String sql = "INSERT INTO OFICINAS (NOM_OFI, UBICACION, TELEFONO, ESTADO, DIRECCION) VALUES(?,?,?,?,?)";
-                PreparedStatement psd = cn.prepareStatement(sql);                
+                PreparedStatement psd = cn.prepareStatement(sql);
                 psd.setString(1, txtNombreOficina.getText());
                 psd.setString(2, txtUbicacion.getText());
                 psd.setString(3, txtTelefono.getText());
@@ -80,6 +85,56 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtDireccion.setText(null);
     }
 
+    public void CargarTablaOficinas(String dato) {
+        try {
+            String[] titulos = {"CODIGO", "NOMBRE", "UBICACIÓN", "TELÉFONO", "DIRECCIÓN"};
+            String[] registros = new String[5];
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "";
+            sql = "SELECT COD_OFI, "
+                    + "NOM_OFI, "
+                    + "UBICACION, "
+                    + "TELEFONO, "
+                    + "DIRECCION "
+                    + "FROM OFICINAS "
+                    + "WHERE UBICACION LIKE'%" + dato + "%' "
+                    + "AND ESTADO = 'S'";
+            model = new DefaultTableModel(null, titulos) {
+                @Override
+                public boolean isCellEditable(int filas, int columnas) {
+                    if (columnas < 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+            };
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                registros[0] = rs.getString("COD_OFI");
+                registros[1] = rs.getString("NOM_OFI");
+                registros[2] = rs.getString("UBICACION");
+                registros[3] = rs.getString("TELEFONO");
+                registros[4] = rs.getString("DIRECCION");
+                model.addRow(registros);
+            }
+            Tabla_Oficina.setModel(model);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    private void actualizarOficina() {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    private void eliminarOficina() {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,11 +154,17 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtUbicacion = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton1_Guardar = new javax.swing.JButton();
-        jButton_Cancelar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tabla_Oficina = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        txtBuscar = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        jButton_Cancelar = new javax.swing.JButton();
+        jButton1_Guardar = new javax.swing.JButton();
+        jButton_Actualizar = new javax.swing.JButton();
+        jButton_Eliminar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
 
@@ -147,17 +208,6 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setText("Teléfono :");
 
-        jButton1_Guardar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jButton1_Guardar.setText("Guardar");
-        jButton1_Guardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1_GuardarActionPerformed(evt);
-            }
-        });
-
-        jButton_Cancelar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jButton_Cancelar.setText("Cancelar");
-
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setText("Dirección :");
 
@@ -167,38 +217,125 @@ public class IngresoOficinas extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        Tabla_Oficina.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(Tabla_Oficina);
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel5.setText("Buscar por ubicación");
+
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
+            }
+        });
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButton_Cancelar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Cancelar.setText("Cancelar");
+
+        jButton1_Guardar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton1_Guardar.setText("Guardar");
+        jButton1_Guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1_GuardarActionPerformed(evt);
+            }
+        });
+
+        jButton_Actualizar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Actualizar.setText("Actualizar");
+        jButton_Actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ActualizarActionPerformed(evt);
+            }
+        });
+
+        jButton_Eliminar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Eliminar.setText("Eliminar");
+        jButton_Eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_EliminarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jButton_Cancelar)
+                .addGap(65, 65, 65)
+                .addComponent(jButton1_Guardar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(jButton_Actualizar)
+                .addGap(86, 86, 86)
+                .addComponent(jButton_Eliminar)
+                .addGap(59, 59, 59))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_Actualizar)
+                    .addComponent(jButton1_Guardar)
+                    .addComponent(jButton_Cancelar)
+                    .addComponent(jButton_Eliminar))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton_Cancelar)
-                        .addGap(43, 43, 43)
-                        .addComponent(jButton1_Guardar)
-                        .addGap(46, 46, 46)
-                        .addComponent(jButton1))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                                    .addComponent(txtNombreOficina))
+                                .addGap(29, 29, 29)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel1))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                                    .addComponent(txtDireccion)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-                            .addComponent(txtNombreOficina))
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-                            .addComponent(txtDireccion))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,12 +352,15 @@ public class IngresoOficinas extends javax.swing.JFrame {
                     .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_Cancelar)
-                    .addComponent(jButton1_Guardar)
-                    .addComponent(jButton1))
-                .addContainerGap(165, Short.MAX_VALUE))
+                    .addComponent(jLabel5)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         txtTelefono.getAccessibleContext().setAccessibleName("");
@@ -262,29 +402,30 @@ public class IngresoOficinas extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(320, 320, 320)
-                .addComponent(jLabel6)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(259, 259, 259))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(319, 319, 319)
+                        .addComponent(jLabel6)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(273, 273, 273))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -295,7 +436,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -341,6 +482,27 @@ public class IngresoOficinas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtDireccionKeyTyped
 
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        CargarTablaOficinas(txtBuscar.getText());
+    }//GEN-LAST:event_txtBuscarKeyReleased
+
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        char c = evt.getKeyChar();
+        if (Character.isLowerCase(c)) {
+            String cad = ("" + c).toUpperCase();
+            c = cad.charAt(0);
+            evt.setKeyChar(c);
+        }
+    }//GEN-LAST:event_txtBuscarKeyTyped
+
+    private void jButton_ActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ActualizarActionPerformed
+        actualizarOficina();
+    }//GEN-LAST:event_jButton_ActualizarActionPerformed
+
+    private void jButton_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_EliminarActionPerformed
+        eliminarOficina();
+    }//GEN-LAST:event_jButton_EliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -378,19 +540,25 @@ public class IngresoOficinas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTable Tabla_Oficina;
     private javax.swing.JButton jButton1_Guardar;
+    private javax.swing.JButton jButton_Actualizar;
     private javax.swing.JButton jButton_Cancelar;
+    private javax.swing.JButton jButton_Eliminar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtNombreOficina;
     private javax.swing.JTextField txtTelefono;
