@@ -120,7 +120,7 @@ public class personalOficina extends javax.swing.JFrame {
                 ubicacion=cbxUbicacion.getSelectedItem().toString();
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "insert into personal_oficina(COD_PER_OFI,CED_PERSONAL_PER,COD_OFI_PER) values(?,?,?)";
+                sql = "insert into personal_oficina(CED_PERSONAL_PER,COD_OFI_PER) values(?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
                 psd.setString(1, cedula);
                 psd.setString(2, ciudad);
