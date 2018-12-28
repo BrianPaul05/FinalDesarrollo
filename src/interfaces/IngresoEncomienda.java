@@ -49,33 +49,9 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     }
 
     private void desactivarTextos() {
-        txtFechaEmision.setEnabled(false);
-        txtN_Documento.setEnabled(false);
+        txtFechaEmision.setEnabled(false);        
         txtOrigen.setEnabled(false);
-    }
-
-    private void cargarNumDocumento() {
-        try {
-            Conexion cc = new Conexion();
-            Connection cn = cc.conexion();
-
-            String sql = "SELECT ENC.NEXTVAL FROM DUAL";
-            Statement psd2 = cn.createStatement();
-            ResultSet rs2 = psd2.executeQuery(sql);
-            String cod = "";
-            while (rs2.next()) {
-                cod = rs2.getString("NEXTVAL");
-            }
-
-            if (cod.isEmpty()) {
-                txtN_Documento.setText("1");
-            } else {
-                txtN_Documento.setText(cod);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(IngresoEncomienda.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    }    
 
     public String obtenerFechaActual() {
         String dia, mes, año, fecha;
@@ -222,7 +198,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     }
 
     private void guardarEncomienda() {
-
+        
         if (txtRemitente.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese la cédula del remitente");
             txtRemitente.requestFocus();
@@ -232,26 +208,35 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         } else if (txtCosto.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese el costo");
             txtDestinatario.requestFocus();
-        } else {
+        } else if(jDateChooser_FechaLlegada.getDate().before(jDateChooser_FechaSalida.getDate())){
+            JOptionPane.showMessageDialog(null, "La fecha de llegada es incorrecta . . . !");
+        }else{
+            String contenido;
+            if (txtContenido.getText().isEmpty()) {
+                contenido = "NINGUNA";
+            } else {
+                contenido = txtContenido.getText();
+            }
+            
             try {
                 Conexion cc = new Conexion();
-                Connection cn = cc.conexion();
+                Connection cn = cc.conexion();                                
 
-                String sql = "INSERTO INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2,FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2, FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
-
-                psd.setString(1, txtCodigoViaje.getText());
+                int c=Integer.valueOf(codParaEncomienda);
+                psd.setInt(1, c);
                 psd.setString(2, txtRemitente.getText());
                 psd.setString(3, txtDestinatario.getText());
-                psd.setString(4, txtCosto.getText());
-                psd.setString(5, txtContenido.getText());
+                psd.setInt(4, Integer.valueOf(txtCosto.getText()));
+                psd.setString(5, contenido);
                 String estEnviado;
                 if (jCheckBox_EstadoEnviado.isSelected()) {
                     estEnviado = "ENVIADO";
                 } else {
                     estEnviado = "NO ENVIADO";
                 }
-                psd.setString(7, estEnviado);
+                psd.setString(6, estEnviado);
 
                 String estLlegada = null;
                 if (jCheckBox_EstadoEntregado.isSelected()) {
@@ -260,17 +245,17 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                     estLlegada = "NO ENTREGADO";
                 }
 
-                psd.setString(8, estLlegada);
+                psd.setString(7, estLlegada);
                 boolean condFechaLlegada = comprobarFechaLlegada(jDateChooser_FechaSalida.getDate(), jDateChooser_FechaLlegada.getDate());
                 if (condFechaLlegada) {
-                    psd.setDate(9, convetirdorFecha(jDateChooser_FechaLlegada.getDate()));
+                    psd.setDate(8, convetirdorFecha(jDateChooser_FechaLlegada.getDate()));
                 } else {
                     JOptionPane.showMessageDialog(null, "LA FECHA DE LLEGADA ES INCORRECTA . . . !");
                 }
 
-                String hora = txtHora + "" + txtMinuto + "" + txtSegundo;
+                String hora = txtHora.getText() + "" + txtMinuto.getText() + "" + txtSegundo.getText();
 
-                psd.setString(10, hora);
+                psd.setString(9, hora);
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(null, "Encomienda guardada");
@@ -295,9 +280,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jEditorPane1 = new javax.swing.JEditorPane();
         PanelPrincipal = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtN_Documento = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txtRemitente = new javax.swing.JTextField();
@@ -310,8 +293,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jComboBox_Destino = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtContenido = new javax.swing.JTextArea();
         jCheckBox_EstadoEnviado = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -332,6 +313,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         txtOrigen = new javax.swing.JTextField();
         jComboBox_HoraSalida = new javax.swing.JComboBox<>();
         jDateChooser_FechaSalida = new com.toedter.calendar.JDateChooser();
+        txtContenido = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
 
         jScrollPane1.setViewportView(jEditorPane1);
@@ -342,9 +324,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel1.setText("ENCOMIENDAS");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("N.- Documento");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Remitente");
@@ -379,10 +358,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel11.setText("Contenido");
-
-        txtContenido.setColumns(20);
-        txtContenido.setRows(5);
-        jScrollPane2.setViewportView(txtContenido);
 
         jCheckBox_EstadoEnviado.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox_EstadoEnviado.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
@@ -483,7 +458,7 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(btnNuevo3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
                 .addComponent(btnGuardar3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
                 .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -525,38 +500,33 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                         .addContainerGap()
                         .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                        .addGap(267, 267, 267)
-                        .addComponent(jLabel1))
-                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel5))
-                        .addGap(24, 24, 24)
                         .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                                .addGap(267, 267, 267)
+                                .addComponent(jLabel1))
+                            .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                                .addGap(26, 26, 26)
                                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtDestinatario)
-                                        .addComponent(txtN_Documento)
-                                        .addComponent(txtRemitente, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtFechaEmision))
-                                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                        .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel13)))
-                                .addGap(67, 67, 67)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel5))
+                                .addGap(32, 32, 32)
                                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtDestinatario)
+                                            .addComponent(txtRemitente, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                            .addComponent(txtFechaEmision)
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                                .addComponent(jLabel10)
-                                                .addGap(262, 262, 262)
-                                                .addComponent(txtCodigoViaje, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                                                .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel13))
+                                            .addComponent(txtCodigoViaje))
+                                        .addGap(204, 204, 204)
+                                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel10)
                                             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                                                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel4)
@@ -567,15 +537,13 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                                                     .addComponent(jDateChooser_FechaSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                     .addComponent(txtOrigen)
                                                     .addComponent(jComboBox_Destino, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jComboBox_HoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                        .addGap(52, 52, 52))
+                                                    .addComponent(jComboBox_HoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(jCheckBox_EstadoEnviado)))
                                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                                        .addComponent(jCheckBox_EstadoEnviado)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(179, 179, 179)
+                                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtContenido, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         PanelPrincipalLayout.setVerticalGroup(
@@ -584,17 +552,16 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1)
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtN_Documento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
-                        .addGap(17, 17, 17))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPrincipalLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                        .addGap(18, 18, 18))
+                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtCodigoViaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addGap(20, 20, 20)))
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtRemitente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -610,7 +577,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtCodigoViaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)
                         .addComponent(txtFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -626,14 +592,11 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                     .addGroup(PanelPrincipalLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jCheckBox_EstadoEnviado)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(97, 97, 97))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPrincipalLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(jLabel11)
+                    .addComponent(txtContenido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(94, 94, 94)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -758,7 +721,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -770,15 +732,13 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField txtCodigoViaje;
-    private javax.swing.JTextArea txtContenido;
+    private javax.swing.JTextField txtContenido;
     private javax.swing.JTextField txtCosto;
     private javax.swing.JTextField txtDestinatario;
     private javax.swing.JTextField txtFechaEmision;
     private javax.swing.JTextField txtHora;
     private javax.swing.JTextField txtMinuto;
-    private javax.swing.JTextField txtN_Documento;
     private javax.swing.JTextField txtOrigen;
     private javax.swing.JTextField txtRemitente;
     private javax.swing.JTextField txtSegundo;
