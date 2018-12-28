@@ -2,6 +2,7 @@ package Conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import javax.swing.JOptionPane;
 
 public class Conexion {
 
@@ -15,7 +16,7 @@ public class Conexion {
         try {
             Class.forName("org.postgresql.Driver");
             conectar = DriverManager.getConnection(url, user, pwd);
-
+            //JOptionPane.showMessageDialog(null, "okk");
         } catch (Exception e) {
             e.printStackTrace();
         }
