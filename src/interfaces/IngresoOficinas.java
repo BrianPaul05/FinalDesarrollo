@@ -14,7 +14,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 public class IngresoOficinas extends javax.swing.JFrame {
 
     DefaultTableModel model;
+    String codigoOficinaTabla;
 
     /**
      * Creates new form IngresoClientes
@@ -35,6 +39,8 @@ public class IngresoOficinas extends javax.swing.JFrame {
         CargarTablaOficinas("");
         Tabla_Oficina.getTableHeader().setReorderingAllowed(false);
         Tabla_Oficina.getTableHeader().setResizingAllowed(false);
+        cargarModificarTabla();
+        bloquearTextos();
     }
 
     private void guardarOficina() {
@@ -69,7 +75,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(null, "OFICINA GUARDADA CORRECTAMENTE");
-                    limpiarcampos();
+                    limpiarTextos();
                 }
 
             }
@@ -78,11 +84,59 @@ public class IngresoOficinas extends javax.swing.JFrame {
         }
     }
 
-    public void limpiarcampos() {
+    public void limpiarTextos() {
         txtNombreOficina.setText(null);
         txtUbicacion.setText(null);
         txtTelefono.setText(null);
         txtDireccion.setText(null);
+    }
+    
+    private void bloquearTextos() {
+        txtNombreOficina.setEnabled(false);
+        txtUbicacion.setEnabled(false);
+        txtTelefono.setEnabled(false);
+        txtDireccion.setEnabled(false);
+    }
+    
+    private void activarTextos() {
+        txtNombreOficina.setEnabled(true);
+        txtUbicacion.setEnabled(true);
+        txtTelefono.setEnabled(true);
+        txtDireccion.setEnabled(true);
+    }
+    
+    public void desactivarTextos() {
+        txtNombreOficina.setEnabled(false);
+        txtUbicacion.setEnabled(false);
+        txtTelefono.setEnabled(false);
+        txtDireccion.setEnabled(false);
+    }
+    
+    private void activarBotonesNuevo() {
+        jButton_Nuevo.setEnabled(false);
+        jButton_Guardar.setEnabled(true);
+        jButton_Actualizar.setEnabled(false);
+        jButton_Cancelar.setEnabled(true);
+        jButton_Eliminar.setEnabled(false); 
+        jButton_Salir.setEnabled(false);
+    }
+    
+    public void desactivarBotones() {
+        jButton_Nuevo.setEnabled(true);
+        jButton_Guardar.setEnabled(false);
+        jButton_Actualizar.setEnabled(false);
+        jButton_Cancelar.setEnabled(false);
+        jButton_Eliminar.setEnabled(false);       
+        jButton_Salir.setEnabled(true);
+    }
+    
+    public void botonesActualizar() {
+        jButton_Nuevo.setEnabled(false);
+        jButton_Guardar.setEnabled(false);
+        jButton_Actualizar.setEnabled(true);
+        jButton_Cancelar.setEnabled(true);
+        jButton_Eliminar.setEnabled(true);
+        jButton_Salir.setEnabled(true);
     }
 
     public void CargarTablaOficinas(String dato) {
@@ -128,12 +182,129 @@ public class IngresoOficinas extends javax.swing.JFrame {
     }
 
     private void actualizarOficina() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException("Not supported yet.");
+
     }
 
-    private void eliminarOficina() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    private boolean condEliOfi1(String codOficina) {
+        /*
+        Metodo que permite verificar si la oficina tiene o no tiene filas hijas ,
+        en la tabla PERSONAL_OFICINA sino NO tiene filas hijas elimino el registro
+        DE LA TABLA OFICINA, caso contrario NO.
+         */
+        int pos = 0;
+        try {
+            String sql = "";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            sql = "SELECT * "
+                    + "FROM PERSONAL_OFICINA "
+                    + "WHERE COD_OFI_PER = '" + codOficina + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                pos = pos + 1;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+        if (pos > 0) {
+            return false;
+        }
+        return true;
     }
+
+    private boolean condEliOfi2(String codOficina) {
+        /*
+        Metodo que permite verificar si la oficina tiene o no tiene filas hijas ,
+        en la tabla RUTAS sino NO tiene filas hijas elimino el registro
+        DE LA TABLA OFICINA, caso contrario NO.
+         */
+        int pos = 0;
+        try {
+            String sql = "";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            sql = "SELECT * "
+                    + "FROM RUTAS "
+                    + "WHERE COD_OFI_ORI = '" + codOficina + "' "
+                    + "OR COD_OFI_DES = '" + codOficina + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                pos = pos + 1;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+        if (pos > 0) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    private void cargarModificarTabla() {
+        Tabla_Oficina.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            //Override cuando se sobrecarga un metodo o sobrecarga de valores ---- se lo pone con el obejtivo de liberar memoria
+            public void valueChanged(ListSelectionEvent e) {
+                if (Tabla_Oficina.getSelectedRow() != -1) {
+                    activarTextos();    
+                    botonesActualizar();
+                    int fila = Tabla_Oficina.getSelectedRow();
+                    codigoOficinaTabla= Tabla_Oficina.getValueAt(fila, 0).toString().trim();
+                    //trim para los espacios en blanco                                       
+                    txtNombreOficina.setText(Tabla_Oficina.getValueAt(fila, 1).toString().trim());
+                    txtUbicacion.setText(Tabla_Oficina.getValueAt(fila, 2).toString().trim());
+                    txtTelefono.setText(Tabla_Oficina.getValueAt(fila, 3).toString().trim());
+                    txtDireccion.setText(Tabla_Oficina.getValueAt(fila, 4).toString().trim());
+                                        
+                }
+            }
+        });
+    }
+
+    
+//    private void eliminarOficina() {
+//        if (JOptionPane.showConfirmDialog(new JInternalFrame(),
+//                "¿ ESTA SEGURO DE BORRAR EL REGISTRO DE OFICINA ?",
+//                "Ventana Borrar",
+//                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+//            boolean cond1, cond2;
+//            if (obtCodigoOficina(txtUbicacion.getText(), txtDireccion.getText())) {
+//                try {
+//                    Conexion cc = new Conexion();
+//                    Connection cn = cc.conexion();
+//
+//                    String sql = "";
+//                    sql = "update OFICINAS set ESTADO = 'N' where COD_OFI='" + txtPlaca.getText() + "'";
+//                    PreparedStatement psd = cn.prepareStatement(sql);
+//                    int n = psd.executeUpdate();
+//                    if (n > 0) {
+//                        JOptionPane.showMessageDialog(this, "REGISTRO ELIMINADO . . . . !");
+//                        CargarTablaAutos("");
+//                        limpiarTextos();
+//                        desactivarTextos();
+//                        desactivarBotones();
+//                        cargarModelo();
+//                        jcbxMarca.setSelectedIndex(0);
+//                        ComboMarcaTabla();
+//                    }
+//                } catch (SQLException ex) {
+//                    JOptionPane.showMessageDialog(this, ex);
+//                }
+//
+//            } else {
+//                JOptionPane.showMessageDialog(null, "NO SE PUEDE ELIMINAR EL REGISTRO . . . !"
+//                        + "PRIMERO DEBE ELIMINAR LAS FILAS DEPENDIENTES DE LA TABLA VIAJES.");
+//            }
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -162,9 +333,11 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtBuscar = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jButton_Cancelar = new javax.swing.JButton();
-        jButton1_Guardar = new javax.swing.JButton();
+        jButton_Guardar = new javax.swing.JButton();
         jButton_Actualizar = new javax.swing.JButton();
         jButton_Eliminar = new javax.swing.JButton();
+        jButton_Nuevo = new javax.swing.JButton();
+        jButton_Salir = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
 
@@ -247,12 +420,17 @@ public class IngresoOficinas extends javax.swing.JFrame {
 
         jButton_Cancelar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jButton_Cancelar.setText("Cancelar");
-
-        jButton1_Guardar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jButton1_Guardar.setText("Guardar");
-        jButton1_Guardar.addActionListener(new java.awt.event.ActionListener() {
+        jButton_Cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1_GuardarActionPerformed(evt);
+                jButton_CancelarActionPerformed(evt);
+            }
+        });
+
+        jButton_Guardar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Guardar.setText("Guardar");
+        jButton_Guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_GuardarActionPerformed(evt);
             }
         });
 
@@ -272,6 +450,17 @@ public class IngresoOficinas extends javax.swing.JFrame {
             }
         });
 
+        jButton_Nuevo.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Nuevo.setText("Nuevo");
+        jButton_Nuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_NuevoActionPerformed(evt);
+            }
+        });
+
+        jButton_Salir.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jButton_Salir.setText("Salir");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -279,13 +468,17 @@ public class IngresoOficinas extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(jButton_Cancelar)
-                .addGap(65, 65, 65)
-                .addComponent(jButton1_Guardar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addComponent(jButton_Nuevo)
+                .addGap(18, 18, 18)
+                .addComponent(jButton_Guardar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addComponent(jButton_Actualizar)
-                .addGap(86, 86, 86)
+                .addGap(18, 18, 18)
                 .addComponent(jButton_Eliminar)
-                .addGap(59, 59, 59))
+                .addGap(18, 18, 18)
+                .addComponent(jButton_Salir)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,9 +486,11 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton_Actualizar)
-                    .addComponent(jButton1_Guardar)
+                    .addComponent(jButton_Guardar)
                     .addComponent(jButton_Cancelar)
-                    .addComponent(jButton_Eliminar))
+                    .addComponent(jButton_Eliminar)
+                    .addComponent(jButton_Nuevo)
+                    .addComponent(jButton_Salir))
                 .addContainerGap())
         );
 
@@ -387,7 +582,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -400,7 +595,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -409,7 +604,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(319, 319, 319)
                         .addComponent(jLabel6)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel7)
@@ -442,9 +637,10 @@ public class IngresoOficinas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1_GuardarActionPerformed
+    private void jButton_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_GuardarActionPerformed
         guardarOficina();
-    }//GEN-LAST:event_jButton1_GuardarActionPerformed
+        bloquearTextos();
+    }//GEN-LAST:event_jButton_GuardarActionPerformed
 
     private void txtNombreOficinaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreOficinaKeyTyped
         char c = evt.getKeyChar();
@@ -500,8 +696,21 @@ public class IngresoOficinas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_ActualizarActionPerformed
 
     private void jButton_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_EliminarActionPerformed
-        eliminarOficina();
+//        eliminarOficina();
     }//GEN-LAST:event_jButton_EliminarActionPerformed
+
+    private void jButton_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NuevoActionPerformed
+        activarBotonesNuevo();
+        activarTextos();
+        limpiarTextos();
+    }//GEN-LAST:event_jButton_NuevoActionPerformed
+
+    private void jButton_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CancelarActionPerformed
+        limpiarTextos();
+        desactivarTextos();
+        desactivarBotones();        
+        Tabla_Oficina.clearSelection();
+    }//GEN-LAST:event_jButton_CancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -541,10 +750,12 @@ public class IngresoOficinas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Tabla_Oficina;
-    private javax.swing.JButton jButton1_Guardar;
     private javax.swing.JButton jButton_Actualizar;
     private javax.swing.JButton jButton_Cancelar;
     private javax.swing.JButton jButton_Eliminar;
+    private javax.swing.JButton jButton_Guardar;
+    private javax.swing.JButton jButton_Nuevo;
+    private javax.swing.JButton jButton_Salir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
