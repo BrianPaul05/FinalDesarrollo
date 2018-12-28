@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DELL GAMER
  */
-public class IngresoOficinas extends javax.swing.JFrame {
+public class IngresoOficinas extends javax.swing.JInternalFrame {
 
     DefaultTableModel model;
     String codigoOficinaTabla;
@@ -34,7 +34,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
      */
     public IngresoOficinas() {
         initComponents();
-        setLocationRelativeTo(this);
+//        setLocationRelativeTo(this);
         PlaceHolder holder = new PlaceHolder(txtTelefono, "Teléfono con el codigo de la ciudad");
         CargarTablaOficinas("");
         Tabla_Oficina.getTableHeader().setReorderingAllowed(false);
@@ -56,9 +56,6 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 txtUbicacion.requestFocus();
             } else if (txtTelefono.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ingrese el telefono de la oficina");
-                txtTelefono.requestFocus();
-            } else if (txtTelefono.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Ingrese un número de teléfono");
                 txtTelefono.requestFocus();
             } else if (txtTelefono.getText().length() < 9 || txtTelefono.getText().length() > 10) {
                 JOptionPane.showMessageDialog(null, "El número de cifras del número de teléfono es incorrecto");
@@ -90,7 +87,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         }
     }
 
-    public void limpiarTextos() {
+    private void limpiarTextos() {
         txtNombreOficina.setText(null);
         txtUbicacion.setText(null);
         txtTelefono.setText(null);
@@ -104,7 +101,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         txtDireccion.setEnabled(true);
     }
 
-    public void desactivarTextos() {
+    private void desactivarTextos() {
         txtNombreOficina.setEnabled(false);
         txtUbicacion.setEnabled(false);
         txtTelefono.setEnabled(false);
@@ -120,7 +117,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(false);
     }
 
-    public void desactivarBotones() {
+    private void desactivarBotones() {
         jButton_Nuevo.setEnabled(true);
         jButton_Guardar.setEnabled(false);
         jButton_Actualizar.setEnabled(false);
@@ -129,7 +126,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(true);
     }
 
-    public void botonesActualizar() {
+    private void botonesActualizar() {
         jButton_Nuevo.setEnabled(false);
         jButton_Guardar.setEnabled(false);
         jButton_Actualizar.setEnabled(true);
@@ -138,7 +135,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
         jButton_Salir.setEnabled(true);
     }
 
-    public void CargarTablaOficinas(String dato) {
+    private void CargarTablaOficinas(String dato) {
         try {
             String[] titulos = {"CODIGO", "NOMBRE", "UBICACIÓN", "TELÉFONO", "DIRECCIÓN"};
             String[] registros = new String[5];
@@ -181,8 +178,48 @@ public class IngresoOficinas extends javax.swing.JFrame {
     }
 
     private void actualizarOficina() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (txtNombreOficina.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre de la oficina");
+            txtNombreOficina.requestFocus();
+        } else if (txtUbicacion.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese la ubicación");
+            txtUbicacion.requestFocus();
+        } else if (txtTelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el teléfono");
+            txtTelefono.requestFocus();
+        } else if (txtTelefono.getText().length() < 9 || txtTelefono.getText().length() > 10) {
+            JOptionPane.showMessageDialog(null, "El número de cifras del número de teléfono es incorrecto");
+            txtTelefono.requestFocus();
+        } else if (txtDireccion.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese una dirección");
+            txtDireccion.requestFocus();
+        } else {
+            try {
 
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                String sql = "";
+
+                sql = "UPDATE OFICINAS set NOM_OFI ='" + txtNombreOficina.getText() + "' "
+                        + ",UBICACION ='" + txtUbicacion.getText() + "' "
+                        + ",TELEFONO ='" + txtTelefono.getText() + "' "
+                        + ",DIRECCION ='" + txtDireccion.getText() + "' "
+                        + " WHERE COD_OFI ='" + codigoOficinaTabla + "'";
+
+                PreparedStatement psd = cn.prepareStatement(sql);
+                int n = psd.executeUpdate();
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(this, "SE ACTUALIZO LA OFICINA.");
+                    desactivarBotones();
+                    desactivarTextos();
+                    limpiarTextos();
+                    CargarTablaOficinas("");
+                }
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
     }
 
     private boolean condEliOfi1(String codOficina) {
@@ -265,7 +302,7 @@ public class IngresoOficinas extends javax.swing.JFrame {
                 }
             }
         });
-    } 
+    }
 
     private void eliminarOficina() {
         if (JOptionPane.showConfirmDialog(new JInternalFrame(),
@@ -458,23 +495,28 @@ public class IngresoOficinas extends javax.swing.JFrame {
 
         jButton_Salir.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jButton_Salir.setText("Salir");
+        jButton_Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_SalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
+                .addContainerGap()
                 .addComponent(jButton_Cancelar)
-                .addGap(27, 27, 27)
+                .addGap(42, 42, 42)
                 .addComponent(jButton_Nuevo)
-                .addGap(18, 18, 18)
+                .addGap(38, 38, 38)
                 .addComponent(jButton_Guardar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jButton_Actualizar)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jButton_Eliminar)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(jButton_Salir)
                 .addContainerGap())
         );
@@ -712,6 +754,10 @@ public class IngresoOficinas extends javax.swing.JFrame {
     private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
 
     }//GEN-LAST:event_txtTelefonoFocusLost
+
+    private void jButton_SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton_SalirActionPerformed
 
     /**
      * @param args the command line arguments
