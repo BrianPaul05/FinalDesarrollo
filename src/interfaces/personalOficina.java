@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -28,11 +31,62 @@ public class personalOficina extends javax.swing.JFrame {
     public personalOficina() {
         initComponents();
         cargarComboCiudadOficina();
-        cargarComboUbicacionOficina();
+        cargarTablaPerOfi();
+        cargarModificar();
+        desactivarBotones();
+        desactivarCampos();
     }
 
-    
-    
+    public void cargarModificar() {
+
+        tblOficinaPer.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                if (tblOficinaPer.getSelectedRow() != -1) {  /// si no esta seleccioando  nada  en la  tabla
+                    //  activarCampos();
+                    //  botonActualizar();
+                    int fila = tblOficinaPer.getSelectedRow();//  tomar la  posicion
+                    txtCedula.setText(tblOficinaPer.getValueAt(fila, 1).toString().trim());
+                    cbxCiudad.setSelectedItem(tblOficinaPer.getValueAt(fila, 2).toString().trim());
+
+                }
+                //  activarCampos();
+            }
+        });
+    }
+
+    DefaultTableModel modelo;
+
+    public void cargarTablaPerOfi() {
+
+        try {
+            String titulos[] = {"CÓDIGO", "CÉDULA", "CIUDAD"};
+            String registro[] = new String[3];
+            modelo = new DefaultTableModel(null, titulos);
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            //String sql = "SELECT * FRM CLIENTES  WHERE EST_CLI='S' and CED_CLI LIKE'%" + dato + "%'";
+            String sql = "SELECT COD_PER_OFI,ced_personal_per,ubicacion\n"
+                    + "from personal_oficina , oficinas \n"
+                    + "where cod_ofi_per = cod_ofi;";
+
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            //  System.out.println(rs);
+            while (rs.next()) {
+                registro[0] = String.valueOf(rs.getInt("COD_PER_OFI"));
+                registro[1] = rs.getString("ced_personal_per");
+                registro[2] = rs.getString("ubicacion");
+                modelo.addRow(registro);
+            }
+
+            tblOficinaPer.setModel(modelo);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+    }
+
     public void cargarComboCiudadOficina() {
 
         try {
@@ -50,95 +104,147 @@ public class personalOficina extends javax.swing.JFrame {
                 cbxCiudad.addItem(personal);
             }
             cn.close();
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
 
     }
-    public void cargarComboUbicacionOficina() {
+//    public void cargarComboUbicacionOficina() {
+//
+//        try {
+//            String personal;
+//            String sql = "";
+//            Conexion cc = new Conexion();
+//            Connection cn = cc.conexion();
+//            sql = "select  DIRECCION from oficinas ";
+//            Statement psd = cn.createStatement();
+//            ResultSet rs = psd.executeQuery(sql);
+//
+//            while (rs.next()) {
+//                //codmar.add(rs.getString("MAR_COD"));
+//                personal = rs.getString("DIRECCION");
+//                cbxUbicacion.addItem(personal);
+//            }
+//            cn.close();
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex);
+//        }
+//                    }
 
-        try {
-            String personal;
-            String sql = "";
-            Conexion cc = new Conexion();
-            Connection cn = cc.conexion();
-            sql = "select  DIRECCION from oficinas ";
-            Statement psd = cn.createStatement();
-            ResultSet rs = psd.executeQuery(sql);
-
-            while (rs.next()) {
-                //codmar.add(rs.getString("MAR_COD"));
-                personal = rs.getString("DIRECCION");
-                cbxUbicacion.addItem(personal);
-            }
-            cn.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-                    }
-    
-    
-     public void borrar() throws SQLException {
+    public void borrar() throws SQLException {
 
         if (JOptionPane.showConfirmDialog(new JInternalFrame(), "Estas seguro de borar el  registro", "Ventana Borrar",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
-            
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
-            String sql = "DELETE FROM PERSONAL_OFICINA WHERE CED_CLI='" + txtCedula.getText() + "'";
+            String sql = "DELETE FROM PERSONAL_OFICINA WHERE CED_PERSONAL_PER ='" + txtCedula.getText() + "'";
             PreparedStatement psd = cn.prepareStatement(sql);
             int n = psd.executeUpdate();
             if (n > 0) {
                 JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
-               // cargarTablaClientes("");
-                //limpiarcampos();
+                cargarTablaPerOfi();
+                limpiarCampos();
             }
 
         }
     }
-    
-     public void guardarPerOficina() throws ClassNotFoundException {
-      
+
+    public String idOficina() throws ClassNotFoundException {
+        String id = " ";
+        try {
+
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "";
+            sql = "SELECT COD_OFI from oficinas where ubicacion= '" + cbxCiudad.getSelectedItem() + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                id = rs.getString("COD_OFI");
+            }
+            cn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //  System.out.println(id);
+        return id;
+
+    }
+
+    public void guardarPerOficina() throws ClassNotFoundException {
+
         if (txtCedula.getText().length() < 10) {
             JOptionPane.showMessageDialog(null, "Cédula Incorrecta");
             txtCedula.requestFocus();
         } else if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja la Ciudad");
-        } else if (cbxUbicacion.getSelectedItem().equals("SELECCIONE")) {
-            JOptionPane.showMessageDialog(null, "Escoja la Ubicación");
         } else {
-
             try {
 
                 String sql = "";
-                String cedula, ciudad, ubicacion;
-
-               
+                String cedula, idOfi;
                 cedula = txtCedula.getText();
-                ciudad=cbxCiudad.getSelectedItem().toString();
-                ubicacion=cbxUbicacion.getSelectedItem().toString();
+                idOfi = idOficina();
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "insert into personal_oficina(CED_PERSONAL_PER,COD_OFI_PER) values(?,?,?)";
+                sql = "insert into personal_oficina(CED_PERSONAL_PER,COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                psd.setString(1, cedula);
-                psd.setString(2, ciudad);
-                psd.setString(3, ubicacion);
-               
-
                 int n = psd.executeUpdate();// ncuantas  filas se inserto
-
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
-
                 }
+                //  cargarTablaPerOfi();
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
         }
     }
+
+    public void limpiarCampos() {
+        txtCedula.setText("");
+        cbxCiudad.setSelectedIndex(0);
+    }
+
+    public void activarBotones() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnSalir.setEnabled(true);
+
+    }
+
+    public void desactivarBotones() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(false);
+        btnSalir.setEnabled(true);
+
+    }
+
+    public void activarCampos() {
+        txtCedula.setEnabled(true);
+        cbxCiudad.setEnabled(true);
+    }
+
+    public void desactivarCampos() {
+        txtCedula.setEnabled(false);
+        cbxCiudad.setEnabled(false);
+    }
+
+    public void soloNumeros(java.awt.event.KeyEvent evt) {
+        char c;
+        c = evt.getKeyChar();
+        if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -164,7 +270,7 @@ public class personalOficina extends javax.swing.JFrame {
         cbxUbicacion = new javax.swing.JComboBox<>();
         cbxCiudad = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tblPerOfi = new javax.swing.JTable(){
+        tblOficinaPer = new javax.swing.JTable(){
             public boolean isCellEditable(int fila , int columna){
                 return false;
             }
@@ -221,12 +327,17 @@ public class personalOficina extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
 
         cbxUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECCIONE" }));
 
         cbxCiudad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECCIONE" }));
 
-        tblPerOfi.setModel(new javax.swing.table.DefaultTableModel(
+        tblOficinaPer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -234,7 +345,7 @@ public class personalOficina extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane4.setViewportView(tblPerOfi);
+        jScrollPane4.setViewportView(tblOficinaPer);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -257,6 +368,11 @@ public class personalOficina extends javax.swing.JFrame {
 
         btnCancelar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnBorrar.setText("Borrar");
@@ -368,20 +484,38 @@ public class personalOficina extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+       limpiarCampos();
+        activarCampos();
+        activarBotones();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPerOficina();
+             limpiarCampos();
+            desactivarCampos();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        // TODO add your handling code here:
+        try {
+            borrar();
+        } catch (SQLException ex) {
+            Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+            limpiarCampos();
+        desactivarBotones();
+       desactivarCampos();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
+        soloNumeros(evt);
+    }//GEN-LAST:event_txtCedulaKeyTyped
 
     /**
      * @param args the command line arguments
@@ -436,7 +570,7 @@ public class personalOficina extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tblClientes;
-    private javax.swing.JTable tblPerOfi;
+    private javax.swing.JTable tblOficinaPer;
     private javax.swing.JFormattedTextField txtCedula;
     // End of variables declaration//GEN-END:variables
 }
