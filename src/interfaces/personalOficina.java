@@ -195,7 +195,7 @@ public class personalOficina extends javax.swing.JFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
                 }
-                //  cargarTablaPerOfi();
+                 cargarTablaPerOfi();
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
