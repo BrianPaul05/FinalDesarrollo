@@ -5,20 +5,320 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Gustavo
  */
 public class Rutas extends javax.swing.JInternalFrame {
-
+    DefaultTableModel modelo;
     /**
      * Creates new form Rutas
      */
     public Rutas() {
         initComponents();
+        cargarOrigen();
+        cargarTabla();
+        limitarLetras(precio, 5);
+        limitarLetras(descripcion, 50);
+        desctivarBotones();
+        desactivarTexto();
+        cargarModificar();
+    }
+    public void activarTexto() {
+        descripcion.setEnabled(true);
+        origen.setEnabled(true);
+        destino.setEnabled(true);
+        precio.setEnabled(true);
+    }
+
+    public void activarBotones() {
+        Nuevo.setEnabled(false);
+        Guardar.setEnabled(true);
+        actualizar.setEnabled(false);
+        Borrar.setEnabled(false);
+        Cancelar.setEnabled(true);
+        Salir.setEnabled(true);
+    }
+
+    public void desactivarTexto() {
+        origen.setEnabled(false);
+        destino.setEnabled(false);
+        precio.setEnabled(false);
+        descripcion.setEnabled(false);
+    }
+
+    public void desctivarBotones() {
+        Nuevo.setEnabled(true);
+        Nuevo.requestFocus();
+        Guardar.setEnabled(false);
+        Borrar.setEnabled(false);
+        actualizar.setEnabled(false);
+        Cancelar.setEnabled(false);
+    }
+
+    private void limpiarcampos() {
+        origen.setSelectedIndex(0);
+        precio.setText("");
+        descripcion.setText("");
+    }
+
+    public void guardarRutas() {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String anio, descrip;
+            float costo;
+            int orige, dest;
+
+            if (origen.getSelectedItem().equals("Selecione...")) {
+                JOptionPane.showMessageDialog(null, "Selecionar origen de la ruta");
+                origen.requestFocus();
+            } else if (destino.getSelectedItem().equals("Selecione...")) {
+                JOptionPane.showMessageDialog(null, "Selecionar destino de la ruta");
+                destino.requestFocus();
+            } else if (precio.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Ingrese el telefono de la oficina");
+                precio.requestFocus();
+            } else {
+                orige = obtenerCodCiudad(origen.getSelectedItem().toString());
+                dest = obtenerCodCiudad(destino.getSelectedItem().toString());
+                costo = Float.valueOf(precio.getText());
+                descrip = descripcion.getText();
+                String sql = "Insert into rutas (COD_OFI_ORI, COD_OFI_DES, PRECIO, DESCRIPCION, ESTADO ) values(?,?,?,?,?)";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                psd.setInt(1, orige);
+                psd.setInt(2, dest);
+                psd.setFloat(3, costo);
+                psd.setString(4, descrip);
+                psd.setString(5, "A");
+                int n = psd.executeUpdate();
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(null, "RUTA GUARDADA CORRECTAMENTE");
+                    limpiarcampos();
+                    desactivarTexto();
+                    desctivarBotones();
+                    cargarTabla();
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al insertar los datos " + ex);
+
+        }
+    }
+
+    public int obtenerCodCiudad(String nombreCiudad) {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "Select cod_ofi FROM oficinas WHERE ubicacion='" + nombreCiudad + "'";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            rs.next();
+            return rs.getInt("cod_ofi");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al obtener el codigo de la ciudad " + ex);
+        }
+        return 0;
+    }
+
+    public void cargarTabla() {
+        Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+        String[] titulos = {"Código", "Origen", "Destino", "Precio", "Descripcion"};
+        modelo = new DefaultTableModel(null, titulos);
+        String[] atributos = new String[5];
+        String sql = "select r.cod_ruta, o.ubicacion as origen, o1.ubicacion as destino, r.precio, r.descripcion \n"
+                + "from rutas r, oficinas o, oficinas o1 \n"
+                + "where r.cod_ofi_ori = o.cod_ofi \n"
+                + "and r.cod_ofi_des = o1.cod_ofi "
+                + "and r.estado = 'A' "
+                + "order by cod_ruta asc";
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                atributos[0] = rs.getString("cod_ruta");
+                atributos[1] = rs.getString("origen");
+                atributos[2] = rs.getString("destino");
+                atributos[3] = rs.getString("precio");
+                atributos[4] = rs.getString("descripcion");
+                modelo.addRow(atributos);
+            }
+            rutas.setModel(modelo);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Eror de ejecucion" + e);
+        }
+    }
+
+    public void cargarDestino() {
+        if (origen.getSelectedItem().equals("Selecione...")) {
+            destino.removeAllItems();
+        } else {
+            try {
+                destino.removeAllItems();
+                Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+                String sql = "Select ubicacion from oficinas where ubicacion <> '" + origen.getSelectedItem() + "'";
+                String nom_ciu;
+                Statement psd = cn.createStatement();
+                ResultSet rs = psd.executeQuery(sql);
+                destino.addItem("Selecione...");
+                while (rs.next()) {
+                    nom_ciu = rs.getString("ubicacion");
+                    destino.addItem(nom_ciu);
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error:" + ex);
+            }
+        }
+    }
+
+    private void botonesActualizar() {
+        Nuevo.setEnabled(false);
+        actualizar.setEnabled(true);
+        Borrar.setEnabled(true);
+        Guardar.setEnabled(false);
+        Cancelar.setEnabled(true);
+    }
+
+    public void cargarModificar() {
+        rutas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                activarTexto();
+                codigo.setEnabled(false);
+                origen.setEnabled(false);
+                destino.setEnabled(false);
+                botonesActualizar();
+                int fila = rutas.getSelectedRow();
+                if (fila != -1) {
+                    codigo.setText(rutas.getValueAt(fila, 0).toString().trim());
+                    origen.setSelectedItem(rutas.getValueAt(fila, 1).toString().trim());
+                    destino.setSelectedItem(rutas.getValueAt(fila, 2));
+                    precio.setText(rutas.getValueAt(fila, 3).toString().trim());
+                    descripcion.setText(rutas.getValueAt(fila, 4).toString());
+                }
+            }
+        });
+    }
+
+    public void modificar() {
+        if (origen.getSelectedItem().equals("Selecione...")) {
+            JOptionPane.showMessageDialog(null, "Selecionar origen de la ruta");
+            origen.requestFocus();
+        } else if (destino.getSelectedItem().equals("Selecione...")) {
+            JOptionPane.showMessageDialog(null, "Selecionar destino de la ruta");
+            destino.requestFocus();
+        } else if (precio.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese el telefono de la oficina");
+            precio.requestFocus();
+        } else {
+            float costo;
+            int cod;
+            String desc;
+            cod = Integer.valueOf(codigo.getText().toString());
+            costo = Float.valueOf(precio.getText());
+            desc = descripcion.getText();
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "update rutas set precio=" + costo + ","
+                    + "descripcion=' " + desc + " ' "
+                    + "where cod_ruta = " + cod + " ";
+            try {
+                PreparedStatement psd = cn.prepareStatement(sql);
+                int n = psd.executeUpdate();
+                if (n != 0) {
+                    JOptionPane.showMessageDialog(this, "Se actualizo con éxito");
+                    cargarTabla();
+                    limpiarcampos();
+                    desactivarTexto();
+                    desctivarBotones();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al actualizar" + e);
+            }
+        }
+    }
+
+    public void cargarOrigen() {
+        Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+        try {
+            origen.addItem("Selecione...");
+            String sql = "Select ubicacion from oficinas";
+            String nom_ciu;
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                nom_ciu = rs.getString("ubicacion");
+                origen.addItem(nom_ciu);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error:" + ex);
+        }
+    }
+
+    public void limitarLetras(final JTextField txt, final int tamaño) {
+        txt.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                int cant = txt.getText().length();
+                if (cant >= tamaño) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    public void validarSoloNumeros(JTextField txt, KeyEvent evt) {
+        if (!Character.isDigit(evt.getKeyChar()) && (evt.getKeyChar() != '.')) {
+            evt.consume();
+        }
+        if (0 == txt.getText().indexOf('.')) {
+            evt.consume();
+        }
+    }
+
+    public void borrar() {
+        Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+        String sql = "update rutas \n"
+                + "set estado = 'D'\n"
+                + "where cod_ruta = " + Integer.valueOf(codigo.getText().toString()) + "";
+        if (JOptionPane.showConfirmDialog(this, "Desea borrar?") == 0) {
+            try {
+                PreparedStatement psd = cn.prepareStatement(sql);
+                int n = psd.executeUpdate();
+                if (n != 0) {
+                    cargarTabla();
+                    limpiarcampos();
+                    desctivarBotones();
+                    desactivarTexto();
+                    JOptionPane.showMessageDialog(this, "Datos borrados");
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showConfirmDialog(this, "Error al eliminar" + ex);
+            }
+        } else {
+            cargarTabla();
+            limpiarcampos();
+            desctivarBotones();
+            desactivarTexto();
+        }
     }
 
     /**
@@ -34,25 +334,24 @@ public class Rutas extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        origen = new javax.swing.JComboBox<>();
+        destino = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        precio = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblViajes = new javax.swing.JTable();
+        descripcion = new javax.swing.JTextField();
+        actualizar = new javax.swing.JButton();
+        Nuevo = new javax.swing.JButton();
+        Guardar = new javax.swing.JButton();
+        Cancelar = new javax.swing.JButton();
+        Salir = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        btnNuevo = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
-        btnSalir1 = new javax.swing.JButton();
-        btnBorrar = new javax.swing.JButton();
+        codigo = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        rutas = new javax.swing.JTable();
+        Borrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(737, 660));
@@ -66,45 +365,170 @@ public class Rutas extends javax.swing.JInternalFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel8.setText("Origen");
+        jLabel8.setText("Origen :");
+
+        origen.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                origenItemStateChanged(evt);
+            }
+        });
+        origen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                origenMouseEntered(evt);
+            }
+        });
+        origen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                origenActionPerformed(evt);
+            }
+        });
+        origen.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                origenPropertyChange(evt);
+            }
+        });
+
+        destino.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                destinoMouseEntered(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel9.setText("Destino");
+        jLabel9.setText("Destino :");
+
+        precio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                precioMouseEntered(evt);
+            }
+        });
+        precio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                precioKeyTyped(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setText("Precio");
+        jLabel3.setText("Precio :");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setText("Descripción");
+        jLabel6.setText("Descripción :");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setText("Estado");
+        descripcion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                descripcionMouseEntered(evt);
+            }
+        });
+        descripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descripcionKeyTyped(evt);
+            }
+        });
+
+        actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/autorenew.png"))); // NOI18N
+        actualizar.setFocusPainted(false);
+        actualizar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                actualizarMouseEntered(evt);
+            }
+        });
+        actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizarActionPerformed(evt);
+            }
+        });
+
+        Nuevo.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        Nuevo.setText("Nuevo");
+        Nuevo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                NuevoMouseEntered(evt);
+            }
+        });
+        Nuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NuevoActionPerformed(evt);
+            }
+        });
+
+        Guardar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        Guardar.setText("Guardar");
+        Guardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                GuardarMouseEntered(evt);
+            }
+        });
+        Guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GuardarActionPerformed(evt);
+            }
+        });
+
+        Cancelar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        Cancelar.setText("Cancelar");
+        Cancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                CancelarMouseEntered(evt);
+            }
+        });
+        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarActionPerformed(evt);
+            }
+        });
+
+        Salir.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        Salir.setText("Salir");
+        Salir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                SalirMouseEntered(evt);
+            }
+        });
+        Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(153, 153, 153)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel8))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(origen, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(destino, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addComponent(jLabel7)))
-                .addGap(49, 49, 49)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(Salir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,35 +536,57 @@ public class Rutas extends javax.swing.JInternalFrame {
                 .addGap(31, 31, 31)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(origen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(destino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel3)
+                    .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addComponent(Nuevo)
+                    .addComponent(Guardar)
+                    .addComponent(Salir)
+                    .addComponent(Cancelar))
+                .addGap(37, 37, 37))
         );
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resumen", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        jPanel2.setBackground(new java.awt.Color(0, 153, 255));
 
-        tblViajes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resumen", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
-        tblViajes.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        tblViajes.setModel(new javax.swing.table.DefaultTableModel(
+        codigo.setFont(new java.awt.Font("Tahoma", 0, 1)); // NOI18N
+        codigo.setForeground(new java.awt.Color(0, 153, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addComponent(codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("RUTAS EXISTENTES"));
+
+        rutas = new javax.swing.JTable(){
+            public boolean isCellEditable(int f, int c){
+                return ((c!=0) && (c!=1) && (c!=2)&& (c!=3)&& (c!=4));
+            }
+        };
+        rutas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -148,114 +594,43 @@ public class Rutas extends javax.swing.JInternalFrame {
 
             }
         ));
-        tblViajes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                tblViajesMousePressed(evt);
+        rutas.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(rutas);
+
+        Borrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        Borrar.setText("Borrar");
+        Borrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                BorrarMouseEntered(evt);
             }
         });
-        jScrollPane1.setViewportView(tblViajes);
+        Borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Borrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84))
-        );
-
-        jPanel2.setBackground(new java.awt.Color(0, 153, 255));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
-
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        btnNuevo.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnNuevo.setText("Nuevo");
-        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoActionPerformed(evt);
-            }
-        });
-
-        btnGuardar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        btnCancelar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
-        btnSalir1.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnSalir1.setText("Salir");
-        btnSalir1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir1ActionPerformed(evt);
-            }
-        });
-
-        btnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnBorrar.setText("Borrar");
-        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBorrarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNuevo)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnSalir1)
-                    .addComponent(btnBorrar))
-                .addContainerGap(19, Short.MAX_VALUE))
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Borrar)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -271,11 +646,9 @@ public class Rutas extends javax.swing.JInternalFrame {
                         .addComponent(jLabel1)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,11 +658,9 @@ public class Rutas extends javax.swing.JInternalFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -308,37 +679,108 @@ public class Rutas extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tblViajesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblViajesMousePressed
+    private void origenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_origenItemStateChanged
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_tblViajesMousePressed
+        cargarDestino();
+    }//GEN-LAST:event_origenItemStateChanged
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
-    }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
+    private void origenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_origenActionPerformed
         // TODO add your handling code here:
-        if (JOptionPane.showConfirmDialog(this, "¿Desea salir?",
-            "Ventana Salir",
-            JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
+    }//GEN-LAST:event_origenActionPerformed
+
+    private void origenPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_origenPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_origenPropertyChange
+
+    private void precioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_precioKeyTyped
+        // TODO add your handling code here:
+        validarSoloNumeros(precio, evt);
+    }//GEN-LAST:event_precioKeyTyped
+
+    private void descripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descripcionKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_descripcionKeyTyped
+
+    private void actualizarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actualizarMouseEntered
+        // TODO add your handling code here:
+        actualizar.setToolTipText("Actualizar campos");
+    }//GEN-LAST:event_actualizarMouseEntered
+
+    private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
+        // TODO add your handling code here:
+        modificar();
+    }//GEN-LAST:event_actualizarActionPerformed
+
+    private void NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevoActionPerformed
+        activarBotones();
+        activarTexto();
+    }//GEN-LAST:event_NuevoActionPerformed
+
+    private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
+        guardarRutas();
+    }//GEN-LAST:event_GuardarActionPerformed
+
+    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+        limpiarcampos();
+        rutas.clearSelection();
+        desctivarBotones();
+        desactivarTexto();
+    }//GEN-LAST:event_CancelarActionPerformed
+
+    private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
+        // TODO add your handling code here:
         this.dispose();
-        }
-        //para cerrar la ventana
-        //exit 0 se sale de todo el sistema
-    }//GEN-LAST:event_btnSalir1ActionPerformed
+    }//GEN-LAST:event_SalirActionPerformed
 
-    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+    private void BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBorrarActionPerformed
+        borrar();
+    }//GEN-LAST:event_BorrarActionPerformed
+
+    private void origenMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_origenMouseEntered
+        // TODO add your handling code here:
+        origen.setToolTipText("Selecionar origen de ruta");
+    }//GEN-LAST:event_origenMouseEntered
+
+    private void destinoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_destinoMouseEntered
+        // TODO add your handling code here:
+        destino.setToolTipText("Selecionar destino de ruta");
+    }//GEN-LAST:event_destinoMouseEntered
+
+    private void precioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_precioMouseEntered
+        // TODO add your handling code here:
+        precio.setToolTipText("Ingresar costo de nueva ruta ingresada");
+    }//GEN-LAST:event_precioMouseEntered
+
+    private void descripcionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_descripcionMouseEntered
+        // TODO add your handling code here:
+        descripcion.setToolTipText("Describir caracteristicas especificas de nueva ruta");
+    }//GEN-LAST:event_descripcionMouseEntered
+
+    private void NuevoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NuevoMouseEntered
+        // TODO add your handling code here:
+        Nuevo.setToolTipText("Ingresar  nueva ruta");
+    }//GEN-LAST:event_NuevoMouseEntered
+
+    private void GuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GuardarMouseEntered
+        // TODO add your handling code here:
+        Guardar.setToolTipText("Almacenar datos de nueva ruta");
+    }//GEN-LAST:event_GuardarMouseEntered
+
+    private void CancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelarMouseEntered
+        // TODO add your handling code here:
+        Cancelar.setToolTipText("Cancelar ingreso de nueva ruta");
+    }//GEN-LAST:event_CancelarMouseEntered
+
+    private void SalirMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirMouseEntered
+        // TODO add your handling code here:
+        Salir.setToolTipText("Cerrar ventana de rutas");
+    }//GEN-LAST:event_SalirMouseEntered
+
+    private void BorrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BorrarMouseEntered
+        // TODO add your handling code here:
+        Borrar.setToolTipText("Seleccionar primero la fila a eliminar de la Tabla");
+    }//GEN-LAST:event_BorrarMouseEntered
 
     /**
      * @param args the command line arguments
@@ -372,28 +814,27 @@ public class Rutas extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBorrar;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton btnSalir1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JButton Borrar;
+    private javax.swing.JButton Cancelar;
+    private javax.swing.JButton Guardar;
+    private javax.swing.JButton Nuevo;
+    private javax.swing.JButton Salir;
+    private javax.swing.JButton actualizar;
+    private javax.swing.JLabel codigo;
+    private javax.swing.JTextField descripcion;
+    private javax.swing.JComboBox<String> destino;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTable tblViajes;
+    private javax.swing.JComboBox<String> origen;
+    private javax.swing.JTextField precio;
+    private javax.swing.JTable rutas;
     // End of variables declaration//GEN-END:variables
 }
