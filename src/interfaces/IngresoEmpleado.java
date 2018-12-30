@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Ronni
  */
-public class IngresoEmpleado extends javax.swing.JInternalFrame {
+public class IngresoEmpleado extends javax.swing.JFrame {
 
     /**
      * Creates new form IngresoEmpleado
