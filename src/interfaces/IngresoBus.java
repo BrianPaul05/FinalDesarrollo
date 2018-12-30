@@ -29,6 +29,9 @@ public class IngresoBus extends javax.swing.JFrame {
      */
     public IngresoBus() {
         initComponents();
+        cargarTablaBus("");
+        cargarModificar();
+        codigoBus();
     }
 
     public void desactivarTextos() {
@@ -77,17 +80,19 @@ public class IngresoBus extends javax.swing.JFrame {
     public void codigoBus() {
         try {
             String sql = "";
-            String count = "";
-            int codigo;
+
+            int codigo = 0;
             Conexion cn = new Conexion();
             Connection n = cn.conexion();
-            sql = "SELECT COUNT(COD_BUS) FROM BUS";
+            sql = "SELECT COUNT(*) FROM BUS";
             Statement psd = n.createStatement();
             ResultSet rs = psd.executeQuery(sql);
             while (rs.next()) {
-                count = rs.getString("COUNT(COD_BUS)");
+                codigo = rs.getInt(1);
             }
-            codigo = Integer.valueOf(count) + 1;
+            codigo += 1;
+
+             txtCodigoBus.setEnabled(false);
             txtCodigoBus.setText(String.valueOf(codigo));
         } catch (SQLException ex) {
             Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,16 +116,15 @@ public class IngresoBus extends javax.swing.JFrame {
             try {
                 Conexion cn = new Conexion();
                 Connection n = cn.conexion();
-                sql = "INSERT INTO BUS(COD_BUS, PLACA, NUM_BUS, ANIO, ESTADO_BUS, CAPACIDAD_BUS, ESTADO) VALUES(?,?,?,?,?,?,?)";
+                sql = "INSERT INTO BUS(PLACA, NUM_BUS, ANIO, ESTADO_BUS, CAPACIDAD_BUS, ESTADO) VALUES(?,?,?,?,?,?)";
                 PreparedStatement psd = n.prepareStatement(sql);
 
-                psd.setString(1, txtCodigoBus.getText());
-                psd.setString(2, txtPlaca.getText());
-                psd.setString(3, txtNumeroBus.getText());
-                psd.setString(4, txtAño.getText());
-                psd.setString(5, cbxEstado.getSelectedItem().toString());
-                psd.setInt(6, Integer.valueOf(cbxCapacidad.getSelectedItem().toString()));
-                psd.setString(7, "S");
+                psd.setString(1, txtPlaca.getText());
+                psd.setString(2, txtNumeroBus.getText());
+                psd.setString(3, txtAño.getText());
+                psd.setString(4, cbxEstado.getSelectedItem().toString());
+                psd.setInt(5, Integer.valueOf(cbxCapacidad.getSelectedItem().toString()));
+                psd.setString(6, "S");
 
                 int m = psd.executeUpdate();
                 if (m > 0) {
@@ -128,6 +132,7 @@ public class IngresoBus extends javax.swing.JFrame {
                     limpiarTextos();
                     desactivarBotones();
                     desactivarTextos();
+                    cargarTablaBus("");
                 }
 
             } catch (SQLException ex) {
@@ -457,36 +462,32 @@ public class IngresoBus extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtNumeroBus, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                     .addComponent(txtCodigoBus, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                     .addComponent(txtPlaca))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(26, 26, 26))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
-                                .addGap(18, 18, 18)))
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbxCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(25, 25, 25)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(35, 35, 35))
         );
@@ -713,10 +714,11 @@ public class IngresoBus extends javax.swing.JFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         activarTextos();
         activarBotones();
+        codigoBus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        guardarBus();
+        guardarBus();       
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
