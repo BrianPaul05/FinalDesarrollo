@@ -22,7 +22,7 @@ import Conexion.*;
  *
  * @author DELL GAMER
  */
-public class IngresoBus extends javax.swing.JInternalFrame {
+public class IngresoBus extends javax.swing.JFrame {
 
     /**
      * Creates new form IngresBus
@@ -30,7 +30,8 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     public IngresoBus() {
         initComponents();
     }
-     public void desactivarTextos(){
+
+    public void desactivarTextos() {
         txtCodigoBus.setEnabled(false);
         txtPlaca.setEnabled(false);
         txtNumeroBus.setEnabled(false);
@@ -38,8 +39,8 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         cbxCapacidad.setEnabled(false);
         cbxEstado.setEnabled(false);
     }
-           
-     public void activarTextos(){
+
+    public void activarTextos() {
         txtCodigoBus.setEnabled(true);
         txtPlaca.setEnabled(true);
         txtNumeroBus.setEnabled(true);
@@ -47,22 +48,24 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         cbxCapacidad.setEnabled(true);
         cbxEstado.setEnabled(true);
     }
-     
-    public void desactivarBotones(){
+
+    public void desactivarBotones() {
         btnNuevo.setEnabled(true);
         btnSalir1.setEnabled(true);
         btnBorrar.setEnabled(false);
         btnCancelar.setEnabled(false);
         btnGuardar.setEnabled(false);
-    } 
-     public void activarBotones(){
+    }
+
+    public void activarBotones() {
         btnNuevo.setEnabled(false);
         btnSalir1.setEnabled(false);
         btnBorrar.setEnabled(true);
         btnCancelar.setEnabled(true);
         btnGuardar.setEnabled(true);
-    } 
-    public void limpiarTextos(){
+    }
+
+    public void limpiarTextos() {
         txtCodigoBus.setText("");
         txtPlaca.setText("");
         txtNumeroBus.setText("");
@@ -70,7 +73,8 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         cbxCapacidad.setSelectedIndex(0);
         cbxEstado.setSelectedIndex(0);
     }
-    public void codigoBus(){
+
+    public void codigoBus() {
         try {
             String sql = "";
             String count = "";
@@ -83,56 +87,58 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 count = rs.getString("COUNT(COD_BUS)");
             }
-            codigo = Integer.valueOf(count)+1;
+            codigo = Integer.valueOf(count) + 1;
             txtCodigoBus.setText(String.valueOf(codigo));
         } catch (SQLException ex) {
             Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     public void guardarBus(){
-         String sql = "";
-         if(txtPlaca.getText()== null){
-             JOptionPane.showMessageDialog(this, "Ingrese la placa");
-         }else  if(txtNumeroBus.getText()== null){
-             JOptionPane.showMessageDialog(this, "Ingrese numero de bus");
-         } else if(txtAño.getText()== null){
-             JOptionPane.showMessageDialog(this, "Ingrese el año");
-         }else   if(cbxCapacidad.getSelectedIndex() == 0){
-             JOptionPane.showMessageDialog(this, "Seleccione la capacidad");
-         }else if(cbxEstado.getSelectedIndex() == 0){
-             JOptionPane.showMessageDialog(this, "Seleccione el estado");
-         }else{
-             
-             try {
-                 Conexion cn = new Conexion();
-                 Connection n = cn.conexion(); 
-                 sql = "INSERT INTO BUS(COD_BUS, PLACA, NUM_BUS, ANIO, ESTADO_BUS, CAPACIDAD_BUS, ESTADO) VALUES(?,?,?,?,?,?,?)";
+
+    public void guardarBus() {
+        String sql = "";
+        if (txtPlaca.getText() == null) {
+            JOptionPane.showMessageDialog(this, "Ingrese la placa");
+        } else if (txtNumeroBus.getText() == null) {
+            JOptionPane.showMessageDialog(this, "Ingrese numero de bus");
+        } else if (txtAño.getText() == null) {
+            JOptionPane.showMessageDialog(this, "Ingrese el año");
+        } else if (cbxCapacidad.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione la capacidad");
+        } else if (cbxEstado.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione el estado");
+        } else {
+
+            try {
+                Conexion cn = new Conexion();
+                Connection n = cn.conexion();
+                sql = "INSERT INTO BUS(COD_BUS, PLACA, NUM_BUS, ANIO, ESTADO_BUS, CAPACIDAD_BUS, ESTADO) VALUES(?,?,?,?,?,?,?)";
                 PreparedStatement psd = n.prepareStatement(sql);
-                
+
                 psd.setString(1, txtCodigoBus.getText());
                 psd.setString(2, txtPlaca.getText());
                 psd.setString(3, txtNumeroBus.getText());
                 psd.setString(4, txtAño.getText());
                 psd.setString(5, cbxEstado.getSelectedItem().toString());
-                psd.setString(6, cbxCapacidad.getSelectedItem().toString());
+                psd.setInt(6, Integer.valueOf(cbxCapacidad.getSelectedItem().toString()));
                 psd.setString(7, "S");
 
-                 int m = psd.executeUpdate();
+                int m = psd.executeUpdate();
                 if (m > 0) {
-                    JOptionPane.showMessageDialog(this, "Se Inserto corerctamente el Auto");
+                    JOptionPane.showMessageDialog(this, "GUARDADO EXITOSO..");
                     limpiarTextos();
                     desactivarBotones();
                     desactivarTextos();
                 }
-                 
-             } catch (SQLException ex) {
-                 Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
-             }
-         }
-         
-     }
-     DefaultTableModel model;
-      public void cargarTablaBus(String Placa) {
+
+            } catch (SQLException ex) {
+                Logger.getLogger(IngresoBus.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+    DefaultTableModel model;
+
+    public void cargarTablaBus(String Placa) {
         try {
             String titulos[] = {"CODIGO", "PLACA", "NUMERO", "AÑO", "ESTADO", "CAPACIDAD"};
             String registros[] = new String[7];             //7 columnas
@@ -190,7 +196,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 
     }
 
-    public void botonesActualizar(){
+    public void botonesActualizar() {
         btnBorrar.setEnabled(true);
         btnCancelar.setEnabled(true);
         btnGuardar.setEnabled(false);
@@ -200,7 +206,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     }
 
     public void controlPlaca(java.awt.event.KeyEvent evt) {
-         
+
         char c = evt.getKeyChar();
 
         if ((c >= 32 && c <= 44) || (c >= 58 && c <= 64) || (c >= 91 && c <= 255)
@@ -246,7 +252,8 @@ public class IngresoBus extends javax.swing.JInternalFrame {
         }
 
     }
-     public void controlNumeroBus(java.awt.event.KeyEvent evt) {
+
+    public void controlNumeroBus(java.awt.event.KeyEvent evt) {
         char caracter = evt.getKeyChar();//  metodos propios // obtener  la  tecla que yo  presiono ,  char un caracter 
         String texto = txtNumeroBus.getText();
         if (((caracter < '1')
@@ -257,7 +264,8 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             evt.consume();// ignorar el evento del  teclado 
         }
     }
-      public void controlAnio(java.awt.event.KeyEvent evt) {
+
+    public void controlAnio(java.awt.event.KeyEvent evt) {
         char caracter = evt.getKeyChar();//  metodos propios // obtener  la  tecla que yo  presiono ,  char un caracter 
         String texto = txtAño.getText();
         if (((caracter < '0')
@@ -267,13 +275,14 @@ public class IngresoBus extends javax.swing.JInternalFrame {
                 (caracter != '\b') && (caracter != '.')) { //   no haya  espacio
             evt.consume();// ignorar el evento del  teclado 
         }
-         if (txtAño.getText().length() == 4) {
+        if (txtAño.getText().length() == 4) {
             evt.consume();
-            
+
         }
     }
-        public void borrar() {
-          
+
+    public void borrar() {
+
         if (JOptionPane.showConfirmDialog(this,
                 "Estas seguro de borrar el registro",
                 "Borrar",
@@ -281,11 +290,11 @@ public class IngresoBus extends javax.swing.JInternalFrame {
             try {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                String sql = "update bus set ESTADO ='"+"N"+"' where COD_BUS = '" + txtCodigoBus.getText() + "'";
+                String sql = "update bus set ESTADO ='" + "N" + "' where COD_BUS = '" + txtCodigoBus.getText() + "'";
                 PreparedStatement psd = cn.prepareStatement(sql);
                 JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
-                  cargarTablaBus("");
-                   limpiarTextos();
+                cargarTablaBus("");
+                limpiarTextos();
 //                int n = psd.executeUpdate();
 //                if (n > 0) {
 //                    JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
@@ -353,7 +362,6 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 //        txtCapacidad.setText(null);
 //        txtEstado.setText(null);
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -503,14 +511,13 @@ public class IngresoBus extends javax.swing.JInternalFrame {
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(txtNumeroBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(cbxCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel6))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(65, 92, Short.MAX_VALUE))))
+                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -709,7 +716,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-          guardarBus();
+        guardarBus();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -721,9 +728,9 @@ public class IngresoBus extends javax.swing.JInternalFrame {
     private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
         // TODO add your handling code here:
         if (JOptionPane.showConfirmDialog(this, "¿Desea salir?",
-            "Ventana Salir",
-            JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
-        this.dispose();
+                "Ventana Salir",
+                JOptionPane.YES_OPTION) == JOptionPane.YES_OPTION) {
+            this.dispose();
         }
         //para cerrar la ventana
         //exit 0 se sale de todo el sistema
@@ -731,7 +738,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
-         borrar();
+        borrar();
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void txtAñoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAñoKeyTyped
@@ -746,7 +753,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-         try {
+        try {
             // TODO add your handling code here:
             modificar();
         } catch (ClassNotFoundException ex) {
@@ -756,7 +763,7 @@ public class IngresoBus extends javax.swing.JInternalFrame {
 
     private void txtPlacaBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlacaBKeyReleased
         // TODO add your handling code here:
-         cargarTablaBus(txtPlacaB.getText());
+        cargarTablaBus(txtPlacaB.getText());
     }//GEN-LAST:event_txtPlacaBKeyReleased
 
     /**
