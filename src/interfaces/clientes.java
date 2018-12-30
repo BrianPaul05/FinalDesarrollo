@@ -60,8 +60,7 @@ public class clientes extends javax.swing.JFrame {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(false);
         btnCancelar.setEnabled(true);
-        btnBorrar.setEnabled(false);
-        btnSalir.setEnabled(true);
+        btnBorrar.setEnabled(false); 
     }
 
     public void activarBotones() {
