@@ -68,6 +68,9 @@ public class IngresoClientes extends javax.swing.JFrame {
         btnBorrar.setEnabled(true);
         btnSalir.setEnabled(true);
     }
+    public void desactivarGuardar(){
+        btnGuardar.setEnabled(false);
+    }
 
     public void cargarTablaClientes(String dato){
 
@@ -170,7 +173,10 @@ public class IngresoClientes extends javax.swing.JFrame {
                     txtNombre.setText(tblClientes.getValueAt(fila, 1).toString().trim());
                     txtApellido.setText(tblClientes.getValueAt(fila, 2).toString().trim());
                 }
-                activarCampos();
+                
+                activarBotones();
+                desactivarGuardar();
+                bloquearCampos();
             }
         });
     }
