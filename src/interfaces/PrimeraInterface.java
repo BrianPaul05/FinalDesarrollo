@@ -577,7 +577,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
         try {
-            clientes c = new clientes();
+            IngresoClientes c = new IngresoClientes();
             
             principal.add(c);
             Dimension desktopSize = principal.getSize();

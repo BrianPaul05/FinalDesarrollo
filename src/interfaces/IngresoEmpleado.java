@@ -304,7 +304,7 @@ public class IngresoEmpleado extends javax.swing.JFrame {
                     cn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(clientes.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(IngresoClientes.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
