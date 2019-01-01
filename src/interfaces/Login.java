@@ -6,6 +6,8 @@
 package interfaces;
 
 import Conexion.Conexion;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 /**
@@ -31,8 +34,19 @@ public class Login extends javax.swing.JFrame {
         this.setTitle("INGRESO AL SISTEMA");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        limitarLetras(usuario, 10);
+        limitarLetras(contraseña, 7);
     }
-
+public void limitarLetras(final JTextField txt, final int tamaño) {
+        txt.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                int cant = txt.getText().length();
+                if (cant >= tamaño) {
+                    e.consume();
+                }
+            }
+        });
+    }
     private boolean comprobarCuenta(String usu, String con) {
         int n = 0;
         try {
@@ -60,7 +74,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     private String obtenerCodigoOficina(String usu) {
-        String codigo= "";
+        String codigo = "";
         try {
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
@@ -73,11 +87,11 @@ public class Login extends javax.swing.JFrame {
             while (rs.next()) {
                 codigo = rs.getString("COD_OFI_PER");
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return codigo;
     }
 

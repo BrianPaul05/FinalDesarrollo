@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -30,6 +31,13 @@ public class PrimeraInterface extends javax.swing.JFrame {
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);        
+    }
+     private void salir() {
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int op = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea salir?", "Advertencia", dialogButton);
+        if (op == 0) {
+            this.dispose();
+        }
     }
 
     /**
@@ -66,6 +74,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
         principal = new org.edisoncor.gui.panel.Panel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 255));
 
@@ -850,6 +863,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void reportesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportesMouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_reportesMouseExited
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+         salir();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
