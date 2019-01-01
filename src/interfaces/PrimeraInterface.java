@@ -576,17 +576,20 @@ public class PrimeraInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_ClientesMouseExited
 
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
+       
+            IngresoClientes c = null;
         try {
-            IngresoClientes c = new IngresoClientes();
+            c = new IngresoClientes();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
             principal.add(c);
             Dimension desktopSize = principal.getSize();
             Dimension internalSize = c.getSize();
             c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
             c.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
     }//GEN-LAST:event_ClientesActionPerformed
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered
