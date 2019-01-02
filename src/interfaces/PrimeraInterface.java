@@ -35,9 +35,9 @@ public class PrimeraInterface extends javax.swing.JFrame {
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
         principal.setBorder(new Conexion.ImagenFondo());
-       this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+         this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
         principal.setBorder(new ImagenFondo());
-       this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+        this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
         setExtendedState(MAXIMIZED_BOTH);
     }
 
@@ -58,17 +58,18 @@ public class PrimeraInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jButton9 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        principal = new javax.swing.JDesktopPane();
         reportes = new javax.swing.JPanel();
         Clientes = new javax.swing.JButton();
         Rutas = new javax.swing.JButton();
         Buses = new javax.swing.JButton();
         oficinas = new javax.swing.JButton();
         empleados = new javax.swing.JButton();
+        reportes2 = new javax.swing.JPanel();
+        Clientes1 = new javax.swing.JButton();
+        Rutas1 = new javax.swing.JButton();
+        Rutas2 = new javax.swing.JButton();
         reportes1 = new javax.swing.JPanel();
         Viajes = new javax.swing.JButton();
         Encomiendas = new javax.swing.JButton();
@@ -80,98 +81,18 @@ public class PrimeraInterface extends javax.swing.JFrame {
         Facturacion = new javax.swing.JPanel();
         Incidentes3 = new javax.swing.JButton();
         Incidentes2 = new javax.swing.JButton();
-        principal = new javax.swing.JDesktopPane();
+        jPanel1 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
-
-        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
-
-        jButton9.setBackground(new java.awt.Color(0, 0, 0));
-        jButton9.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jButton9.setForeground(new java.awt.Color(255, 255, 255));
-        jButton9.setText("Editar");
-        jButton9.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton9.setFocusable(false);
-        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton9MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jButton9MouseExited(evt);
-            }
-        });
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-
-        jButton6.setBackground(new java.awt.Color(0, 0, 0));
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("Reportes");
-        jButton6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton6.setFocusable(false);
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton6MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jButton6MouseExited(evt);
-            }
-        });
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
-        jButton10.setBackground(new java.awt.Color(0, 0, 0));
-        jButton10.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jButton10.setForeground(new java.awt.Color(255, 255, 255));
-        jButton10.setText("Facturación");
-        jButton10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton10.setFocusable(false);
-        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton10MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jButton10MouseExited(evt);
-            }
-        });
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -183,8 +104,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
+            .addGap(0, 21, Short.MAX_VALUE)
         );
+
+        principal.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
+        principal.setPreferredSize(new java.awt.Dimension(771, 529));
 
         reportes.setBackground(new java.awt.Color(0, 0, 0));
         reportes.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -199,6 +123,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
         Clientes.setBackground(new java.awt.Color(0, 0, 0));
         Clientes.setForeground(new java.awt.Color(255, 255, 255));
+        Clientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png"))); // NOI18N
         Clientes.setText("Clientes");
         Clientes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         Clientes.setFocusable(false);
@@ -215,10 +140,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 ClientesActionPerformed(evt);
             }
         });
-        reportes.add(Clientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 20));
+        reportes.add(Clientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 138, 30));
 
         Rutas.setBackground(new java.awt.Color(0, 0, 0));
         Rutas.setForeground(new java.awt.Color(255, 255, 255));
+        Rutas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/rutas.png"))); // NOI18N
         Rutas.setText("Rutas");
         Rutas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         Rutas.setFocusable(false);
@@ -235,10 +161,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 RutasActionPerformed(evt);
             }
         });
-        reportes.add(Rutas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 110, 20));
+        reportes.add(Rutas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 138, 30));
 
         Buses.setBackground(new java.awt.Color(0, 0, 0));
         Buses.setForeground(new java.awt.Color(255, 255, 255));
+        Buses.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/bus2.png"))); // NOI18N
         Buses.setText("Buses");
         Buses.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         Buses.setFocusable(false);
@@ -255,10 +182,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 BusesActionPerformed(evt);
             }
         });
-        reportes.add(Buses, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 110, 20));
+        reportes.add(Buses, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 138, 30));
 
         oficinas.setBackground(new java.awt.Color(0, 0, 0));
         oficinas.setForeground(new java.awt.Color(255, 255, 255));
+        oficinas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/oficinas.png"))); // NOI18N
         oficinas.setText("Oficinas");
         oficinas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         oficinas.setFocusable(false);
@@ -275,10 +203,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 oficinasActionPerformed(evt);
             }
         });
-        reportes.add(oficinas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 110, 20));
+        reportes.add(oficinas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 138, 30));
 
         empleados.setBackground(new java.awt.Color(0, 0, 0));
         empleados.setForeground(new java.awt.Color(255, 255, 255));
+        empleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/empleados.png"))); // NOI18N
         empleados.setText("Empleados");
         empleados.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         empleados.setFocusable(false);
@@ -295,7 +224,81 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 empleadosActionPerformed(evt);
             }
         });
-        reportes.add(empleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 110, 20));
+        reportes.add(empleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 138, 30));
+
+        reportes2.setBackground(new java.awt.Color(0, 0, 0));
+        reportes2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                reportes2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                reportes2MouseExited(evt);
+            }
+        });
+        reportes2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Clientes1.setBackground(new java.awt.Color(0, 0, 0));
+        Clientes1.setForeground(new java.awt.Color(255, 255, 255));
+        Clientes1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png"))); // NOI18N
+        Clientes1.setText("Ingreso Em");
+        Clientes1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Clientes1.setFocusable(false);
+        Clientes1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                Clientes1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Clientes1MouseExited(evt);
+            }
+        });
+        Clientes1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Clientes1ActionPerformed(evt);
+            }
+        });
+        reportes2.add(Clientes1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
+
+        Rutas1.setBackground(new java.awt.Color(0, 0, 0));
+        Rutas1.setForeground(new java.awt.Color(255, 255, 255));
+        Rutas1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoTip.png"))); // NOI18N
+        Rutas1.setText("Tipos Emp");
+        Rutas1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Rutas1.setFocusable(false);
+        Rutas1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                Rutas1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Rutas1MouseExited(evt);
+            }
+        });
+        Rutas1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Rutas1ActionPerformed(evt);
+            }
+        });
+        reportes2.add(Rutas1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 130, 30));
+
+        Rutas2.setBackground(new java.awt.Color(0, 0, 0));
+        Rutas2.setForeground(new java.awt.Color(255, 255, 255));
+        Rutas2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoOfi.png"))); // NOI18N
+        Rutas2.setText("Oficinas Emp");
+        Rutas2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Rutas2.setFocusable(false);
+        Rutas2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                Rutas2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Rutas2MouseExited(evt);
+            }
+        });
+        Rutas2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Rutas2ActionPerformed(evt);
+            }
+        });
+        reportes2.add(Rutas2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
 
         reportes1.setBackground(new java.awt.Color(0, 0, 0));
         reportes1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -455,7 +458,8 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
         Incidentes3.setBackground(new java.awt.Color(0, 0, 0));
         Incidentes3.setForeground(new java.awt.Color(255, 255, 255));
-        Incidentes3.setText("Facturacion");
+        Incidentes3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/viajes.png"))); // NOI18N
+        Incidentes3.setText("Viajes");
         Incidentes3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         Incidentes3.setFocusable(false);
         Incidentes3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -471,10 +475,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 Incidentes3ActionPerformed(evt);
             }
         });
-        Facturacion.add(Incidentes3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 20));
+        Facturacion.add(Incidentes3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
 
         Incidentes2.setBackground(new java.awt.Color(0, 0, 0));
         Incidentes2.setForeground(new java.awt.Color(255, 255, 255));
+        Incidentes2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/encmiendas.png"))); // NOI18N
         Incidentes2.setText("Encomiendas");
         Incidentes2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         Incidentes2.setFocusable(false);
@@ -491,19 +496,135 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 Incidentes2ActionPerformed(evt);
             }
         });
-        Facturacion.add(Incidentes2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 110, 20));
+        Facturacion.add(Incidentes2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
 
-        principal.setPreferredSize(new java.awt.Dimension(0, 0));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+
+        jButton6.setBackground(new java.awt.Color(0, 0, 0));
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/clipboard-text.png"))); // NOI18N
+        jButton6.setText("Reportes");
+        jButton6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton6.setFocusable(false);
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton6MouseExited(evt);
+            }
+        });
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton10.setBackground(new java.awt.Color(0, 0, 0));
+        jButton10.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jButton10.setForeground(new java.awt.Color(255, 255, 255));
+        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cloud-print.png"))); // NOI18N
+        jButton10.setText("Facturación");
+        jButton10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton10.setFocusable(false);
+        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton10MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton10MouseExited(evt);
+            }
+        });
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6))
+                .addGap(0, 0, 0))
+        );
+
+        jButton9.setBackground(new java.awt.Color(0, 0, 0));
+        jButton9.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jButton9.setForeground(new java.awt.Color(255, 255, 255));
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/folder-edit.png"))); // NOI18N
+        jButton9.setText("Editar");
+        jButton9.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton9.setFocusable(false);
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton9MouseExited(evt);
+            }
+        });
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        principal.setLayer(reportes, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(reportes2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(reportes1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(Facturacion, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(jButton9, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout principalLayout = new javax.swing.GroupLayout(principal);
         principal.setLayout(principalLayout);
         principalLayout.setHorizontalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(principalLayout.createSequentialGroup()
+                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(principalLayout.createSequentialGroup()
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(reportes2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(principalLayout.createSequentialGroup()
+                .addGap(277, 277, 277)
+                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(907, Short.MAX_VALUE))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(principalLayout.createSequentialGroup()
+                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(principalLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jButton9))
+                .addGap(0, 0, 0)
+                .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(116, 116, 116)
+                .addComponent(reportes2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(454, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -511,33 +632,14 @@ public class PrimeraInterface extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(170, 170, 170)
-                        .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 984, Short.MAX_VALUE))
-            .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
+            .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, 1314, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(reportes1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(839, Short.MAX_VALUE))
-            .addComponent(principal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 879, Short.MAX_VALUE)
+                .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE))
         );
 
         pack();
@@ -561,7 +663,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void jButton9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseEntered
         // TODO add your handling code here:
         jButton6.setToolTipText("Reportes existentes");
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
     }//GEN-LAST:event_jButton9MouseEntered
 
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
@@ -576,7 +678,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void jButton10MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseEntered
         // TODO add your handling code here:
         jButton6.setToolTipText("Reportes existentes");
-        Facturacion.setSize(110, 40);
+        Facturacion.setSize(130, 60);
     }//GEN-LAST:event_jButton10MouseEntered
 
     private void jButton10MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseExited
@@ -591,7 +693,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void ClientesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ClientesMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
     }//GEN-LAST:event_ClientesMouseEntered
 
     private void ClientesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ClientesMouseExited
@@ -618,7 +720,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered
         // TODO add your handling code here:
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
         Rutas.setToolTipText("Detalle de repuestos");
     }//GEN-LAST:event_RutasMouseEntered
 
@@ -696,7 +798,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void Incidentes2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Incidentes2MouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
-        Facturacion.setSize(110, 40);
+        Facturacion.setSize(130, 60);
     }//GEN-LAST:event_Incidentes2MouseEntered
 
     private void Incidentes2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Incidentes2MouseExited
@@ -720,7 +822,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void BusesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BusesMouseEntered
         // TODO add your handling code here:
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
         Rutas.setToolTipText("Detalle de repuestos");
     }//GEN-LAST:event_BusesMouseEntered
 
@@ -742,29 +844,25 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void empleadosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_empleadosMouseEntered
         // TODO add your handling code here:
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
+        reportes2.setSize(130,90);
         Rutas.setToolTipText("Detalle de repuestos");
     }//GEN-LAST:event_empleadosMouseEntered
 
     private void empleadosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_empleadosMouseExited
         // TODO add your handling code here:
         reportes.setSize(0, 0);
-
+        reportes2.setSize(0,0);
     }//GEN-LAST:event_empleadosMouseExited
 
     private void empleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empleadosActionPerformed
         // TODO add your handling code here:
-        IngresoEmpleado ie = new IngresoEmpleado();
-        principal.add(ie);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = ie.getSize();
-        ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        ie.setVisible(true);
+        
     }//GEN-LAST:event_empleadosActionPerformed
 
     private void oficinasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_oficinasMouseEntered
         // TODO add your handling code here:
-        reportes.setSize(110, 100);
+        reportes.setSize(138, 150);
         Rutas.setToolTipText("Detalle de repuestos");
     }//GEN-LAST:event_oficinasMouseEntered
 
@@ -853,7 +951,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void Incidentes3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Incidentes3MouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
-        Facturacion.setSize(110, 40);
+        Facturacion.setSize(130, 60);
     }//GEN-LAST:event_Incidentes3MouseEntered
 
     private void Incidentes3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Incidentes3MouseExited
@@ -879,6 +977,79 @@ public class PrimeraInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
         salir();
     }//GEN-LAST:event_formWindowClosing
+
+    private void Clientes1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Clientes1MouseEntered
+        // TODO add your handling code here:
+        reportes.setSize(138,150);
+        reportes2.setSize(130,90);
+    }//GEN-LAST:event_Clientes1MouseEntered
+
+    private void Clientes1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Clientes1MouseExited
+        // TODO add your handling code here:
+        reportes.setSize(0,0);
+        reportes2.setSize(0, 0);
+    }//GEN-LAST:event_Clientes1MouseExited
+
+    private void Clientes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clientes1ActionPerformed
+        // TODO add your handling code here:
+        IngresoEmpleado ie = new IngresoEmpleado();
+        principal.add(ie);
+        Dimension desktopSize = principal.getSize();
+        Dimension internalSize = ie.getSize();
+        ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+        ie.setVisible(true);
+    }//GEN-LAST:event_Clientes1ActionPerformed
+
+    private void Rutas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Rutas1MouseEntered
+        // TODO add your handling code here:
+        reportes.setSize(138,150);
+        reportes2.setSize(130,90);
+    }//GEN-LAST:event_Rutas1MouseEntered
+
+    private void Rutas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Rutas1MouseExited
+        reportes.setSize(0,0);
+        reportes2.setSize(0,0);        // TODO add your handling code here:
+    }//GEN-LAST:event_Rutas1MouseExited
+
+    private void Rutas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Rutas1ActionPerformed
+        // TODO add your handling code here:
+        TipoPersonal tp = new TipoPersonal();
+        principal.add(tp);
+        Dimension desktopSize = principal.getSize();
+        Dimension internalSize = tp.getSize();
+        tp.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+        tp.setVisible(true);
+    }//GEN-LAST:event_Rutas1ActionPerformed
+
+    private void reportes2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportes2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reportes2MouseEntered
+
+    private void reportes2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportes2MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reportes2MouseExited
+
+    private void Rutas2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Rutas2MouseEntered
+        // TODO add your handling code here:
+        reportes.setSize(138,150);
+        reportes2.setSize(130,90);
+    }//GEN-LAST:event_Rutas2MouseEntered
+
+    private void Rutas2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Rutas2MouseExited
+        // TODO add your handling code here:
+        reportes.setSize(0,0);
+        reportes2.setSize(0,0);
+    }//GEN-LAST:event_Rutas2MouseExited
+
+    private void Rutas2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Rutas2ActionPerformed
+        // TODO add your handling code here:
+        personalOficina po = new personalOficina();
+        principal.add(po);
+        Dimension desktopSize = principal.getSize();
+        Dimension internalSize = po.getSize();
+        po.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+        po.setVisible(true);
+    }//GEN-LAST:event_Rutas2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -913,6 +1084,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Buses;
     private javax.swing.JButton Clientes;
+    private javax.swing.JButton Clientes1;
     private javax.swing.JButton Encomiendas;
     private javax.swing.JButton Encomiendas2;
     private javax.swing.JButton Encomiendas3;
@@ -922,6 +1094,8 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JButton Incidentes2;
     private javax.swing.JButton Incidentes3;
     private javax.swing.JButton Rutas;
+    private javax.swing.JButton Rutas1;
+    private javax.swing.JButton Rutas2;
     private javax.swing.JButton Unidades;
     private javax.swing.JButton Viajes;
     private javax.swing.JButton empleados;
@@ -934,5 +1108,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JDesktopPane principal;
     private javax.swing.JPanel reportes;
     private javax.swing.JPanel reportes1;
+    private javax.swing.JPanel reportes2;
     // End of variables declaration//GEN-END:variables
 }
