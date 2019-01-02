@@ -206,7 +206,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     }
 
     private void guardarEncomienda() {
-
         if (txtRemitente.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "INGRESE LA CÉDULA DEL REMITENTE.");
             txtRemitente.requestFocus();
@@ -219,20 +218,33 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         } else if (jDateChooser_FechaLlegada.getDate().before(jDateChooser_FechaSalida.getDate())) {
             JOptionPane.showMessageDialog(null, "LA FECHA DE LLEGADA ES INCORRECTA . . . !");
         } else {
-            
-            
-            Date fechaSalida = convetirdorFecha(jDateChooser_FechaSalida.getDate());
-            Date fechaLlegada = convetirdorFecha(jDateChooser_FechaLlegada.getDate());
-            int codicionHoraLlegada = fechaLlegada.compareTo(fechaSalida);
-            if(codicionHoraLlegada == 0){
-                String horaSalida =  jComboBox_HoraSalida.getSelectedItem().toString();
-               String horaLlegada = txtHora+""+txtMinuto+""+txtSegundo;
+            String contenido;
+            if (txtContenido.getText().isEmpty()) {
+                contenido = "NINGUNA";
+            } else {
+                contenido = txtContenido.getText();
             }
-            
+
+            java.sql.Date fechaSalida = convetirdorFecha(jDateChooser_FechaSalida.getDate());
+            java.sql.Date fechaLlegada = convetirdorFecha(jDateChooser_FechaLlegada.getDate());
+            int codicionFechaLlegada = fechaLlegada.compareTo(fechaSalida);
+            if (codicionFechaLlegada == 0) {
+                String horaSalida = jComboBox_HoraSalida.getSelectedItem().toString();
+                String horaLlegada = txtHora.getText() + ":" + txtMinuto.getText() + ":" + txtSegundo.getText();
+
+                boolean isBeforeHour = LocalTime.parse(horaLlegada).isBefore(LocalTime.parse(horaSalida));
+                if (isBeforeHour) {
+                    JOptionPane.showMessageDialog(null, "ERROR: LA HORA DE LLEGADA ES INCORRECTA.");
+                    txtHora.setText(null);
+                    txtMinuto.setText(null);
+                    txtSegundo.setText(null);
+                    txtHora.requestFocus();
+                }
+            }
+
             try {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-
                 String sql = "INSERT INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2, FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
                 int cod = Integer.valueOf(codParaEncomienda);
@@ -240,21 +252,14 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 psd.setString(2, txtRemitente.getText());
                 psd.setString(3, txtDestinatario.getText());
                 psd.setInt(4, Integer.valueOf(txtCosto.getText()));
-                psd.setString(5, "");                
+                psd.setString(5, contenido);
+                psd.setDate(6, fechaSalida);
+                psd.setString(7, jComboBox_HoraSalida.getSelectedItem().toString());
+                psd.setDate(8, fechaLlegada);                
 
-                psd.setString(6, "");
-
-                psd.setString(7, "");
-                boolean condFechaLlegada = comprobarFechaLlegada(jDateChooser_FechaSalida.getDate(), jDateChooser_FechaLlegada.getDate());
-                if (condFechaLlegada) {
-                    psd.setDate(8, convetirdorFecha(jDateChooser_FechaLlegada.getDate()));
-                } else {
-                    JOptionPane.showMessageDialog(null, "LA FECHA DE LLEGADA ES INCORRECTA . . . !");
-                }
-
-                String hora = txtHora.getText() + "" + txtMinuto.getText() + "" + txtSegundo.getText();
-
+                String hora = txtHora.getText() + ":" + txtMinuto.getText() + ":" + txtSegundo.getText();
                 psd.setString(9, hora);
+                psd.setString(10, "S");
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(null, "Encomienda guardada");
