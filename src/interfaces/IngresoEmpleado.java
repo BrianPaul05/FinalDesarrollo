@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Ronni
  */
-public class IngresoEmpleado extends javax.swing.JInternalFrame {
+public class IngresoEmpleado extends javax.swing.JFrame {
 
     /**
      * Creates new form IngresoEmpleado
@@ -39,8 +39,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         cargarModificar();
         desactivarBotones();
         bloquearCampos();
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/empleados.png")));
-        this.setIconifiable(true);
+    //   setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/empleados.png")));
+      //  this.setIconifiable(true);
 
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }
@@ -69,6 +69,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Borrado  exitosamente");
                 cargarTablaPersonal("");
                 limpiarCampos();
+                desactivarBotones();
             }
             cn.close();
         }
@@ -373,8 +374,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
                 }
-                limpiarCampos();
-                bloquearCampos();
+                //limpiarCampos();
+                //bloquearCampos();
                 cn.close();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -439,7 +440,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     public void desactivarBotones() {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(false);
-        btnCancelar.setEnabled(true);
+        btnCancelar.setEnabled(false);
         btnBorrar.setEnabled(false);
         btnSalir.setEnabled(true);
         btnActualizar.setEnabled(false);
@@ -924,8 +925,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         try {
             guardarPersonal();
             cargarTablaPersonal("");
-            limpiarCampos();
-            bloquearCampos();
+           // limpiarCampos();
+          //  bloquearCampos();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1026,6 +1027,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new IngresoEmpleado().setVisible(true);
             }
