@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -29,15 +29,20 @@
           <Component id="jPanel2" max="32767" attributes="0"/>
           <Component id="jPanel1" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
-              <EmptySpace min="170" pref="170" max="-2" attributes="0"/>
-              <Component id="Facturacion" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="reportes" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="107" pref="107" max="-2" attributes="0"/>
+                      <Component id="reportes1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="170" max="-2" attributes="0"/>
+                      <Component id="Facturacion" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="0" pref="984" max="32767" attributes="0"/>
           </Group>
-          <Group type="102" attributes="0">
-              <EmptySpace min="80" pref="80" max="-2" attributes="0"/>
-              <Component id="reportes1" min="-2" max="-2" attributes="0"/>
-          </Group>
-          <Component id="reportes" min="-2" max="-2" attributes="0"/>
-          <Component id="principal" max="32767" attributes="0"/>
+          <Component id="principal" alignment="0" pref="1264" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -47,14 +52,16 @@
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="Facturacion" min="-2" pref="0" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="reportes1" min="-2" pref="0" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="reportes" min="-2" pref="0" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="principal" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="reportes" min="-2" pref="0" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="reportes1" alignment="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="Facturacion" min="-2" pref="0" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="839" max="32767" attributes="0"/>
           </Group>
+          <Component id="principal" alignment="1" pref="879" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -75,7 +82,7 @@
                   <Component id="jButton6" min="-2" pref="90" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="jButton10" min="-2" pref="98" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="428" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -617,13 +624,10 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="org.edisoncor.gui.panel.Panel" name="principal">
+    <Container class="javax.swing.JDesktopPane" name="principal">
       <Properties>
-        <Property name="colorPrimario" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="99" red="0" type="rgb"/>
-        </Property>
-        <Property name="colorSecundario" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[0, 0]"/>
         </Property>
       </Properties>
 
@@ -635,7 +639,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="341" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
