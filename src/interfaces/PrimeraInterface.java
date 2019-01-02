@@ -5,13 +5,18 @@
  */
 package interfaces;
 
+import Conexion.ImagenFondo;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import org.omg.CORBA.portable.InputStream;
 
 /**
  *
@@ -22,17 +27,21 @@ public class PrimeraInterface extends javax.swing.JFrame {
     /**
      * Creates new form PrimeraInterface
      */
-    
     String codEncomiendaOficina;
-    
+
     public PrimeraInterface(String codOficina) {
         codEncomiendaOficina = codOficina;
         initComponents();
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
-        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);     
-       }
-     private void salir() {
+        principal.setBorder(new Conexion.ImagenFondo());
+       this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+        principal.setBorder(new ImagenFondo());
+       this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+        setExtendedState(MAXIMIZED_BOTH);
+    }
+
+    private void salir() {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int op = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea salir?", "Advertencia", dialogButton);
         if (op == 0) {
@@ -71,7 +80,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         Facturacion = new javax.swing.JPanel();
         Incidentes3 = new javax.swing.JButton();
         Incidentes2 = new javax.swing.JButton();
-        principal = new org.edisoncor.gui.panel.Panel();
+        principal = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -152,7 +161,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 428, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,8 +493,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         });
         Facturacion.add(Incidentes2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 110, 20));
 
-        principal.setColorPrimario(new java.awt.Color(0, 153, 255));
-        principal.setColorSecundario(new java.awt.Color(255, 255, 255));
+        principal.setPreferredSize(new java.awt.Dimension(0, 0));
 
         javax.swing.GroupLayout principalLayout = new javax.swing.GroupLayout(principal);
         principal.setLayout(principalLayout);
@@ -495,7 +503,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 341, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -505,13 +513,16 @@ public class PrimeraInterface extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(170, 170, 170)
-                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(170, 170, 170)
+                        .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 984, Short.MAX_VALUE))
+            .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -520,13 +531,13 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(reportes1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reportes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(reportes1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(839, Short.MAX_VALUE))
+            .addComponent(principal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 879, Short.MAX_VALUE)
         );
 
         pack();
@@ -589,20 +600,20 @@ public class PrimeraInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_ClientesMouseExited
 
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
-       
-            IngresoClientes c = null;
-           
-             try {
+
+        IngresoClientes c = null;
+
+        try {
             c = new IngresoClientes();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-       principal.add(c);
-            Dimension desktopSize = principal.getSize();
-            Dimension internalSize = c.getSize();
-            c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-            c.setVisible(true);
+
+        principal.add(c);
+        Dimension desktopSize = principal.getSize();
+        Dimension internalSize = c.getSize();
+        c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+        c.setVisible(true);
     }//GEN-LAST:event_ClientesActionPerformed
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered
@@ -866,7 +877,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-         salir();
+        salir();
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -894,7 +905,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+
             }
         });
     }
@@ -920,7 +931,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton oficinas;
-    private org.edisoncor.gui.panel.Panel principal;
+    private javax.swing.JDesktopPane principal;
     private javax.swing.JPanel reportes;
     private javax.swing.JPanel reportes1;
     // End of variables declaration//GEN-END:variables
