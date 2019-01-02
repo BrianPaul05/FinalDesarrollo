@@ -30,8 +30,8 @@ public class PrimeraInterface extends javax.swing.JFrame {
         initComponents();
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
-        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);        
-    }
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);     
+       }
      private void salir() {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int op = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea salir?", "Advertencia", dialogButton);
@@ -152,7 +152,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 341, Short.MAX_VALUE))
+                .addGap(0, 428, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,18 +591,18 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
        
             IngresoClientes c = null;
-        try {
+           
+             try {
             c = new IngresoClientes();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-            principal.add(c);
+       principal.add(c);
             Dimension desktopSize = principal.getSize();
             Dimension internalSize = c.getSize();
             c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
             c.setVisible(true);
-       
     }//GEN-LAST:event_ClientesActionPerformed
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered

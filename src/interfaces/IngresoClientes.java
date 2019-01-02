@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Roberto Altamirano
  */
-public class IngresoClientes extends javax.swing.JInternalFrame {
+public class IngresoClientes extends javax.swing.JInternalFrame{
 
     /**
      * Creates new form IngresoClientes
@@ -39,7 +39,6 @@ public class IngresoClientes extends javax.swing.JInternalFrame {
         limitarLetras(txtCedula, 10);
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png")));
         this.setTitle("REGISTRO CLIENTES");
-         
     }
     DefaultTableModel modelo;
 public void limitarLetras(final JTextField txt, final int tamaño) {
@@ -81,7 +80,6 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(true);
         btnCancelar.setEnabled(true);
-        btnBorrar.setEnabled(true);
         btnSalir.setEnabled(true);
     }
     public void desactivarGuardar(){
@@ -257,6 +255,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconifiable(true);
         setFrameIcon(null);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -278,6 +277,11 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("CLIENTES EXISTENTES"));
 
+        tblClientes = new javax.swing.JTable(){
+            public boolean isCellEditable(int f, int c){
+                return ((c!=0) && (c!=1) && (c!=2));
+            }
+        };
         tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -381,7 +385,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         });
 
         btnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnBorrar.setText("Borrar");
+        btnBorrar.setText("Eliminar");
         btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBorrarActionPerformed(evt);
