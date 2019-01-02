@@ -245,17 +245,17 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             try {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                String sql = "INSERT INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2, FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO ENCOMIENDAS (COD_VIAJE, CED_REMITENTE, CED_DESTINATARIO, COSTO, CONTENIDO, FEC_SAL_ENCOMIENDA, HOR_SAL_ENCOMIENDA, FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA, ESTADO1) VALUES(?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                int cod = Integer.valueOf(codParaEncomienda);
-                psd.setInt(1, cod);
+
+                psd.setInt(1, 1);
                 psd.setString(2, txtRemitente.getText());
                 psd.setString(3, txtDestinatario.getText());
-                psd.setInt(4, Integer.valueOf(txtCosto.getText()));
+                psd.setString(4, txtCosto.getText());
                 psd.setString(5, contenido);
                 psd.setDate(6, fechaSalida);
                 psd.setString(7, jComboBox_HoraSalida.getSelectedItem().toString());
-                psd.setDate(8, fechaLlegada);                
+                psd.setDate(8, fechaLlegada);
 
                 String hora = txtHora.getText() + ":" + txtMinuto.getText() + ":" + txtSegundo.getText();
                 psd.setString(9, hora);
@@ -263,12 +263,43 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(null, "Encomienda guardada");
+                    desactivarBotones();
+                    desactivarTextos();
+                    limpiarTextos();                   
                 }
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
         }
+    }
+
+    private void desactivarBotones() {
+        jbtnNuevo.setEnabled(true);
+        jbtnGuardar.setEnabled(false);
+//        jbtnActualizar.setEnabled(false);
+        jbntCancelar.setEnabled(false);
+        jbtnBorrar.setEnabled(false);
+        jbtnSalir.setEnabled(true);
+    }
+
+    public void limpiarTextos() {
+        txtRemitente.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtDestinatario.setText("");
+        txtNombreDes.setText("");
+        txtApellidoDes.setText("");
+        txtContenido.setText("");
+        txtFechaEmision.setText("");
+        txtCosto.setText("");
+        txtOrigen.setText("");
+        jDateChooser_FechaSalida.setDate(null);
+        jComboBox_Destino.setSelectedIndex(0);
+        jDateChooser_FechaLlegada.setDate(null);
+        txtHora.setText("");
+        txtMinuto.setText("");
+        txtSegundo.setText("");
     }
 
     private void cargarInformacionCliente(String cedula, JTextField txtNombre, JTextField txtApellido) {
@@ -320,12 +351,15 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         txtHora = new javax.swing.JTextField();
         txtMinuto = new javax.swing.JTextField();
         txtSegundo = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        btnNuevo3 = new javax.swing.JButton();
-        btnGuardar3 = new javax.swing.JButton();
-        btnCancelar3 = new javax.swing.JButton();
-        btnSalir4 = new javax.swing.JButton();
-        btnBorrar3 = new javax.swing.JButton();
+        jbtnNuevo = new javax.swing.JButton();
+        jbtnGuardar = new javax.swing.JButton();
+        jbntCancelar = new javax.swing.JButton();
+        jbtnSalir = new javax.swing.JButton();
+        jbtnBorrar = new javax.swing.JButton();
         txtFechaEmision = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtOrigen = new javax.swing.JTextField();
@@ -434,20 +468,35 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel17.setText("Hora:");
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel18.setText(":");
+
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel20.setText(":");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addComponent(jLabel12)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jDateChooser_FechaLlegada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel20)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMinuto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSegundo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -463,50 +512,53 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMinuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSegundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                    .addComponent(txtSegundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel18))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        btnNuevo3.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnNuevo3.setText("Nuevo");
-        btnNuevo3.addActionListener(new java.awt.event.ActionListener() {
+        jbtnNuevo.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        jbtnNuevo.setText("Nuevo");
+        jbtnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevo3ActionPerformed(evt);
+                jbtnNuevoActionPerformed(evt);
             }
         });
 
-        btnGuardar3.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnGuardar3.setText("Guardar");
-        btnGuardar3.addActionListener(new java.awt.event.ActionListener() {
+        jbtnGuardar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        jbtnGuardar.setText("Guardar");
+        jbtnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardar3ActionPerformed(evt);
+                jbtnGuardarActionPerformed(evt);
             }
         });
 
-        btnCancelar3.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnCancelar3.setText("Cancelar");
-        btnCancelar3.addActionListener(new java.awt.event.ActionListener() {
+        jbntCancelar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        jbntCancelar.setText("Cancelar");
+        jbntCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelar3ActionPerformed(evt);
+                jbntCancelarActionPerformed(evt);
             }
         });
 
-        btnSalir4.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnSalir4.setText("Salir");
-        btnSalir4.addActionListener(new java.awt.event.ActionListener() {
+        jbtnSalir.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        jbtnSalir.setText("Salir");
+        jbtnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir4ActionPerformed(evt);
+                jbtnSalirActionPerformed(evt);
             }
         });
 
-        btnBorrar3.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
-        btnBorrar3.setText("Borrar");
-        btnBorrar3.addActionListener(new java.awt.event.ActionListener() {
+        jbtnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        jbtnBorrar.setText("Borrar");
+        jbtnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBorrar3ActionPerformed(evt);
+                jbtnBorrarActionPerformed(evt);
             }
         });
 
@@ -516,15 +568,15 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(btnNuevo3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jbtnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnGuardar3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jbtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jbntCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSalir4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jbtnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnBorrar3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jbtnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -532,11 +584,11 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNuevo3)
-                    .addComponent(btnGuardar3)
-                    .addComponent(btnCancelar3)
-                    .addComponent(btnSalir4)
-                    .addComponent(btnBorrar3))
+                    .addComponent(jbtnNuevo)
+                    .addComponent(jbtnGuardar)
+                    .addComponent(jbntCancelar)
+                    .addComponent(jbtnSalir)
+                    .addComponent(jbtnBorrar))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -751,28 +803,28 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNuevo3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevo3ActionPerformed
+    private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
 
-    }//GEN-LAST:event_btnNuevo3ActionPerformed
+    }//GEN-LAST:event_jbtnNuevoActionPerformed
 
-    private void btnGuardar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar3ActionPerformed
+    private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         guardarEncomienda();
-    }//GEN-LAST:event_btnGuardar3ActionPerformed
+    }//GEN-LAST:event_jbtnGuardarActionPerformed
 
-    private void btnCancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar3ActionPerformed
+    private void jbntCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbntCancelarActionPerformed
 
-    }//GEN-LAST:event_btnCancelar3ActionPerformed
+    }//GEN-LAST:event_jbntCancelarActionPerformed
 
-    private void btnSalir4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir4ActionPerformed
+    private void jbtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSalirActionPerformed
         // TODO add your handling code here:
         this.dispose();
         //para cerrar la ventana
         //exit 0 se sale de todo el sistema
-    }//GEN-LAST:event_btnSalir4ActionPerformed
+    }//GEN-LAST:event_jbtnSalirActionPerformed
 
-    private void btnBorrar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrar3ActionPerformed
+    private void jbtnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBorrarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBorrar3ActionPerformed
+    }//GEN-LAST:event_jbtnBorrarActionPerformed
 
     private void jComboBox_HoraSalidaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox_HoraSalidaFocusGained
 
@@ -911,11 +963,6 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelPrincipal;
-    private javax.swing.JButton btnBorrar3;
-    private javax.swing.JButton btnCancelar3;
-    private javax.swing.JButton btnGuardar3;
-    private javax.swing.JButton btnNuevo3;
-    private javax.swing.JButton btnSalir4;
     private javax.swing.JComboBox<String> jComboBox_Destino;
     private javax.swing.JComboBox<String> jComboBox_HoraSalida;
     private com.toedter.calendar.JDateChooser jDateChooser_FechaLlegada;
@@ -929,7 +976,10 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -941,6 +991,11 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbntCancelar;
+    private javax.swing.JButton jbtnBorrar;
+    private javax.swing.JButton jbtnGuardar;
+    private javax.swing.JButton jbtnNuevo;
+    private javax.swing.JButton jbtnSalir;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtApellidoDes;
     private javax.swing.JTextField txtContenido;
