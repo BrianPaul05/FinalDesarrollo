@@ -280,6 +280,8 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         }
     }
 
+ 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -354,6 +356,11 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Fecha Emisión:");
 
+        txtRemitente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRemitenteActionPerformed(evt);
+            }
+        });
         txtRemitente.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtRemitenteKeyReleased(evt);
@@ -843,6 +850,10 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
             txtSegundo.requestFocus();
         }
     }//GEN-LAST:event_txtSegundoKeyReleased
+
+    private void txtRemitenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRemitenteActionPerformed
+        cargarInformacionCliente(txtRemitente.getText(), txtNombre, txtApellido);
+    }//GEN-LAST:event_txtRemitenteActionPerformed
 
     public boolean controlCostoViaje(String costo) {
         double num;

@@ -21,6 +21,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
 //        cargarComboCiudadesOrigen();
 //        cargarComboCiudadesDestino();
 //        cargarComboBus();
+      this.setIconifiable(true);
     }
 
 //    public void cargarComboCiudadesOrigen() {

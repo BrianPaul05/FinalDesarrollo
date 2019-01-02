@@ -70,7 +70,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
             //String sql = "SELECT * FRM CLIENTES  WHERE EST_CLI='S' and CED_CLI LIKE'%" + dato + "%'";
             String sql = "SELECT COD_PER_OFI,ced_personal_per,ubicacion\n"
                     + "from personal_oficina , oficinas \n"
-                    + "where cod_ofi_per = cod_ofi;";
+                    + "where cod_ofi_per = cod_ofi";
 
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
