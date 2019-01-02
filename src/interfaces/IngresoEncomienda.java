@@ -208,37 +208,39 @@ public class IngresoEncomienda extends javax.swing.JInternalFrame {
     private void guardarEncomienda() {
 
         if (txtRemitente.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese la cédula del remitente");
+            JOptionPane.showMessageDialog(null, "INGRESE LA CÉDULA DEL REMITENTE.");
             txtRemitente.requestFocus();
         } else if (txtDestinatario.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese la cédula del destinatario");
+            JOptionPane.showMessageDialog(null, "INGRESE LA CÉDULA DEL DESTINATARIO.");
             txtDestinatario.requestFocus();
         } else if (txtCosto.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese el costo");
+            JOptionPane.showMessageDialog(null, "INGRESE EL COSTO.");
             txtDestinatario.requestFocus();
         } else if (jDateChooser_FechaLlegada.getDate().before(jDateChooser_FechaSalida.getDate())) {
-            JOptionPane.showMessageDialog(null, "La fecha de llegada es incorrecta . . . !");
+            JOptionPane.showMessageDialog(null, "LA FECHA DE LLEGADA ES INCORRECTA . . . !");
         } else {
-            String contenido;
-            if (txtContenido.getText().isEmpty()) {
-                contenido = "NINGUNA";
-            } else {
-                contenido = txtContenido.getText();
+            
+            
+            Date fechaSalida = convetirdorFecha(jDateChooser_FechaSalida.getDate());
+            Date fechaLlegada = convetirdorFecha(jDateChooser_FechaLlegada.getDate());
+            int codicionHoraLlegada = fechaLlegada.compareTo(fechaSalida);
+            if(codicionHoraLlegada == 0){
+                String horaSalida =  jComboBox_HoraSalida.getSelectedItem().toString();
+               String horaLlegada = txtHora+""+txtMinuto+""+txtSegundo;
             }
-
+            
             try {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
 
                 String sql = "INSERT INTO ENCOMIENDAS (COD_VIAJE, COD_REMITENTE, COD_DESTINATARIO, COSTO, CONTENIDO, ESTADO1, ESTADO2, FEC_LLE_ENCOMIENDA, HOR_LLE_ENCOMIENDA) VALUES(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                int c = Integer.valueOf(codParaEncomienda);
-                psd.setInt(1, c);
+                int cod = Integer.valueOf(codParaEncomienda);
+                psd.setInt(1, cod);
                 psd.setString(2, txtRemitente.getText());
                 psd.setString(3, txtDestinatario.getText());
                 psd.setInt(4, Integer.valueOf(txtCosto.getText()));
-                psd.setString(5, contenido);
-                String estEnviado;
+                psd.setString(5, "");                
 
                 psd.setString(6, "");
 
