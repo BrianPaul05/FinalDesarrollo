@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Gustavo
  */
-public class TipoPersonal extends javax.swing.JInternalFrame {
+public class TipoPersonal extends javax.swing.JFrame {
 
     /**
      * Creates new form TipoPersonal
@@ -35,7 +35,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         cargarTabla();
         tblTipo.getTableHeader().setReorderingAllowed(false);
         this.setTitle("TIPOS EMPLEADOS");
-        this.setIconifiable(true);
+       // this.setIconifiable(true);
     }
 
     public void limpiarCampos() {
@@ -90,10 +90,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
 
     public void guardarTipoPersonal() {
         String estado = "S";
-        if (txtTipoPersonal.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese el tipo de Personal");
-            txtTipoPersonal.requestFocus();
-        } else if (txtDescripcion.getText().isEmpty()) {
+        if (txtDescripcion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese descripcion o rol");
             txtDescripcion.requestFocus();
         } else {
@@ -101,11 +98,11 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
                 String sql = "";
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "INSERT INTO TIPO_PERSONAL (COD_TIP_PER,TIPO_PER,DES_PER, ESTADO) values(TIPO_PER.NEXTVAL,?,?,?)";
+                sql = "INSERT INTO TIPO_PERSONAL (DES_PER, ESTADO) values(?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                psd.setString(1, txtTipoPersonal.getText());
-                psd.setString(2, txtDescripcion.getText());
-                psd.setString(3, estado);
+               // psd.setString(1, txtTipoPersonal.getText());
+                psd.setString(1, txtDescripcion.getText());
+                psd.setString(2, estado);
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Se ha guardado correctamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
@@ -162,7 +159,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
     public void soloLetras(java.awt.event.KeyEvent evt) {
         char c = evt.getKeyChar();
 
-        if ((c >= 32 && c <= 64) || (c >= 91 && c <= 255)) {
+        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) ||(c>=123 && c<=255)) {
             evt.consume();
             getToolkit().beep();
             JOptionPane.showMessageDialog(this, "Ingrese solo Letras", "Error", JOptionPane.ERROR_MESSAGE);
@@ -196,7 +193,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         btnGuardar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -257,6 +254,12 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
 
         jLabel60.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel60.setText("Descripcion");
+
+        txtDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescripcionKeyTyped(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel4.setText("Buscar por Tipo Personal:");
@@ -438,8 +441,12 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
 
     private void txtTipoPersonalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTipoPersonalKeyTyped
         // TODO add your handling code here:
-        soloLetras(evt);
+       // soloLetras(evt);
     }//GEN-LAST:event_txtTipoPersonalKeyTyped
+
+    private void txtDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionKeyTyped
+        soloLetras(evt);
+    }//GEN-LAST:event_txtDescripcionKeyTyped
 
     /**
      * @param args the command line arguments
