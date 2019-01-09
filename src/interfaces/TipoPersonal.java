@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Gustavo
  */
-public class TipoPersonal extends javax.swing.JFrame {
+public class TipoPersonal extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form TipoPersonal
@@ -35,7 +35,7 @@ public class TipoPersonal extends javax.swing.JFrame {
         cargarTabla();
         tblTipo.getTableHeader().setReorderingAllowed(false);
         this.setTitle("TIPOS EMPLEADOS");
-       // this.setIconifiable(true);
+       this.setIconifiable(true);
     }
 
     public void limpiarCampos() {

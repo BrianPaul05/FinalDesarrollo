@@ -36,7 +36,8 @@ public class personalOficina extends javax.swing.JInternalFrame {
         desactivarBotones();
         desactivarCampos();
         this.setTitle("PERSONAL OFICINAS");
-        this.setIconifiable(true);
+         tblOficinaPer.getTableHeader().setReorderingAllowed(false);
+         this.setIconifiable(true);
     }
 
     public void cargarModificar() {
@@ -197,7 +198,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
                 }
-                 cargarTablaPerOfi();
+                cargarTablaPerOfi();
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -216,6 +217,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         btnCancelar.setEnabled(true);
         btnBorrar.setEnabled(true);
         btnSalir.setEnabled(true);
+         txtCedula.requestFocus();
 
     }
 
@@ -247,6 +249,26 @@ public class personalOficina extends javax.swing.JInternalFrame {
         }
     }
 
+     private void comprobarEmpleado(String cedula) {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            Statement psd = cn.createStatement();
+            String sql = "SELECT * FROM personal WHERE CED_PER='" + cedula + "'";
+            ResultSet rs = psd.executeQuery(sql);
+            int pos = 0;
+            while (rs.next()) {
+                pos = pos + 1;
+            }
+            if (pos > 0) {         
+            }else{
+                JOptionPane.showMessageDialog(null, "No existe el usuario");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -266,7 +288,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        txtCedula = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         cbxCiudad = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
@@ -276,6 +297,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
+        txtCedula = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblOficinaPer = new javax.swing.JTable(){
@@ -283,6 +305,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
                 return false;
             }
         };
+        jLabel1 = new javax.swing.JLabel();
 
         tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -317,17 +340,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("CEDULA :");
-
-        try {
-            txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCedulaKeyTyped(evt);
-            }
-        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("CIUDAD :");
@@ -379,6 +391,12 @@ public class personalOficina extends javax.swing.JInternalFrame {
             }
         });
 
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -395,9 +413,9 @@ public class personalOficina extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4))
                         .addGap(34, 34, 34)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtCedula)
                             .addComponent(cbxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCedula)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(btnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -463,6 +481,9 @@ public class personalOficina extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
+        jLabel1.setFont(new java.awt.Font("Palatino Linotype", 1, 18)); // NOI18N
+        jLabel1.setText("PERSONAL POR OFICNA");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -474,12 +495,18 @@ public class personalOficina extends javax.swing.JInternalFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(177, 177, 177))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1)
+                .addGap(10, 10, 10)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -501,7 +528,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-       limpiarCampos();
+        limpiarCampos();
         activarCampos();
         activarBotones();
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -509,7 +536,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPerOficina();
-             limpiarCampos();
+            limpiarCampos();
             desactivarCampos();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
@@ -525,18 +552,22 @@ public class personalOficina extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-            limpiarCampos();
+        limpiarCampos();
         desactivarBotones();
-       desactivarCampos();
+        desactivarCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
-        soloNumeros(evt);
-    }//GEN-LAST:event_txtCedulaKeyTyped
-
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txtCedulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyReleased
+        if(txtCedula.getText().length() == 10){
+          comprobarEmpleado(txtCedula.getText());
+      }
+    }//GEN-LAST:event_txtCedulaKeyReleased
+
+   
 
     /**
      * @param args the command line arguments
@@ -581,6 +612,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cbxCiudad;
     private javax.swing.JComboBox<String> cbxUbicacion;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -592,6 +624,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tblClientes;
     private javax.swing.JTable tblOficinaPer;
-    private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JTextField txtCedula;
     // End of variables declaration//GEN-END:variables
 }
