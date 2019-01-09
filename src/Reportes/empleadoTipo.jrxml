@@ -35,14 +35,6 @@ WHERE TIPO_PER = $P{ID_TIPO_PERSONAL}]]>
 				</textElement>
 				<text><![CDATA[COOPERATIVA DE TRANSPORTE SKY WAY]]></text>
 			</staticText>
-			<image>
-				<reportElement x="0" y="0" width="98" height="53" uuid="b963516c-6c61-4488-b658-87ed3f1c7a2e"/>
-				<imageExpression><![CDATA["D:\\UTA\\QUINTO\\DESARROLLO\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="451" y="1" width="126" height="65" uuid="72abbac0-3180-47ff-9830-dc140d6c357f"/>
-				<imageExpression><![CDATA["D:\\UTA\\QUINTO\\DESARROLLO\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="133" y="40" width="279" height="20" uuid="f46a9bf2-7936-4d43-9689-81364ae99b1b"/>
 				<textElement>
@@ -64,6 +56,14 @@ WHERE TIPO_PER = $P{ID_TIPO_PERSONAL}]]>
 				</textElement>
 				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
 			</staticText>
+			<image>
+				<reportElement x="1" y="1" width="97" height="59" uuid="5d7257c9-e81d-4bef-ad91-d0d89a292342"/>
+				<imageExpression><![CDATA["D:\\Mis documentos\\Escritorio\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="451" y="1" width="126" height="65" uuid="8ea61ef9-a969-44cc-8765-128f91c3c6c8"/>
+				<imageExpression><![CDATA["D:\\Mis documentos\\Escritorio\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

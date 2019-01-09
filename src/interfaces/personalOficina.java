@@ -294,7 +294,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         ));
         jScrollPane3.setViewportView(tblClientes);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -341,6 +341,11 @@ public class personalOficina extends javax.swing.JInternalFrame {
 
         btnSalir.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         btnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnBorrar.setText("Eliminar");
@@ -528,6 +533,10 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
         soloNumeros(evt);
     }//GEN-LAST:event_txtCedulaKeyTyped
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+       this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
