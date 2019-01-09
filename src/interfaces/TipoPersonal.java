@@ -58,6 +58,13 @@ public class TipoPersonal extends javax.swing.JFrame {
         btnBorrar.setEnabled(false);
         btnSalir.setEnabled(true);
     }
+     public void desactivarbotonesTabla() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnSalir.setEnabled(true);
+    }
 
     public void bloquearCampos() {
         txtTipoPersonal.setEnabled(false);
@@ -154,8 +161,8 @@ public class TipoPersonal extends javax.swing.JFrame {
                 txtTipoPersonal.setText(tblTipo.getValueAt(fila, 1).toString().trim());
                 //permite cojer de una lista solo una posicion  trim nos ayuda a llenar los espacios en blanco
                 txtDescripcion.setText(tblTipo.getValueAt(fila, 2).toString().trim());
-
-                activarBotones();
+                bloquearCampos();
+                desactivarbotonesTabla();
             }
         });
     }
@@ -183,7 +190,12 @@ public class TipoPersonal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblTipo = new javax.swing.JTable();
+        tblTipo = new javax.swing.JTable(){
+            public boolean isCellEditable(int x, int y){
+                return false;
+            }
+        }
+        ;
         jPanel3 = new javax.swing.JPanel();
         jLabel59 = new javax.swing.JLabel();
         txtTipoPersonal = new javax.swing.JTextField();
