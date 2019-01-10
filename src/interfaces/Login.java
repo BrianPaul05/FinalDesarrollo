@@ -35,7 +35,7 @@ public class Login extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         limitarLetras(usuario, 10);
-        limitarLetras(contraseña, 7);
+        limitarLetras(contraseña, 4);
     }
 public void limitarLetras(final JTextField txt, final int tamaño) {
         txt.addKeyListener(new KeyAdapter() {
@@ -186,6 +186,11 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
                 contraseñaMouseEntered(evt);
             }
         });
+        contraseña.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                contraseñaKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -308,6 +313,10 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         // TODO add your handling code here:
         contraseña.setToolTipText("Ingrese su contraseña");
     }//GEN-LAST:event_contraseñaMouseEntered
+
+    private void contraseñaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contraseñaKeyTyped
+       
+    }//GEN-LAST:event_contraseñaKeyTyped
 
     /**
      * @param args the command line arguments
