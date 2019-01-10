@@ -39,9 +39,9 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         cargarModificar();
         desactivarBotones();
         bloquearCampos();
-        //setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
+       setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         this.setTitle("REGISTRAR EMPLEADOS");
-        //this.setIconifiable(true);
+        this.setIconifiable(true);
 
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }
@@ -566,6 +566,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         };
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconifiable(true);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
