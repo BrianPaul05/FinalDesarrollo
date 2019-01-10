@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -75,7 +77,19 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             cn.close();
         }
     }
-
+public static boolean validarEmailIntemedia(String email){
+        
+        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+ 
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        if(matcher.find()){
+            return matcher.matches(); 
+        }else{
+            JOptionPane.showMessageDialog(null,"Email Incorrecto");
+           return false;
+        }   
+    }
     public String cargarNA(String dato1, String dato2) {
         //  String nom1 = "";
         // String nom2 = "";  NOM1_PER,NOM2_PER
@@ -331,7 +345,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Falta Fecha de Ingreso...");
         } else if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
-        } else if (txtCorreo.getText().isEmpty()) {
+        } else if (txtCorreo.getText().isEmpty() && validarEmailIntemedia(txtCorreo.getText())) {
             JOptionPane.showMessageDialog(null, "Ingrese Correo...");
         } else if (txtTelefono.getText().isEmpty() || txtTelefono.getText().length() < 10) {
             JOptionPane.showMessageDialog(null, "Telefono Incorrecto...");
