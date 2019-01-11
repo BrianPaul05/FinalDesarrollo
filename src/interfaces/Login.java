@@ -94,6 +94,24 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
 
         return codigo;
     }
+private String[] obtenerNombre(){
+               String[] dato = new String[2];
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql ="select nom1_per, ape1_per from personal where ced_per = '"+usuario.getText()+"' ";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);            
+            while(rs.next()){
+                dato[0] =  rs.getString("nom1_per");
+                dato[1] = rs.getString("ape1_per");
+            }
+            return dato;
+        } catch (Exception e) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return dato ;
+               
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -296,17 +314,19 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
 
     private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
 
-        boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
+       boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
         if (condicion) {
             String codOfi = obtenerCodigoOficina(usuario.getText());
-            PrimeraInterface pi = new PrimeraInterface(codOfi);
-            pi.setVisible(true);
+            String[] nombre= obtenerNombre();
+           PrimeraInterface pi = new PrimeraInterface(codOfi, nombre);
+           pi.setVisible(true);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(null, "El usuario no existe");
             usuario.setText(null);
             contraseña.setText(null);
         }
+
     }//GEN-LAST:event_ingresarActionPerformed
 
     private void contraseñaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contraseñaMouseEntered

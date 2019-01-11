@@ -34,9 +34,11 @@ public class PrimeraInterface extends javax.swing.JFrame {
      */
     String codEncomiendaOficina;
 
-    public PrimeraInterface(String codOficina) {
+    public PrimeraInterface(String codOficina, String[] nombre) {
         codEncomiendaOficina = codOficina;
         initComponents();
+        txtUsuaio.setText(nombre[0] + " " + nombre[1]);
+
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
         principal.setBorder(new ImagenFondo());
@@ -89,6 +91,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
+        txtUsuaio = new javax.swing.JLabel();
         jButton9 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -547,6 +550,9 @@ public class PrimeraInterface extends javax.swing.JFrame {
             }
         });
 
+        txtUsuaio.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        txtUsuaio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-circle.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -555,15 +561,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6))
-                .addGap(0, 0, 0))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton6))
+            .addComponent(txtUsuaio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jButton9.setBackground(new java.awt.Color(0, 0, 0));
@@ -1137,5 +1143,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JPanel reportes;
     private javax.swing.JPanel reportes1;
     private javax.swing.JPanel reportes2;
+    private javax.swing.JLabel txtUsuaio;
     // End of variables declaration//GEN-END:variables
 }
