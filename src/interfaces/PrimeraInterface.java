@@ -5,9 +5,14 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
 import Conexion.ImagenFondo;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -34,7 +39,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         initComponents();
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
-        principal.setBorder(new Conexion.ImagenFondo());
+        principal.setBorder(new ImagenFondo());
          this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
         principal.setBorder(new ImagenFondo());
         this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
@@ -959,9 +964,32 @@ public class PrimeraInterface extends javax.swing.JFrame {
         Facturacion.setSize(0, 0);
     }//GEN-LAST:event_Incidentes3MouseExited
 
+    private String cedulaEmpleado(String codOficina){
+        String cedula = "";
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "SELECT CED_PERSONAL_PER "
+                    + "FROM PERSONAL_OFICINA "
+                    + "WHERE COD_OFI_PER = '" + codOficina + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                cedula = rs.getString("CED_PERSONAL_PER");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cedula;        
+    }
+    
     private void Incidentes3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Incidentes3ActionPerformed
         // TODO add your handling code here:
-        IngresoViajes iv = new IngresoViajes();
+        String ced = cedulaEmpleado(codEncomiendaOficina);
+        IngresoViajes iv = new IngresoViajes(ced);
         principal.add(iv);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = iv.getSize();

@@ -28,8 +28,12 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoViajes
      */
-    public IngresoViajes() {
+    String cedEmpleado;
+    
+    public IngresoViajes(String cedula) {        
         initComponents();
+        cedEmpleado = cedula;
+        cargarValoresIncio();
         cargarComboCiudadesOrigen();
         cargarComboCiudadesDestino();
         cargarComboBus();
@@ -37,7 +41,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
     }
 
     private void cargarValoresIncio() {
-        txtFechaEmision.setText(obtenerFechaActual());               
+        txtFechaEmision.setText(obtenerFechaActual());         
     }
     
     public String obtenerFechaActual() {
@@ -49,6 +53,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
         fecha = año + "-" + mes + "-" + dia;
         return fecha;
     }
+    
     
     public void cargarComboCiudadesOrigen() {
         try {
@@ -613,7 +618,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IngresoViajes().setVisible(true);
+                
             }
         });
     }
