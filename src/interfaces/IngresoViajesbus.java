@@ -15,220 +15,14 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoViajes
      */
-    public IngresoViajesbus() {
+    public IngresoViajesbus(String cedu) {
         initComponents();
-//       setLocationRelativeTo(this);
-//        cargarComboCiudadesOrigen();
-//        cargarComboCiudadesDestino();
-//        cargarComboBus();
+        txtcedula.setText(cedu);
+
       this.setIconifiable(true);
     }
 
-//    public void cargarComboCiudadesOrigen() {
-//        try {
-////            conexion cc = new conexion();
-////            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT NOM_OFI FROM OFICINAS";
-//            //Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxOrigen.addItem(rs.getString("NOM_OFI"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
 
-//    public void cargarComboCiudadesDestino() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT NOM_OFI FROM OFICINAS";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxDestino.addItem(rs.getString("NOM_OFI"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
-
-//    public void cargarComboFrecuencia() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT HORA_SALIDA "
-//                    + "FROM FRECUENCIAS "
-//                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
-//                    + "                         FROM RUTAS"
-//                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
-//                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "')) ";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxHora_Salida.addItem(rs.getString("HORA_SALIDA"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
-
-//    public String obtenerCodigoFrecuencia(String hor_sal) {
-//        String codigo = "";
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT COD_FRE "
-//                    + "FROM FRECUENCIAS "
-//                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
-//                    + "                         FROM RUTAS"
-//                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
-//                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "') "
-//                    + "AND HORA_SALIDA = '" + hor_sal + "') ";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                codigo = (rs.getString("COD_FRE"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//
-//        return codigo;
-//    }
-//
-//    public void cargarComboBus() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT PLACA FROM BUS";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxBus.addItem(rs.getString("PLACA"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
-//
-//    public String obtenerCodigoBus(String placa) {
-//        String codigo = "";
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT COD_BUS "
-//                    + "FROM BUS "
-//                    + "WHERE PLACA = '" + placa + "'";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                codigo = (rs.getString("COD_BUS"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//
-//        return codigo;
-//    }
-
-//
-//    private java.sql.Date convertUtilToSql(java.util.Date uDate) {
-//
-//        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
-//
-//        return sDate;
-//
-//    }
-//
-//    public void guardarViaje() throws ParseException {
-//        try {
-//            
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql2 = "select VI.NEXTVAL from dual";           
-//
-//            Statement psd2 = cn.createStatement();
-//            ResultSet rs2 = psd2.executeQuery(sql2);
-//            String cod = "";
-//
-//            while (rs2.next()) {
-//                cod = rs2.getString("NEXTVAL");
-//            }
-//
-//            int valor = Integer.valueOf(cod);
-//            
-//            String sql = "INSERT INTO VIAJES(COD_VIAJE, CED_PER_VIA, COD_FRE_VIA, COD_BUS_VIA, FEC_VEN, FEC_VIAJE, OBS) VALUES(?,?,?,?,?,?,?) ";
-//            PreparedStatement psd = cn.prepareStatement(sql);
-//            String cod_fre, cod_bus, obs, fec_ven, fec_via;
-//            cod_fre = obtenerCodigoFrecuencia(jcbxHora_Salida.getSelectedItem().toString());
-//            cod_bus = obtenerCodigoBus(jcbxBus.getSelectedItem().toString());
-//
-//            SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
-//
-//            fec_ven = formatoDeFecha.format(jDateChooser_venta.getDate());
-//            fec_via = formatoDeFecha.format(jDateChooser_viaje.getDate());
-//
-//            Date dateForBBDD = formatoDeFecha.parse(fec_ven);
-//            Date dateForBBDD2 = formatoDeFecha.parse(fec_via);
-//            java.sql.Date sDate = convertUtilToSql(dateForBBDD);
-//            java.sql.Date sDate2 = convertUtilToSql(dateForBBDD2);
-//           
-//            obs = txtObservacion.getText();
-//
-//            psd.setInt(1, valor);
-//            psd.setString(2, txtCedulaPersonal.getText());
-//            psd.setString(3, cod_fre);
-//            psd.setString(4, cod_bus);
-//            psd.setDate(5, sDate);
-//            psd.setDate(6, sDate2);
-//            psd.setString(7, obs);
-//
-//            int n = psd.executeUpdate();
-//            if (n > 0) {
-//                JOptionPane.showMessageDialog(this, "Se Inserto correctamente el VIAJE");
-//                limpiarTextos();
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
-
-//    public void limpiarTextos() {
-//        txtCedulaPersonal.setText(null);
-//        jcbxOrigen.setSelectedIndex(0);
-//        jcbxDestino.setSelectedIndex(0);
-//        jcbxHora_Salida.setSelectedIndex(0);
-//        jcbxBus.setSelectedIndex(0);
-//        jDateChooser_venta.setDate(null);
-//        jDateChooser_viaje.setDate(null);
-//        txtObservacion.setText(null);
-//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -253,11 +47,9 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         jPanel3 = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel10 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        txtcedula = new javax.swing.JLabel();
         btnNuevo3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         btnGuardar3 = new javax.swing.JButton();
@@ -321,17 +113,12 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
 
         jLabel10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
-        jLabel5.setText("Datos Personal");
-
         jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
         jLabel11.setText("Placa Bus:");
 
         jLabel12.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel13.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtcedula.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         btnNuevo3.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnNuevo3.setText("Nuevo");
@@ -400,12 +187,9 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
-                                        .addComponent(jLabel5))
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel11)
                                         .addComponent(jLabel4))
@@ -414,10 +198,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jcbxDestino, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(jcbxBus, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(73, 73, 73))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -446,16 +227,15 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addComponent(jLabel9)
-                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -586,7 +366,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IngresoViajesbus().setVisible(true);
+                new IngresoViajesbus(Login.usuario.getText()).setVisible(true);
             }
         });
     }
@@ -603,12 +383,9 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -617,5 +394,6 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> jcbxBus;
     private javax.swing.JComboBox<String> jcbxDestino;
     private javax.swing.JComboBox<String> jcbxHora_Salida;
+    private javax.swing.JLabel txtcedula;
     // End of variables declaration//GEN-END:variables
 }
