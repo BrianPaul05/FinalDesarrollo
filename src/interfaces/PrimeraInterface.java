@@ -989,7 +989,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void Incidentes3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Incidentes3ActionPerformed
         // TODO add your handling code here:
         String ced = cedulaEmpleado(codEncomiendaOficina);
-        IngresoViajes iv = new IngresoViajes(ced);
+        IngresoViajesbus iv = new IngresoViajesbus();
         principal.add(iv);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = iv.getSize();
