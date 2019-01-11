@@ -5,6 +5,19 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,218 +30,232 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
      */
     public IngresoViajes() {
         initComponents();
-//        setLocationRelativeTo(this);
-//        cargarComboCiudadesOrigen();
-//        cargarComboCiudadesDestino();
-//        cargarComboBus();
-      this.setIconifiable(true);
+        cargarComboCiudadesOrigen();
+        cargarComboCiudadesDestino();
+        cargarComboBus();
+        this.setIconifiable(true);
     }
 
-//    public void cargarComboCiudadesOrigen() {
-//        try {
-////            conexion cc = new conexion();
-////            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT NOM_OFI FROM OFICINAS";
-//            //Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxOrigen.addItem(rs.getString("NOM_OFI"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
+    private void cargarValoresIncio() {
+        txtFechaEmision.setText(obtenerFechaActual());               
+    }
+    
+    public String obtenerFechaActual() {
+        String dia, mes, año, fecha;
+        Calendar c = Calendar.getInstance();
+        dia = Integer.toString(c.get(Calendar.DATE));
+        mes = Integer.toString(c.get(Calendar.MONTH) + 1);
+        año = Integer.toString(c.get(Calendar.YEAR));
+        fecha = año + "-" + mes + "-" + dia;
+        return fecha;
+    }
+    
+    public void cargarComboCiudadesOrigen() {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
 
-//    public void cargarComboCiudadesDestino() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT NOM_OFI FROM OFICINAS";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxDestino.addItem(rs.getString("NOM_OFI"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
+            String sql = "SELECT NOM_OFI FROM OFICINAS";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                jcbxOrigen.addItem(rs.getString("NOM_OFI"));
+            }
 
-//    public void cargarComboFrecuencia() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT HORA_SALIDA "
-//                    + "FROM FRECUENCIAS "
-//                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
-//                    + "                         FROM RUTAS"
-//                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
-//                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "')) ";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxHora_Salida.addItem(rs.getString("HORA_SALIDA"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
 
-//    public String obtenerCodigoFrecuencia(String hor_sal) {
-//        String codigo = "";
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT COD_FRE "
-//                    + "FROM FRECUENCIAS "
-//                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
-//                    + "                         FROM RUTAS"
-//                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
-//                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
-//                    + "                                                 FROM OFICINAS "
-//                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "') "
-//                    + "AND HORA_SALIDA = '" + hor_sal + "') ";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                codigo = (rs.getString("COD_FRE"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//
-//        return codigo;
-//    }
-//
-//    public void cargarComboBus() {
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT PLACA FROM BUS";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//            while (rs.next()) {
-//                jcbxBus.addItem(rs.getString("PLACA"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
-//
-//    public String obtenerCodigoBus(String placa) {
-//        String codigo = "";
-//        try {
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql = "SELECT COD_BUS "
-//                    + "FROM BUS "
-//                    + "WHERE PLACA = '" + placa + "'";
-//            Statement psd = cn.createStatement();
-//            ResultSet rs = psd.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                codigo = (rs.getString("COD_BUS"));
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//
-//        return codigo;
-//    }
+    public void cargarComboCiudadesDestino() {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
 
-//
-//    private java.sql.Date convertUtilToSql(java.util.Date uDate) {
-//
-//        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
-//
-//        return sDate;
-//
-//    }
-//
-//    public void guardarViaje() throws ParseException {
-//        try {
-//            
-//            conexion cc = new conexion();
-//            Connection cn = cc.conectar();
-//
-//            String sql2 = "select VI.NEXTVAL from dual";           
-//
-//            Statement psd2 = cn.createStatement();
-//            ResultSet rs2 = psd2.executeQuery(sql2);
-//            String cod = "";
-//
-//            while (rs2.next()) {
-//                cod = rs2.getString("NEXTVAL");
-//            }
-//
-//            int valor = Integer.valueOf(cod);
-//            
-//            String sql = "INSERT INTO VIAJES(COD_VIAJE, CED_PER_VIA, COD_FRE_VIA, COD_BUS_VIA, FEC_VEN, FEC_VIAJE, OBS) VALUES(?,?,?,?,?,?,?) ";
-//            PreparedStatement psd = cn.prepareStatement(sql);
-//            String cod_fre, cod_bus, obs, fec_ven, fec_via;
-//            cod_fre = obtenerCodigoFrecuencia(jcbxHora_Salida.getSelectedItem().toString());
-//            cod_bus = obtenerCodigoBus(jcbxBus.getSelectedItem().toString());
-//
-//            SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
-//
-//            fec_ven = formatoDeFecha.format(jDateChooser_venta.getDate());
-//            fec_via = formatoDeFecha.format(jDateChooser_viaje.getDate());
-//
-//            Date dateForBBDD = formatoDeFecha.parse(fec_ven);
-//            Date dateForBBDD2 = formatoDeFecha.parse(fec_via);
-//            java.sql.Date sDate = convertUtilToSql(dateForBBDD);
-//            java.sql.Date sDate2 = convertUtilToSql(dateForBBDD2);
-//           
-//            obs = txtObservacion.getText();
-//
-//            psd.setInt(1, valor);
-//            psd.setString(2, txtCedulaPersonal.getText());
-//            psd.setString(3, cod_fre);
-//            psd.setString(4, cod_bus);
-//            psd.setDate(5, sDate);
-//            psd.setDate(6, sDate2);
-//            psd.setString(7, obs);
-//
-//            int n = psd.executeUpdate();
-//            if (n > 0) {
-//                JOptionPane.showMessageDialog(this, "Se Inserto correctamente el VIAJE");
-//                limpiarTextos();
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(this, ex);
-//        }
-//    }
+            String sql = "SELECT NOM_OFI FROM OFICINAS";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                jcbxDestino.addItem(rs.getString("NOM_OFI"));
+            }
 
-//    public void limpiarTextos() {
-//        txtCedulaPersonal.setText(null);
-//        jcbxOrigen.setSelectedIndex(0);
-//        jcbxDestino.setSelectedIndex(0);
-//        jcbxHora_Salida.setSelectedIndex(0);
-//        jcbxBus.setSelectedIndex(0);
-//        jDateChooser_venta.setDate(null);
-//        jDateChooser_viaje.setDate(null);
-//        txtObservacion.setText(null);
-//    }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    public void cargarComboFrecuencia() {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+
+            String sql = "SELECT HORA_SALIDA "
+                    + "FROM FRECUENCIAS "
+                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
+                    + "                         FROM RUTAS"
+                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
+                    + "                                                 FROM OFICINAS "
+                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
+                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
+                    + "                                                 FROM OFICINAS "
+                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "')) ";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                jcbxHora_Salida.addItem(rs.getString("HORA_SALIDA"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    public String obtenerCodigoFrecuencia(String hor_sal) {
+        String codigo = "";
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+
+            String sql = "SELECT COD_FRE "
+                    + "FROM FRECUENCIAS "
+                    + "WHERE COD_RUTA_PER = (SELECT COD_RUTA "
+                    + "                         FROM RUTAS"
+                    + "                         WHERE COD_OFI_ORI = (SELECT COD_OFI "
+                    + "                                                 FROM OFICINAS "
+                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxOrigen.getSelectedItem()) + "')"
+                    + "                         AND COD_OFI_DES = ( SELECT COD_OFI "
+                    + "                                                 FROM OFICINAS "
+                    + "                                                 WHERE NOM_OFI = '" + String.valueOf(jcbxDestino.getSelectedItem()) + "') "
+                    + "AND HORA_SALIDA = '" + hor_sal + "') ";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                codigo = (rs.getString("COD_FRE"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+        return codigo;
+    }
+
+    public void cargarComboBus() {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+
+            String sql = "SELECT PLACA FROM BUS";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                jcbxBus.addItem(rs.getString("PLACA"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    public String obtenerCodigoBus(String placa) {
+        String codigo = "";
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+
+            String sql = "SELECT COD_BUS "
+                    + "FROM BUS "
+                    + "WHERE PLACA = '" + placa + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                codigo = (rs.getString("COD_BUS"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+        return codigo;
+    }
+
+    private java.sql.Date convertUtilToSql(java.util.Date uDate) {
+
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+
+        return sDate;
+
+    }
+
+    public void guardarViaje(){
+        try {
+
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+
+            String sql2 = "select VI.NEXTVAL from dual";
+
+            Statement psd2 = cn.createStatement();
+            ResultSet rs2 = psd2.executeQuery(sql2);
+            String cod = "";
+
+            while (rs2.next()) {
+                cod = rs2.getString("NEXTVAL");
+            }
+
+            int valor = Integer.valueOf(cod);
+
+            String sql = "INSERT INTO VIAJES(COD_VIAJE, CED_PER_VIA, COD_FRE_VIA, COD_BUS_VIA, FEC_VEN, FEC_VIAJE, OBS) VALUES(?,?,?,?,?,?,?) ";
+            PreparedStatement psd = cn.prepareStatement(sql);
+            String cod_fre, cod_bus, obs, fec_ven, fec_via;
+            cod_fre = obtenerCodigoFrecuencia(jcbxHora_Salida.getSelectedItem().toString());
+            cod_bus = obtenerCodigoBus(jcbxBus.getSelectedItem().toString());
+
+            SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+            fec_ven = txtFechaEmision.getText();
+            fec_via = formatoDeFecha.format(jDateChooser_viaje.getDate());
+
+            Date dateForBBDD = formatoDeFecha.parse(fec_ven);
+            Date dateForBBDD2 = formatoDeFecha.parse(fec_via);
+            java.sql.Date sDate = convertUtilToSql(dateForBBDD);
+            java.sql.Date sDate2 = convertUtilToSql(dateForBBDD2);
+
+            obs = txtObservacion.getText();
+
+            psd.setInt(1, valor);
+            psd.setString(2, txtCedulaPersonal.getText());
+            psd.setString(3, cod_fre);
+            psd.setString(4, cod_bus);
+            psd.setDate(5, sDate);
+            psd.setDate(6, sDate2);
+            psd.setString(7, obs);
+
+            int n = psd.executeUpdate();
+            if (n > 0) {
+                JOptionPane.showMessageDialog(this, "Se Inserto correctamente el VIAJE");
+                limpiarTextos();
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(IngresoViajes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void limpiarTextos() {
+        txtCedulaPersonal.setText(null);
+        jcbxOrigen.setSelectedIndex(0);
+        jcbxDestino.setSelectedIndex(0);
+        jcbxHora_Salida.setSelectedIndex(0);
+        jcbxBus.setSelectedIndex(0);
+        txtFechaEmision.setText("");
+        jDateChooser_viaje.setDate(null);
+        txtObservacion.setText(null);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -256,8 +283,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
         jcbxDestino = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jDateChooser_viaje = new com.toedter.calendar.JDateChooser();
         jPanel8 = new javax.swing.JPanel();
         btnNuevo3 = new javax.swing.JButton();
         btnGuardar3 = new javax.swing.JButton();
@@ -265,6 +291,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
         btnSalir4 = new javax.swing.JButton();
         btnBorrar3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        txtFechaEmision = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -422,39 +449,38 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(39, 39, 39))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(11, 11, 11)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel8)
-                                .addComponent(jLabel2))
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jcbxOrigen, javax.swing.GroupLayout.Alignment.LEADING, 0, 140, Short.MAX_VALUE)
-                                            .addComponent(txtCedulaPersonal, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addComponent(jcbxDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4)))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel6)))
-                            .addGap(31, 31, 31)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtObservacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jcbxBus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(98, 98, 98))
-                        .addComponent(jLabel9))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jcbxOrigen, javax.swing.GroupLayout.Alignment.LEADING, 0, 140, Short.MAX_VALUE)
+                                        .addComponent(txtCedulaPersonal, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(jcbxDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6)))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtObservacion, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                            .addComponent(jcbxBus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jDateChooser_viaje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtFechaEmision))
+                        .addGap(98, 98, 98))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -470,28 +496,26 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
                         .addComponent(jcbxBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)))
                 .addGap(38, 38, 38)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbxOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7)
+                    .addComponent(txtFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jcbxOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel7))
+                            .addComponent(jcbxDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel4))
                         .addGap(40, 40, 40)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jcbxDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel4))
-                                .addGap(40, 40, 40)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(txtObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6)))
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))
+                    .addComponent(jDateChooser_viaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
         );
@@ -542,20 +566,20 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnBorrar3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       if(jcbxBus.getSelectedItem()=="42"){
-           Asientos42 s= new Asientos42();
-           s.setVisible(true);
-           
-       }else if(jcbxBus.getSelectedItem()=="45"){
-           Asientos45 s= new Asientos45();
-           s.setVisible(true);
-           
-       } else if(jcbxBus.getSelectedItem()=="48"){
-           Asientos48 s= new Asientos48();
-           s.setVisible(true);
-           
-       }
-       
+        if (jcbxBus.getSelectedItem() == "42") {
+            Asientos42 s = new Asientos42();
+            s.setVisible(true);
+
+        } else if (jcbxBus.getSelectedItem() == "45") {
+            Asientos45 s = new Asientos45();
+            s.setVisible(true);
+
+        } else if (jcbxBus.getSelectedItem() == "48") {
+            Asientos48 s = new Asientos48();
+            s.setVisible(true);
+
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -601,8 +625,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo3;
     private javax.swing.JButton btnSalir4;
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private com.toedter.calendar.JDateChooser jDateChooser_viaje;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -620,6 +643,7 @@ public class IngresoViajes extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> jcbxHora_Salida;
     private javax.swing.JComboBox<String> jcbxOrigen;
     private javax.swing.JTextField txtCedulaPersonal;
+    private javax.swing.JTextField txtFechaEmision;
     private javax.swing.JTextField txtObservacion;
     // End of variables declaration//GEN-END:variables
 }
