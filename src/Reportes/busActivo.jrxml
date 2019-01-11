@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="db398510-e42c-44c6-87b2-896c412f7e89">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT * FROM BUS
+WHERE estado = 'S']]>
+	</queryString>
+	<field name="cod_bus" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="num_bus" class="java.lang.String"/>
+	<field name="anio" class="java.lang.String"/>
+	<field name="estado_bus" class="java.lang.String"/>
+	<field name="capacidad_bus" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="95" splitType="Stretch">
+			<staticText>
+				<reportElement x="134" y="41" width="279" height="20" uuid="846c7f85-6e37-4b77-8d04-bd5acbbad9c5"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono : 03-2565658 Celular : 09956238545]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="61" width="551" height="19" uuid="86435fa0-d99c-4468-9f5e-22885060d50f"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="1" width="353" height="20" uuid="30863c69-af22-41be-842f-e410f69b11c0"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COOPERATIVA DE TRANSPORTE SKY WAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="21" width="275" height="20" uuid="7dad6a27-9a32-4221-a69f-20c554567e7c"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIAJA TRANQUILO JUNTO A NOSOTROS]]></text>
+			</staticText>
+			<image>
+				<reportElement x="2" y="2" width="97" height="59" uuid="380783a9-c427-4790-b581-98c033426969"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="451" y="2" width="126" height="65" uuid="6c4169f9-e728-454c-affb-c9019c7112f2"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="209" y="6" width="140" height="20" uuid="44d63296-6d42-438a-a530-22a095f82da5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[BUSES EN ESTADO ACTIVO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="27" width="100" height="1" uuid="c68d6b58-e393-49cc-a2ad-b1815636ff3a"/>
+			</line>
+			<line>
+				<reportElement x="99" y="27" width="100" height="1" uuid="6a993951-8b3c-4579-ba45-457babbcb529"/>
+			</line>
+			<line>
+				<reportElement x="199" y="27" width="100" height="1" uuid="8074fd56-0de5-41b8-919f-947ee5cb6c02"/>
+			</line>
+			<line>
+				<reportElement x="299" y="27" width="100" height="1" uuid="e647b540-082c-4ef8-9d05-df5b449b6cfd"/>
+			</line>
+			<line>
+				<reportElement x="398" y="27" width="100" height="1" uuid="3d8cd5f4-690f-465c-880e-222c829e7101"/>
+			</line>
+			<line>
+				<reportElement x="451" y="27" width="100" height="1" uuid="42578f55-cb44-4dd5-af4f-9be160b8540e"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="2" width="100" height="20" uuid="aa7055f1-e1c1-46ec-b619-6b3de88bbe4a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="2" width="100" height="20" uuid="777e5d03-2d12-4883-9a73-b5a4417ee981"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="2" width="100" height="20" uuid="74f54ecb-0c0d-4803-af51-aec5aadeeb7e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO BUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="2" width="100" height="20" uuid="8a089aad-e4be-42c9-aa77-f03f7e4832d0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AÑO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="2" width="100" height="20" uuid="b41810b6-7c86-4e80-8afa-42854ab90ff2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAPACIDAD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="1" width="100" height="20" uuid="0098478a-0e00-42d1-8c24-cd3de56a7843"/>
+				<textFieldExpression><![CDATA[$F{cod_bus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="1" width="100" height="20" uuid="e8c7da53-4e17-4922-b8fb-12bf6e115b7c"/>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="0" width="100" height="20" uuid="f76dabdc-27ee-4df8-9c58-586a85d02bd1"/>
+				<textFieldExpression><![CDATA[$F{num_bus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="303" y="1" width="100" height="20" uuid="b051ca2a-b5ea-4c02-9cb3-110afca94f25"/>
+				<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="405" y="1" width="100" height="20" uuid="99ebfbb5-9e82-4d08-bc66-9aaee5b344b6"/>
+				<textFieldExpression><![CDATA[$F{capacidad_bus}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="430" y="20" width="128" height="10" uuid="a0aa1d13-57c7-4b1d-98ae-f2b1bc1993be"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Celular : 09956238545]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="1" width="551" height="19" uuid="2a725741-968e-4258-b452-4470a1c301e5"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="20" width="194" height="10" uuid="6de01731-3358-40b1-b759-95514d3cb7c6"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Matriz : ambato - terminal terrestre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="30" width="124" height="13" uuid="ae52fdd6-ca80-49fb-bdd4-223fa980a1eb"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono : 03-2565658]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
