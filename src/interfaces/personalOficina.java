@@ -36,7 +36,8 @@ public class personalOficina extends javax.swing.JInternalFrame {
         desactivarBotones();
         desactivarCampos();
         this.setTitle("PERSONAL OFICINAS");
-        this.setIconifiable(true);
+         tblOficinaPer.getTableHeader().setReorderingAllowed(false);
+         this.setIconifiable(true);
     }
 
     public void cargarModificar() {
@@ -197,7 +198,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
                 }
-                 cargarTablaPerOfi();
+                cargarTablaPerOfi();
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -216,6 +217,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         btnCancelar.setEnabled(true);
         btnBorrar.setEnabled(true);
         btnSalir.setEnabled(true);
+         txtCedula.requestFocus();
 
     }
 
@@ -247,6 +249,26 @@ public class personalOficina extends javax.swing.JInternalFrame {
         }
     }
 
+     private void comprobarEmpleado(String cedula) {
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            Statement psd = cn.createStatement();
+            String sql = "SELECT * FROM personal WHERE CED_PER='" + cedula + "'";
+            ResultSet rs = psd.executeQuery(sql);
+            int pos = 0;
+            while (rs.next()) {
+                pos = pos + 1;
+            }
+            if (pos > 0) {         
+            }else{
+                JOptionPane.showMessageDialog(null, "No existe el usuario");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -266,7 +288,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        txtCedula = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         cbxCiudad = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
@@ -276,6 +297,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
+        txtCedula = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblOficinaPer = new javax.swing.JTable(){
@@ -294,7 +316,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
         ));
         jScrollPane3.setViewportView(tblClientes);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -318,17 +340,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("CEDULA :");
 
-        try {
-            txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCedulaKeyTyped(evt);
-            }
-        });
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("CIUDAD :");
 
@@ -341,6 +352,11 @@ public class personalOficina extends javax.swing.JInternalFrame {
 
         btnSalir.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         btnBorrar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
         btnBorrar.setText("Eliminar");
@@ -374,33 +390,45 @@ public class personalOficina extends javax.swing.JInternalFrame {
             }
         });
 
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnNuevo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtCedula)
-                            .addComponent(cbxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnNuevo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBorrar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSalir)))
+                        .addComponent(btnSalir))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3))
+                                .addGap(58, 58, 58)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -465,20 +493,22 @@ public class personalOficina extends javax.swing.JInternalFrame {
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(38, 38, 38)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -496,7 +526,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-       limpiarCampos();
+        limpiarCampos();
         activarCampos();
         activarBotones();
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -504,7 +534,7 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPerOficina();
-             limpiarCampos();
+            limpiarCampos();
             desactivarCampos();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(personalOficina.class.getName()).log(Level.SEVERE, null, ex);
@@ -520,14 +550,29 @@ public class personalOficina extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-            limpiarCampos();
+        limpiarCampos();
         desactivarBotones();
-       desactivarCampos();
+        desactivarCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txtCedulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyReleased
+        if(txtCedula.getText().length() == 10){
+          comprobarEmpleado(txtCedula.getText());
+      }
+    }//GEN-LAST:event_txtCedulaKeyReleased
+
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
-        soloNumeros(evt);
+       if(txtCedula.getText().length()>=10){
+           JOptionPane.showMessageDialog(null, "Cédula Incorrecta");
+           evt.consume();
+       }
     }//GEN-LAST:event_txtCedulaKeyTyped
+
+   
 
     /**
      * @param args the command line arguments
@@ -583,6 +628,6 @@ public class personalOficina extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tblClientes;
     private javax.swing.JTable tblOficinaPer;
-    private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JTextField txtCedula;
     // End of variables declaration//GEN-END:variables
 }

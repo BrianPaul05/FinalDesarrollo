@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package interfaces;
+
 import Conexion.Conexion;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -20,14 +21,16 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Roberto Altamirano
  */
-public class IngresoClientes extends javax.swing.JInternalFrame{
+public class IngresoClientes extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form IngresoClientes
+     *
      * @throws java.lang.ClassNotFoundException
      */
     public IngresoClientes() throws ClassNotFoundException {
@@ -41,7 +44,8 @@ public class IngresoClientes extends javax.swing.JInternalFrame{
         this.setTitle("REGISTRO CLIENTES");
     }
     DefaultTableModel modelo;
-public void limitarLetras(final JTextField txt, final int tamaño) {
+
+    public void limitarLetras(final JTextField txt, final int tamaño) {
         txt.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 int cant = txt.getText().length();
@@ -51,6 +55,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
             }
         });
     }
+
     public void limpiarcampos() {
         txtApellido.setText("");
         txtNombre.setText("");
@@ -61,6 +66,12 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         txtApellido.setEnabled(false);
         txtCedula.setEnabled(false);
         txtNombre.setEnabled(false);
+    }
+    
+    public void bloquearCamposActualizar() {
+        txtApellido.setEnabled(true);
+        txtCedula.setEnabled(false);
+        txtNombre.setEnabled(true);
     }
 
     public void activarCampos() {
@@ -73,7 +84,8 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(false);
         btnCancelar.setEnabled(false);
-        btnBorrar.setEnabled(false); 
+        btnBorrar.setEnabled(false);
+        btnActualizar.setEnabled(false);
     }
 
     public void activarBotones() {
@@ -81,17 +93,28 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         btnGuardar.setEnabled(true);
         btnCancelar.setEnabled(true);
         btnSalir.setEnabled(true);
+        btnActualizar.setEnabled(false);
     }
-    public void desactivarGuardar(){
+
+    public void desactivarGuardar() {
         btnGuardar.setEnabled(false);
     }
-    public void desactivarTexto(){
+    public void activarBotonesActualizar()
+    {
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnSalir.setEnabled(true);
+        btnActualizar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+    }
+    public void desactivarTexto() {
         txtCedula.setEnabled(false);
         txtNombre.setEnabled(false);
         txtApellido.setEnabled(false);
     }
 
-    public void cargarTablaClientes(String dato){
+    public void cargarTablaClientes(String dato) {
 
         try {
             String titulos[] = {"CÉDULA", "NOMBRE", "APELLIDO"};
@@ -132,8 +155,8 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
                 String nombre, apellido, cedula;
 
                 nombre = txtNombre.getText();
-                apellido = txtApellido.getText();
-                cedula = txtCedula.getText();
+                apellido = txtApellido.getText().toUpperCase();
+                cedula = txtCedula.getText().toUpperCase();
 
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
@@ -157,6 +180,36 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+    }
+
+    public void actualizarCliente() {
+        if (txtNombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Datos...");
+        } else if (txtApellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Datos...");
+        } else {
+
+            try {
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                String sql="";
+                sql = "UPDATE CLIENTES set NOM_CLI ='" + txtNombre.getText().toUpperCase() + "',"
+                        + "APE_CLI = '" + txtApellido.getText().toUpperCase() + "'"
+                        + "where CED_CLI= '" + txtCedula.getText() + "'";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                int n = psd.executeUpdate();
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(this, "Modificado Exitosamente....");
+                    cargarTablaClientes("");
+                    bloquearCamposActualizar();
+                    limpiarcampos();
+                    desactivarBotones();
+                    cn.close();
+                    
+                }   } catch (SQLException ex) {
+                Logger.getLogger(IngresoClientes.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -199,14 +252,14 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
                     txtNombre.setText(tblClientes.getValueAt(fila, 1).toString().trim());
                     txtApellido.setText(tblClientes.getValueAt(fila, 2).toString().trim());
                 }
-                
-                activarBotones();
+
+                activarBotonesActualizar();
                 desactivarGuardar();
-                bloquearCampos();
+                bloquearCamposActualizar();
             }
         });
     }
-    
+
     public void soloNumeros(java.awt.event.KeyEvent evt) {
         char c;
         c = evt.getKeyChar();
@@ -215,15 +268,15 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
             JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
         }
     }
+
     public void soloLetras(java.awt.event.KeyEvent evt) {
         char c = evt.getKeyChar();
-        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) ||(c>=123 && c<=255)) {
+        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 255)) {
             evt.consume();
             getToolkit().beep();
             JOptionPane.showMessageDialog(this, "Ingrese solo Letras", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -253,6 +306,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         btnCancelar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconifiable(true);
@@ -400,6 +454,14 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
             }
         });
 
+        btnActualizar.setFont(new java.awt.Font("Palatino Linotype", 0, 14)); // NOI18N
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -416,19 +478,21 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
                         .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualizar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -451,7 +515,8 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
                     .addComponent(btnSalir)
-                    .addComponent(btnBorrar))
+                    .addComponent(btnBorrar)
+                    .addComponent(btnActualizar))
                 .addContainerGap())
         );
 
@@ -459,13 +524,13 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -506,7 +571,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-            guardarCliente();
+        guardarCliente();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -518,13 +583,13 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:       
-        this.dispose();       
+        this.dispose();
         //para cerrar la ventana
         //exit 0 se sale de todo el sistema
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-            borrar(); 
+        borrar();
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
@@ -536,8 +601,13 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
     }//GEN-LAST:event_txtCedulaKeyTyped
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
-        // TODO add your handling code here:
+        soloLetras(evt);
     }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+       actualizarCliente();
+       bloquearCampos();
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -579,6 +649,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;

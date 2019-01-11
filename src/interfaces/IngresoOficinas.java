@@ -41,6 +41,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
         Tabla_Oficina.getTableHeader().setResizingAllowed(false);
         cargarModificarTabla();
         desactivarTextos();
+        desactivarBotones();
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/oficinas.png")));
         this.setTitle("REGISTRO OFICINAS");
     }
@@ -136,6 +137,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
         jButton_Eliminar.setEnabled(true);
         jButton_Salir.setEnabled(true);
     }
+   
 
     private void CargarTablaOficinas(String dato) {
         try {
@@ -680,7 +682,10 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
 
     private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
         char validar = evt.getKeyChar();
-        if (Character.isLetter(validar)) {
+        if(txtTelefono.getText().length()>=10){
+             JOptionPane.showMessageDialog(this,"Teléfono Incorrecto");
+             evt.consume();
+        } else if (Character.isLetter(validar)) {
             getToolkit().beep();
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "SOLO NÚMEROS POR FAVOR", "Advertencia", JOptionPane.ERROR_MESSAGE);

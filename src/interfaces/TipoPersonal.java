@@ -35,7 +35,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         cargarTabla();
         tblTipo.getTableHeader().setReorderingAllowed(false);
         this.setTitle("TIPOS EMPLEADOS");
-        this.setIconifiable(true);
+       this.setIconifiable(true);
     }
 
     public void limpiarCampos() {
@@ -54,8 +54,15 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
     public void desactivarBotones() {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(false);
-        btnCancelar.setEnabled(true);
+        btnCancelar.setEnabled(false);
         btnBorrar.setEnabled(false);
+        btnSalir.setEnabled(true);
+    }
+     public void desactivarbotonesTabla() {
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnBorrar.setEnabled(true);
         btnSalir.setEnabled(true);
     }
 
@@ -89,11 +96,8 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
     }
 
     public void guardarTipoPersonal() {
-        String estado = "S";
-        if (txtTipoPersonal.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Ingrese el tipo de Personal");
-            txtTipoPersonal.requestFocus();
-        } else if (txtDescripcion.getText().isEmpty()) {
+      
+        if (txtDescripcion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese descripcion o rol");
             txtDescripcion.requestFocus();
         } else {
@@ -101,15 +105,19 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
                 String sql = "";
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "INSERT INTO TIPO_PERSONAL (COD_TIP_PER,TIPO_PER,DES_PER, ESTADO) values(TIPO_PER.NEXTVAL,?,?,?)";
+                sql = "INSERT INTO TIPO_PERSONAL (tipo_per,DES_PER, ESTADO) values(?,?,?)";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                psd.setString(1, txtTipoPersonal.getText());
-                psd.setString(2, txtDescripcion.getText());
-                psd.setString(3, estado);
+               // psd.setString(1, txtTipoPersonal.getText());
+                psd.setString(1, txtTipoPersonal.getText().toUpperCase());
+                psd.setString(2, txtDescripcion.getText().toUpperCase());
+                psd.setString(3, "S");
                 int n = psd.executeUpdate();
                 if (n > 0) {
                     JOptionPane.showMessageDialog(this, "Se ha guardado correctamente", "Informacion", JOptionPane.INFORMATION_MESSAGE);
                     limpiarCampos();
+                    cargarTipoPersonal("");
+                    desactivarBotones();
+                    bloquearCampos();
                 }
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -153,8 +161,8 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
                 txtTipoPersonal.setText(tblTipo.getValueAt(fila, 1).toString().trim());
                 //permite cojer de una lista solo una posicion  trim nos ayuda a llenar los espacios en blanco
                 txtDescripcion.setText(tblTipo.getValueAt(fila, 2).toString().trim());
-
-                activarBotones();
+                bloquearCampos();
+                desactivarbotonesTabla();
             }
         });
     }
@@ -162,7 +170,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
     public void soloLetras(java.awt.event.KeyEvent evt) {
         char c = evt.getKeyChar();
 
-        if ((c >= 32 && c <= 64) || (c >= 91 && c <= 255)) {
+        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) ||(c>=123 && c<=255)) {
             evt.consume();
             getToolkit().beep();
             JOptionPane.showMessageDialog(this, "Ingrese solo Letras", "Error", JOptionPane.ERROR_MESSAGE);
@@ -182,7 +190,12 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblTipo = new javax.swing.JTable();
+        tblTipo = new javax.swing.JTable(){
+            public boolean isCellEditable(int x, int y){
+                return false;
+            }
+        }
+        ;
         jPanel3 = new javax.swing.JPanel();
         jLabel59 = new javax.swing.JLabel();
         txtTipoPersonal = new javax.swing.JTextField();
@@ -196,7 +209,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         btnGuardar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -232,7 +245,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -257,6 +270,12 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
 
         jLabel60.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel60.setText("Descripcion");
+
+        txtDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescripcionKeyTyped(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel4.setText("Buscar por Tipo Personal:");
@@ -311,54 +330,63 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel60)
-                    .addComponent(jLabel59)
-                    .addComponent(jLabel4))
-                .addGap(40, 40, 40)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTipoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 24, Short.MAX_VALUE)
-                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel59)
+                            .addComponent(jLabel60))
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTipoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(25, 25, 25)
+                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(53, 53, 53)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel59)
                     .addComponent(txtTipoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(52, 52, 52)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel60)
-                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(58, 58, 58)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
                     .addComponent(btnBorrar)
                     .addComponent(btnSalir))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -368,9 +396,9 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -378,9 +406,9 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -436,9 +464,13 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         cargarTipoPersonal(txtBuscar.getText());
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void txtDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionKeyTyped
+        soloLetras(evt);
+    }//GEN-LAST:event_txtDescripcionKeyTyped
+
     private void txtTipoPersonalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTipoPersonalKeyTyped
         // TODO add your handling code here:
-        soloLetras(evt);
+        // soloLetras(evt);
     }//GEN-LAST:event_txtTipoPersonalKeyTyped
 
     /**
