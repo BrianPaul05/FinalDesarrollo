@@ -27,14 +27,14 @@ import org.omg.CORBA.portable.InputStream;
  *
  * @author Ronni
  */
-public class PrimeraInterface extends javax.swing.JFrame {
+public class PrincipalSecretaria extends javax.swing.JFrame {
 
     /**
      * Creates new form PrimeraInterface
      */
     String codEncomiendaOficina;
 
-    public PrimeraInterface(String codOficina, String[] nombre) {
+    public PrincipalSecretaria(String codOficina, String[] nombre) {
         codEncomiendaOficina = codOficina;
         initComponents();
         txtUsuaio.setText(nombre[0] + " " + nombre[1]);
@@ -42,9 +42,9 @@ public class PrimeraInterface extends javax.swing.JFrame {
         this.setTitle("SKY WAY");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/sk.png")).getImage());
         principal.setBorder(new ImagenFondo());
-        this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+        this.setExtendedState(PrincipalSecretaria.MAXIMIZED_BOTH);
         principal.setBorder(new ImagenFondo());
-        this.setExtendedState(PrimeraInterface.MAXIMIZED_BOTH);
+        this.setExtendedState(PrincipalSecretaria.MAXIMIZED_BOTH);
         setExtendedState(MAXIMIZED_BOTH);
     }
 
@@ -90,7 +90,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
         fac2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
-        menuFacturacion = new javax.swing.JButton();
         txtUsuaio = new javax.swing.JLabel();
         jButton9 = new javax.swing.JButton();
 
@@ -529,28 +528,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
             }
         });
 
-        menuFacturacion.setBackground(new java.awt.Color(0, 0, 0));
-        menuFacturacion.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        menuFacturacion.setForeground(new java.awt.Color(255, 255, 255));
-        menuFacturacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cloud-print.png"))); // NOI18N
-        menuFacturacion.setText("Facturación");
-        menuFacturacion.setToolTipText("");
-        menuFacturacion.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        menuFacturacion.setFocusable(false);
-        menuFacturacion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                menuFacturacionMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                menuFacturacionMouseExited(evt);
-            }
-        });
-        menuFacturacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuFacturacionActionPerformed(evt);
-            }
-        });
-
         txtUsuaio.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         txtUsuaio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-circle.png"))); // NOI18N
 
@@ -583,15 +560,12 @@ public class PrimeraInterface extends javax.swing.JFrame {
                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(menuFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(menuFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton6)
                 .addComponent(jButton9))
             .addComponent(txtUsuaio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -682,22 +656,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void menuFacturacionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacionMouseEntered
-
-        jButton6.setToolTipText("Reportes existentes");
-        Facturacion.setSize(130, 60);
-
-    }//GEN-LAST:event_menuFacturacionMouseEntered
-
-    private void menuFacturacionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacionMouseExited
-        // TODO add your handling code here:
-        Facturacion.setSize(0, 0);
-    }//GEN-LAST:event_menuFacturacionMouseExited
-
-    private void menuFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFacturacionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuFacturacionActionPerformed
-
     private void ClientesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ClientesMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
@@ -716,7 +674,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         try {
             c = new IngresoClientes();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrimeraInterface.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PrincipalSecretaria.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         principal.add(c);
@@ -1094,14 +1052,17 @@ public class PrimeraInterface extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrimeraInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrimeraInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrimeraInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrimeraInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -1134,7 +1095,6 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    public static javax.swing.JButton menuFacturacion;
     private javax.swing.JButton oficinas;
     private javax.swing.JDesktopPane principal;
     private javax.swing.JPanel reportes;

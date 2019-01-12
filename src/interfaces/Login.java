@@ -37,7 +37,8 @@ public class Login extends javax.swing.JFrame {
         limitarLetras(usuario, 10);
         limitarLetras(contraseña, 4);
     }
-public void limitarLetras(final JTextField txt, final int tamaño) {
+
+    public void limitarLetras(final JTextField txt, final int tamaño) {
         txt.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 int cant = txt.getText().length();
@@ -47,6 +48,7 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
             }
         });
     }
+
     private boolean comprobarCuenta(String usu, String con) {
         int n = 0;
         try {
@@ -73,6 +75,28 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
         return false;
     }
 
+    public String tipoPersonal() {
+        String personal = "";
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "select TIPO_PER \n"
+                    + "FROM TIPO_PERSONAL\n"
+                    + "WHERE COD_TIP_PER IN (SELECT TIPO_PER\n"
+                    + "                       FROM PERSONAL \n"
+                    + "                       WHERE CED_PER='" + usuario.getText() + "')";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                personal = rs.getString("TIPO_PER");
+            }
+            cn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return personal;
+    }
+
     private String obtenerCodigoOficina(String usu) {
         String codigo = "";
         try {
@@ -86,31 +110,36 @@ public void limitarLetras(final JTextField txt, final int tamaño) {
 
             while (rs.next()) {
                 codigo = rs.getString("COD_OFI_PER");
+
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         return codigo;
     }
-private String[] obtenerNombre(){
-               String[] dato = new String[2];
+
+    private String[] obtenerNombre() {
+        String[] dato = new String[2];
         try {
             Connection cn = new Conexion().conexion();
-            String sql ="select nom1_per, ape1_per from personal where ced_per = '"+usuario.getText()+"' ";
+            String sql = "select nom1_per, ape1_per from personal where ced_per = '" + usuario.getText() + "' ";
             Statement psd = cn.createStatement();
-            ResultSet rs = psd.executeQuery(sql);            
-            while(rs.next()){
-                dato[0] =  rs.getString("nom1_per");
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                dato[0] = rs.getString("nom1_per");
                 dato[1] = rs.getString("ape1_per");
             }
             return dato;
+
         } catch (Exception e) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(Login.class
+                    .getName()).log(Level.SEVERE, null, e);
         }
-        return dato ;
-               
+        return dato;
+
     }
 
     /**
@@ -314,13 +343,29 @@ private String[] obtenerNombre(){
 
     private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
 
-       boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
+        boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
         if (condicion) {
-            String codOfi = obtenerCodigoOficina(usuario.getText());
-            String[] nombre= obtenerNombre();
-           PrimeraInterface pi = new PrimeraInterface(codOfi, nombre);
-           pi.setVisible(true);
-            this.dispose();
+            if ("ADMINISTRADOR".equals(tipoPersonal())) {
+                String codOfi = obtenerCodigoOficina(usuario.getText());
+                String[] nombre = obtenerNombre();
+                PrimeraInterface pi = new PrimeraInterface(codOfi, nombre);
+                pi.setVisible(true);
+                this.dispose();
+            } else if ("SECRETARIA".equals(tipoPersonal())) {
+                String codOfi = obtenerCodigoOficina(usuario.getText());
+                String[] nombre = obtenerNombre();
+                PrincipalSecretaria pi = new PrincipalSecretaria(codOfi, nombre);
+                pi.setVisible(true);
+                this.dispose();
+            }
+            else if ("VENDEDOR".equals(tipoPersonal())) {
+                String codOfi = obtenerCodigoOficina(usuario.getText());
+                String[] nombre = obtenerNombre();
+                PrincipalVendedor pi = new PrincipalVendedor(codOfi, nombre);
+                pi.setVisible(true);
+                
+                this.dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(null, "El usuario no existe");
             usuario.setText(null);
@@ -335,7 +380,7 @@ private String[] obtenerNombre(){
     }//GEN-LAST:event_contraseñaMouseEntered
 
     private void contraseñaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contraseñaKeyTyped
-       
+
     }//GEN-LAST:event_contraseñaKeyTyped
 
     /**
@@ -351,13 +396,20 @@ private String[] obtenerNombre(){
             UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
 
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
