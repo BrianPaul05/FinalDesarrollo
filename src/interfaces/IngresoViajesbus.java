@@ -5,6 +5,12 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -15,12 +21,67 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     /**
      * Creates new form IngresoViajes
      */
-    public IngresoViajesbus(String cedu) {
+    String c;
+     public IngresoViajesbus(String cedu) {
         initComponents();
-        txtcedula.setText(cedu);
-
-      this.setIconifiable(true);
+        c = cedu;
+        txtcedula.setText(c);
+        txtorigen.setText(cargarOrigen());
+        cargarBus();
+        this.setIconifiable(true);
     }
+ public String cargarOrigen(){
+     String orige = "";
+     try {
+         Connection cn = new Conexion().conexion();
+         String sql = "select  o.ubicacion "
+                 + "from oficinas o, personal_oficina po "
+                 + "where o.cod_ofi = po.cod_ofi_per "
+                 + "and po.ced_personal_per = '"+c+"' ";
+         Statement psd = cn.createStatement();
+         ResultSet rs = psd.executeQuery(sql);
+         while (rs.next()) {
+             orige = rs.getString("ubicacion");
+         }
+         return orige;
+     } catch (Exception e) {
+         JOptionPane.showMessageDialog(this, e);
+     }
+     return orige;
+ }
+public void cargarBus(){
+    try {
+        Connection cn = new Conexion().conexion();
+        String sql = "Select num_bus from bus";
+        Statement st = cn.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        cbBus.addItem("Selecione...");
+        while(rs.next()){            
+            cbBus.addItem(rs.getString("num_bus"));
+        }        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e);
+    }
+}
+
+
+
+
+public String cargarPlaca(){
+    String placa ="";
+    try {
+        Connection cn = new Conexion().conexion();
+        String sql = "Select placa from bus where num_bus = '"+cbBus.getSelectedItem()+"'";
+        Statement st = cn.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        while(rs.next()){
+            placa= rs.getString("placa");
+        }
+        return placa;
+    } catch (Exception e) {
+    }
+    return placa;
+}
 
 
 
@@ -39,23 +100,21 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jcbxHora_Salida = new javax.swing.JComboBox<>();
-        jcbxBus = new javax.swing.JComboBox<>();
+        cbBus = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jcbxDestino = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jLabel10 = new javax.swing.JLabel();
+        txtorigen = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        txtPlaca = new javax.swing.JLabel();
         txtcedula = new javax.swing.JLabel();
         btnNuevo3 = new javax.swing.JButton();
         jbtnAsiento = new javax.swing.JButton();
         btnGuardar3 = new javax.swing.JButton();
         btnCancelar3 = new javax.swing.JButton();
-        btnSalir4 = new javax.swing.JButton();
-        btnBorrar3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -75,10 +134,9 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
 
         jcbxHora_Salida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
 
-        jcbxBus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "42", "45", "48" }));
-        jcbxBus.addActionListener(new java.awt.event.ActionListener() {
+        cbBus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbxBusActionPerformed(evt);
+                cbBusActionPerformed(evt);
             }
         });
 
@@ -111,12 +169,12 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        jLabel10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtorigen.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
         jLabel11.setText("Placa Bus:");
 
-        jLabel12.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtPlaca.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txtcedula.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -152,22 +210,6 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
             }
         });
 
-        btnSalir4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        btnSalir4.setText("Salir");
-        btnSalir4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir4ActionPerformed(evt);
-            }
-        });
-
-        btnBorrar3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        btnBorrar3.setText("Borrar");
-        btnBorrar3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBorrar3ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -177,7 +219,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -188,11 +230,19 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
+                                .addGap(9, 9, 9)
+                                .addComponent(jbtnAsiento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnGuardar3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtorigen, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -200,29 +250,16 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                 .addComponent(jLabel11)
                                                 .addComponent(jLabel4))
-                                            .addComponent(jLabel8))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jcbxDestino, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addComponent(jcbxBus, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(73, 73, 73))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(jbtnAsiento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnGuardar3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSalir4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnBorrar3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 62, Short.MAX_VALUE))))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                                            .addComponent(jLabel8)))
+                                    .addComponent(cbBus, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                                        .addComponent(jcbxDestino, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,7 +277,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                         .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtorigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jcbxDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel8))
@@ -256,17 +293,15 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(jcbxBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11))
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnAsiento, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalir4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBorrar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
 
@@ -302,37 +337,18 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_btnCancelar3ActionPerformed
 
-    private void btnSalir4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir4ActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-        //para cerrar la ventana
-        //exit 0 se sale de todo el sistema
-    }//GEN-LAST:event_btnSalir4ActionPerformed
-
-    private void btnBorrar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrar3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBorrar3ActionPerformed
-
     private void jbtnAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAsientoActionPerformed
-       if(jcbxBus.getSelectedItem()=="42"){
-           Asientos42 s= new Asientos42();
-           s.setVisible(true);
-           
-       }else if(jcbxBus.getSelectedItem()=="45"){
-           Asientos45 s= new Asientos45();
-           s.setVisible(true);
-           
-       } else if(jcbxBus.getSelectedItem()=="48"){
-           Asientos48 s= new Asientos48();
-           s.setVisible(true);
-           
-       }
-       
+              
     }//GEN-LAST:event_jbtnAsientoActionPerformed
 
-    private void jcbxBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbxBusActionPerformed
+    private void cbBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jcbxBusActionPerformed
+        if (cbBus.getSelectedItem().equals("Selecione...")) {
+            txtPlaca.setText("");
+        }else{
+        txtPlaca.setText(cargarPlaca());
+        }
+    }//GEN-LAST:event_cbBusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -373,16 +389,13 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBorrar3;
     private javax.swing.JButton btnCancelar3;
     private javax.swing.JButton btnGuardar3;
     private javax.swing.JButton btnNuevo3;
-    private javax.swing.JButton btnSalir4;
+    private javax.swing.JComboBox<String> cbBus;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -392,9 +405,10 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jbtnAsiento;
-    private javax.swing.JComboBox<String> jcbxBus;
     private javax.swing.JComboBox<String> jcbxDestino;
     private javax.swing.JComboBox<String> jcbxHora_Salida;
+    private javax.swing.JLabel txtPlaca;
     private javax.swing.JLabel txtcedula;
+    private javax.swing.JLabel txtorigen;
     // End of variables declaration//GEN-END:variables
 }
