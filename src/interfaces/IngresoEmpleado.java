@@ -42,7 +42,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         desactivarBotones();
         bloquearCampos();
         cargarComboCiudadOficina();
-       setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         this.setTitle("REGISTRAR EMPLEADOS");
         this.setIconifiable(true);
 
@@ -78,19 +78,21 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             cn.close();
         }
     }
-public static boolean validarEmailIntemedia(String email){
-        
+
+    public static boolean validarEmailIntemedia(String email) {
+
         String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
- 
+
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
-        if(matcher.find()){
-            return matcher.matches(); 
-        }else{
-            JOptionPane.showMessageDialog(null,"Email Incorrecto");
-           return false;
-        }   
+        if (matcher.find()) {
+            return matcher.matches();
+        } else {
+            JOptionPane.showMessageDialog(null, "Email Incorrecto");
+            return false;
+        }
     }
+
     public String cargarNA(String dato1, String dato2) {
         //  String nom1 = "";
         // String nom2 = "";  NOM1_PER,NOM2_PER
@@ -329,7 +331,7 @@ public static boolean validarEmailIntemedia(String email){
         }
     }
 
-     public void guardarPersonal() throws ClassNotFoundException {
+    public void guardarPersonal() throws ClassNotFoundException {
         String estado = "S";
         if (txtCedula.getText().length() < 10) {
             JOptionPane.showMessageDialog(null, "Cédula Incorrecta..");
@@ -354,25 +356,36 @@ public static boolean validarEmailIntemedia(String email){
             JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado..");
         } else if (txtClave.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
+        }
+        if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
+            JOptionPane.showMessageDialog(null, "Escoja la Ciudad");
         } else {
 
             try {
-
+                String sql1 = "";
+                String idOfi;
+                idOfi = idOficina();
                 String sql = "";
                 String cedula, direccion, telefono, mail, id_tipo_personal;
                 String nombres = txtNombre.getText().toUpperCase();
                 String apellidos = txtApellido.getText().toUpperCase();
-
                 String[] sepNom = nombres.split(" ");
                 String[] sepApe = apellidos.split(" ");
-
                 String nom1 = sepNom[0];
                 String nom2 = sepNom[1];
                 String ape1 = sepApe[0];
                 String ape2 = sepApe[1];
                 char[] aux = txtClave.getPassword();
                 String clave = new String(aux);
-
+                if (nom1.isEmpty()) {
+                    nom1 = null;
+                } else if (nom2.isEmpty()) {
+                    nom2 = null;
+                } else if (ape1.isEmpty()) {
+                    ape1 = null;
+                } else if (ape2.isEmpty()) {
+                    ape2 = null;
+                }
                 direccion = txtDireccion.getText().toUpperCase();
                 telefono = txtTelefono.getText();
                 mail = txtCorreo.getText().toLowerCase();
@@ -382,24 +395,28 @@ public static boolean validarEmailIntemedia(String email){
                 Date fec2 = jdcNacimiento.getDate();
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
-                sql = "INSERT INTO personal(CED_PER,NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
+                sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
                         + " values('" + cedula + "','" + nom1 + "','" + nom2 + "','" + ape1 + "','" + ape2 + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + clave + "')";
                 PreparedStatement psd = cn.prepareStatement(sql);
-
                 int n = psd.executeUpdate();
-
-                if (n > 0) {
+                
+                sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
+                PreparedStatement psd1 = cn.prepareStatement(sql1);
+                psd1.executeUpdate();// ncuantas  filas se inserto
+                int n2 = psd1.executeUpdate();
+                if (n > 0 && n2 > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
-                limpiarCampos();
-                bloquearCampos();
-                
+                    limpiarCampos();
+                    bloquearCampos();
                 }
-                
+
                 cn.close();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
+                Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
+
     }
 
     public void cargarTablaPersonal(String dato) {
@@ -428,14 +445,14 @@ public static boolean validarEmailIntemedia(String email){
             }
             tblPersonal.setModel(modelo);
             cn.close();
+
         } catch (SQLException ex) {
-            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    
-    
     public void cargarComboCiudadOficina() {
 
         try {
@@ -459,6 +476,7 @@ public static boolean validarEmailIntemedia(String email){
         }
 
     }
+
     public String idOficina() throws ClassNotFoundException {
         String id = " ";
         try {
@@ -466,47 +484,28 @@ public static boolean validarEmailIntemedia(String email){
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
             String sql = "";
-            sql = "SELECT COD_OFI from oficinas where ubicacion= '" + cbxCiudad.getSelectedItem() + "'";
+            sql = "SELECT COD_OFI from oficinas where ubicacion = '" + cbxCiudad.getSelectedItem() + "'";
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
             while (rs.next()) {
                 id = rs.getString("COD_OFI");
             }
             cn.close();
+            return id;
+
         } catch (SQLException ex) {
-            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         //  System.out.println(id);
         return id;
 
     }
-    
-    
-    
-    public void guardarPerOficina() throws ClassNotFoundException {
 
-        if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
-            JOptionPane.showMessageDialog(null, "Escoja la Ciudad");
-        } else {
-            try {
+    public void guardarPerOficina() {
 
-                String sql = "";
-                String idOfi;
-                
-                idOfi = idOficina();
-                Conexion cc = new Conexion();
-                Connection cn = cc.conexion();
-                sql = "insert into personal_oficina(CED_PERSONAL_PER,COD_OFI_PER) values('" + txtCedula.getText() + "','" + idOfi + "')";
-                PreparedStatement psd = cn.prepareStatement(sql);
-                psd.executeUpdate();// ncuantas  filas se inserto
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
-        }
     }
-    
-    
-    
+
     public void limpiarCampos() {
         txtCedula.setText("");
         txtNombre.setText("");
@@ -529,6 +528,7 @@ public static boolean validarEmailIntemedia(String email){
         btnSalir.setEnabled(true);
         btnActualizar.setEnabled(false);
     }
+
     public void botonesActualizar() {
         btnNuevo.setEnabled(false);
         btnActualizar.setEnabled(true);
@@ -597,17 +597,16 @@ public static boolean validarEmailIntemedia(String email){
             JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
         }
     }
-    
-   public void soloLetras(java.awt.event.KeyEvent evt) {
+
+    public void soloLetras(java.awt.event.KeyEvent evt) {
         char c = evt.getKeyChar();
 
-        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) ||(c>=123 && c<=255)) {
+        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 255)) {
             evt.consume();
             getToolkit().beep();
             JOptionPane.showMessageDialog(this, "Ingrese solo Letras", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1040,9 +1039,12 @@ public static boolean validarEmailIntemedia(String email){
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPersonal();
+            guardarPerOficina();
             cargarTablaPersonal("");
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -1062,16 +1064,20 @@ public static boolean validarEmailIntemedia(String email){
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         try {
             borrar();
+
         } catch (SQLException ex) {
-            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         try {
             actualizarPersonal();
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
@@ -1126,16 +1132,24 @@ public static boolean validarEmailIntemedia(String email){
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IngresoEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IngresoEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IngresoEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IngresoEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IngresoEmpleado.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
