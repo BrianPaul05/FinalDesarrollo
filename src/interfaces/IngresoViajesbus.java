@@ -28,6 +28,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         txtcedula.setText(c);
         txtorigen.setText(cargarOrigen());
         cargarBus();
+        cargarDestino();
         this.setIconifiable(true);
     }
  public String cargarOrigen(){
@@ -48,6 +49,21 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
          JOptionPane.showMessageDialog(this, e);
      }
      return orige;
+ }
+ 
+ public void cargarDestino(){
+     try {
+         Connection cn = new Conexion().conexion();
+         String sql = "Select ubicacion from oficinas where ubicacion<> '" +txtorigen.getText()+"' ";
+         Statement st = cn.createStatement();
+         ResultSet rs = st.executeQuery(sql);
+         jcbxDestino.addItem("Selecione...");
+         while(rs.next()){
+             jcbxDestino.addItem(rs.getString("ubicacion"));
+         }
+     } catch (Exception e) {
+         JOptionPane.showMessageDialog(this, e);
+     }
  }
 public void cargarBus(){
     try {
@@ -132,8 +148,6 @@ public String cargarPlaca(){
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
         jLabel4.setText("Fecha del viaje:");
 
-        jcbxHora_Salida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
-
         cbBus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbBusActionPerformed(evt);
@@ -146,7 +160,6 @@ public String cargarPlaca(){
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
         jLabel8.setText("Ciudad Destino:");
 
-        jcbxDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
         jcbxDestino.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jcbxDestinoItemStateChanged(evt);
