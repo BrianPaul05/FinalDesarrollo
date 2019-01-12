@@ -41,6 +41,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         cargarModificar();
         desactivarBotones();
         bloquearCampos();
+        cargarComboCiudadOficina();
        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         this.setTitle("REGISTRAR EMPLEADOS");
         this.setIconifiable(true);
@@ -433,6 +434,79 @@ public static boolean validarEmailIntemedia(String email){
 
     }
 
+    
+    
+    public void cargarComboCiudadOficina() {
+
+        try {
+            String personal;
+            String sql = "";
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            sql = "select UBICACION from oficinas ";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+
+            while (rs.next()) {
+                //codmar.add(rs.getString("MAR_COD"));
+                personal = rs.getString("UBICACION");
+                cbxCiudad.addItem(personal);
+            }
+            cn.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+    }
+    public String idOficina() throws ClassNotFoundException {
+        String id = " ";
+        try {
+
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            String sql = "";
+            sql = "SELECT COD_OFI from oficinas where ubicacion= '" + cbxCiudad.getSelectedItem() + "'";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                id = rs.getString("COD_OFI");
+            }
+            cn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //  System.out.println(id);
+        return id;
+
+    }
+    
+    
+    
+    public void guardarPerOficina() throws ClassNotFoundException {
+
+        if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
+            JOptionPane.showMessageDialog(null, "Escoja la Ciudad");
+        } else {
+            try {
+
+                String sql = "";
+                String idOfi;
+                
+                idOfi = idOficina();
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                sql = "insert into personal_oficina(CED_PERSONAL_PER,COD_OFI_PER) values('" + txtCedula.getText() + "','" + idOfi + "')";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                psd.executeUpdate();// ncuantas  filas se inserto
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+    }
+    
+    
+    
     public void limpiarCampos() {
         txtCedula.setText("");
         txtNombre.setText("");
@@ -443,6 +517,7 @@ public static boolean validarEmailIntemedia(String email){
         txtClave.setText("");
         jdcIngreso.setDate(null);
         jdcNacimiento.setDate(null);
+        cbxEmpleado.setSelectedIndex(0);
         cbxEmpleado.setSelectedIndex(0);
     }
 
@@ -482,6 +557,7 @@ public static boolean validarEmailIntemedia(String email){
         txtTelefono.setEnabled(false);
         cbxEmpleado.setEnabled(false);
         txtClave.setEnabled(false);
+        cbxCiudad.setEnabled(false);
     }
 
     public void activarCampos() {
@@ -495,6 +571,7 @@ public static boolean validarEmailIntemedia(String email){
         txtTelefono.setEnabled(true);
         cbxEmpleado.setEnabled(true);
         txtClave.setEnabled(true);
+        cbxCiudad.setEnabled(true);
     }
 
     public void bloquearCed() {
@@ -509,6 +586,7 @@ public static boolean validarEmailIntemedia(String email){
         cbxEmpleado.setEnabled(true);
         btnGuardar.setEnabled(false);
         txtClave.setEnabled(true);
+        cbxCiudad.setEnabled(true);
     }
 
     public void soloNumeros(java.awt.event.KeyEvent evt) {
@@ -568,6 +646,8 @@ public static boolean validarEmailIntemedia(String email){
         btnCancelar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        jLabel69 = new javax.swing.JLabel();
+        cbxCiudad = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -709,6 +789,11 @@ public static boolean validarEmailIntemedia(String email){
             }
         });
 
+        jLabel69.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel69.setText("Oficina:");
+
+        cbxCiudad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECCIONE" }));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -716,54 +801,10 @@ public static boolean validarEmailIntemedia(String email){
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel59)
-                                        .addComponent(jLabel60))
-                                    .addComponent(jLabel62)
-                                    .addComponent(jLabel63)))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel61)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtNombre)
-                                    .addComponent(txtApellido)
-                                    .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGap(45, 45, 45)
-                                        .addComponent(jLabel68)
-                                        .addGap(24, 24, 24))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel64)
-                                            .addComponent(jLabel66))
-                                        .addGap(18, 18, 18))))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(167, 167, 167)))
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
-                            .addComponent(txtClave)
-                            .addComponent(txtTelefono)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
                         .addComponent(jLabel58)
                         .addGap(18, 18, 18)
                         .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
-                        .addComponent(jLabel65)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -776,7 +817,50 @@ public static boolean validarEmailIntemedia(String email){
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGap(42, 42, 42)
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel59)
+                                                .addComponent(jLabel60))
+                                            .addComponent(jLabel62)
+                                            .addComponent(jLabel63)))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jLabel61)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtNombre)
+                                            .addComponent(txtApellido)
+                                            .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel64)
+                                            .addComponent(jLabel66)
+                                            .addComponent(jLabel69)))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                                        .addComponent(jLabel68))))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(87, 87, 87)
+                                .addComponent(jLabel65)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
+                            .addComponent(txtClave)
+                            .addComponent(txtTelefono)
+                            .addComponent(cbxCiudad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -786,7 +870,7 @@ public static boolean validarEmailIntemedia(String email){
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel58)
                     .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel61)
@@ -827,7 +911,9 @@ public static boolean validarEmailIntemedia(String email){
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel65)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel69)
+                    .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
@@ -921,7 +1007,7 @@ public static boolean validarEmailIntemedia(String email){
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1068,6 +1154,7 @@ public static boolean validarEmailIntemedia(String email){
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> cbxCiudad;
     private javax.swing.JComboBox<String> cbxEmpleado;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel58;
@@ -1080,6 +1167,7 @@ public static boolean validarEmailIntemedia(String email){
     private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel68;
+    private javax.swing.JLabel jLabel69;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
