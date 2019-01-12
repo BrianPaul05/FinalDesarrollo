@@ -371,20 +371,25 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 String apellidos = txtApellido.getText().toUpperCase();
                 String[] sepNom = nombres.split(" ");
                 String[] sepApe = apellidos.split(" ");
-                String nom1 = sepNom[0];
-                String nom2 = sepNom[1];
-                String ape1 = sepApe[0];
-                String ape2 = sepApe[1];
+//                String nom1 = sepNom[0];
+//                String nom2 = sepNom[1];
+//                String ape1 = sepApe[0];
+//                String ape2 = sepApe[1];
+
+              
+                
+
+
                 char[] aux = txtClave.getPassword();
                 String clave = new String(aux);
-                if (nom1.isEmpty()) {
-                    nom1 = null;
-                } else if (nom2.isEmpty()) {
-                    nom2 = null;
-                } else if (ape1.isEmpty()) {
-                    ape1 = null;
-                } else if (ape2.isEmpty()) {
-                    ape2 = null;
+                if (sepNom[0].isEmpty()) {
+                  sepNom[0] = null;
+                } else if (sepNom[1].isEmpty()) {
+                    sepNom[1]= null;
+                } else if (sepApe[0].isEmpty()) {
+                    sepApe[0] = null;
+                } else if (sepApe[1].isEmpty()) {
+                    sepApe[1]= null;
                 }
                 direccion = txtDireccion.getText().toUpperCase();
                 telefono = txtTelefono.getText();
@@ -396,13 +401,17 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
                 sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
-                        + " values('" + cedula + "','" + nom1 + "','" + nom2 + "','" + ape1 + "','" + ape2 + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + clave + "')";
+                        + " values('" + cedula + "','" + sepNom[0] + "','" + sepNom[1] + "','" + sepApe[0] + "','" + sepApe[1] + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + clave + "')";
                 PreparedStatement psd = cn.prepareStatement(sql);
                 int n = psd.executeUpdate();
-                
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
                 PreparedStatement psd1 = cn.prepareStatement(sql1);
-                psd1.executeUpdate();// ncuantas  filas se inserto
+             
                 int n2 = psd1.executeUpdate();
                 if (n > 0 && n2 > 0) {
                     JOptionPane.showMessageDialog(this, "Guardado Correctamente");
@@ -502,9 +511,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
 
     }
 
-    public void guardarPerOficina() {
-
-    }
+   
 
     public void limpiarCampos() {
         txtCedula.setText("");
@@ -1039,7 +1046,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPersonal();
-            guardarPerOficina();
+            //guardarPerOficina();
             cargarTablaPersonal("");
 
         } catch (ClassNotFoundException ex) {
