@@ -302,11 +302,11 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
         return cedula;
     }
-
+ IngresoViajesbus iv;
     private void fac1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac1ActionPerformed
         // TODO add your handling code here:
         String ced = cedulaEmpleado(codEncomiendaOficina);
-        IngresoViajesbus iv = null;
+       
         if (ventanasAbiertas(iv)) {
             iv = new IngresoViajesbus(Login.usuario.getText());
             principal.add(iv);

@@ -684,10 +684,9 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
         reportes.setSize(0, 0);
     }//GEN-LAST:event_ClientesMouseExited
-
+    IngresoClientes c;
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
 
-        IngresoClientes c = null;
         if (ventanasAbiertas(c)) {
             try {
                 c = new IngresoClientes();
@@ -713,10 +712,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
         reportes.setSize(0, 0);
     }//GEN-LAST:event_RutasMouseExited
-
+    Rutas r;
     private void RutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RutasActionPerformed
         // TODO add your handling code here:
-        Rutas r = null;
+
         if (ventanasAbiertas(r)) {
             r = new Rutas();
             principal.add(r);
@@ -794,10 +793,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         reportes.setSize(0, 0);
 
     }//GEN-LAST:event_BusesMouseExited
-
+    IngresoBus ib;
     private void BusesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BusesActionPerformed
         // TODO add your handling code here:
-        IngresoBus ib = null;
+
         if (ventanasAbiertas(ib)) {
             ib = new IngresoBus();
             principal.add(ib);
@@ -837,10 +836,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         reportes.setSize(0, 0);
 
     }//GEN-LAST:event_oficinasMouseExited
-
+    IngresoOficinas o;
     private void oficinasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oficinasActionPerformed
         // TODO add your handling code here:
-        IngresoOficinas o = null;
+
         if (ventanasAbiertas(o)) {
             o = new IngresoOficinas();
             principal.add(o);
@@ -891,10 +890,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
     }//GEN-LAST:event_Encomiendas5MouseExited
-
+    parametros p;
     private void Encomiendas5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas5ActionPerformed
         // TODO add your handling code here:
-        parametros p = null;
+
         if (ventanasAbiertas(p)) {
             p = new parametros();
             principal.add(p);
@@ -962,10 +961,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         reportes.setSize(0, 0);
         reportes2.setSize(0, 0);
     }//GEN-LAST:event_Clientes1MouseExited
-
+    IngresoEmpleado ie;
     private void Clientes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clientes1ActionPerformed
         // TODO add your handling code here:
-        IngresoEmpleado ie = null;
+
         if (ventanasAbiertas(ie)) {
             ie = new IngresoEmpleado();
             principal.add(ie);
@@ -986,10 +985,10 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         reportes.setSize(0, 0);
         reportes2.setSize(0, 0);        // TODO add your handling code here:
     }//GEN-LAST:event_Rutas1MouseExited
-
+    TipoPersonal tp;
     private void Rutas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Rutas1ActionPerformed
         // TODO add your handling code here:
-        TipoPersonal tp = null;
+
         if (ventanasAbiertas(tp)) {
             tp = new TipoPersonal();
             principal.add(tp);

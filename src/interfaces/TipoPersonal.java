@@ -33,6 +33,7 @@ public class TipoPersonal extends javax.swing.JInternalFrame {
         bloquearCampos();
         cargarTipoPersonal("");
         cargarTabla();
+         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         tblTipo.getTableHeader().setReorderingAllowed(false);
         this.setTitle("TIPOS EMPLEADOS");
        this.setIconifiable(true);
