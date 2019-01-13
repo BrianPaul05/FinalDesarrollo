@@ -117,7 +117,6 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-
         return codigo;
     }
 
@@ -345,7 +344,7 @@ public class Login extends javax.swing.JFrame {
 
         boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
         if (condicion) {
-            if ("ADMINISTRADOR".equals(tipoPersonal())) {
+            if ("ADMINISTRA".equals(tipoPersonal())) {
                 String codOfi = obtenerCodigoOficina(usuario.getText());
                 String[] nombre = obtenerNombre();
                 PrimeraInterface pi = new PrimeraInterface(codOfi, nombre);

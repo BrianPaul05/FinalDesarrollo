@@ -77,7 +77,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="txtorigen" alignment="0" min="-2" pref="141" max="-2" attributes="0"/>
-                                              <Component id="jcbxHora_Salida" min="-2" pref="140" max="-2" attributes="0"/>
+                                              <Component id="jcbFrecuencia" min="-2" pref="140" max="-2" attributes="0"/>
                                               <Component id="txtcedula" min="-2" pref="141" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -139,7 +139,7 @@
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jcbxHora_Salida" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbFrecuencia" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jDateChooser1" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -197,7 +197,7 @@
             <Property name="text" type="java.lang.String" value="Fecha del viaje:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jcbxHora_Salida">
+        <Component class="javax.swing.JComboBox" name="jcbFrecuencia">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -244,6 +244,7 @@
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbxDestinoItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbxDestinoActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
