@@ -89,12 +89,6 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
-                              <Component id="jLabel58" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="txtCedula" min="-2" pref="130" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                               <Component id="btnNuevo" min="-2" pref="99" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -131,23 +125,27 @@
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Group type="102" attributes="0">
+                                              <Component id="txtDireccion" min="-2" pref="258" max="-2" attributes="0"/>
+                                              <EmptySpace pref="51" max="32767" attributes="0"/>
+                                              <Component id="jLabel68" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="txtNombre" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="txtApellido" alignment="0" max="32767" attributes="0"/>
                                                   <Component id="jdcNacimiento" alignment="0" max="32767" attributes="0"/>
                                                   <Component id="jdcIngreso" alignment="0" pref="258" max="32767" attributes="0"/>
+                                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                                      <Component id="txtApellido" alignment="0" pref="185" max="32767" attributes="0"/>
+                                                      <Component id="txtNombre" alignment="0" max="32767" attributes="0"/>
+                                                  </Group>
                                               </Group>
                                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Component id="jLabel64" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jLabel66" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jLabel69" alignment="1" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel67" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel70" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                          </Group>
-                                          <Group type="102" attributes="0">
-                                              <Component id="txtDireccion" min="-2" pref="258" max="-2" attributes="0"/>
-                                              <EmptySpace pref="51" max="32767" attributes="0"/>
-                                              <Component id="jLabel68" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -164,7 +162,15 @@
                                   <Component id="txtClave" alignment="0" max="32767" attributes="0"/>
                                   <Component id="txtTelefono" alignment="0" max="32767" attributes="0"/>
                                   <Component id="cbxCiudad" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtNom2" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtApe2" alignment="0" max="32767" attributes="0"/>
                               </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+                              <Component id="jLabel58" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="txtCedula" min="-2" pref="130" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -190,11 +196,15 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel59" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel67" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtNom2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtApellido" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel60" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel70" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtApe2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jdcNacimiento" min="-2" max="-2" attributes="0"/>
@@ -265,7 +275,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="18" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Nombres :"/>
+                <Property name="text" type="java.lang.String" value="Nombre 1 :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel60">
@@ -273,7 +283,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="18" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Apellidos :"/>
+                <Property name="text" type="java.lang.String" value="Apellido 1:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel61">
@@ -481,6 +491,38 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel67">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial" size="18" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Nombre 2 :"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel70">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial" size="18" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Apellido 2:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtNom2">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" value="Opcional"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNom2KeyTyped"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtApe2">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtApe2KeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

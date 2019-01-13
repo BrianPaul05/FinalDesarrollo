@@ -88,8 +88,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         if (matcher.find()) {
             return matcher.matches();
         } else {
-            JOptionPane.showMessageDialog(null, "Email Incorrecto");
             return false;
+
         }
     }
 
@@ -336,10 +336,15 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         if (txtCedula.getText().length() < 10) {
             JOptionPane.showMessageDialog(null, "Cédula Incorrecta..");
             txtCedula.requestFocus();
-        } else if (txtNombre.getText().isEmpty() || !txtNombre.getText().contains(" ")) {
+        } else if (txtNombre.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Nombres...");
-        } else if (txtApellido.getText().isEmpty() || !txtNombre.getText().contains(" ")) {
-            JOptionPane.showMessageDialog(null, "Ingrese Apellidos...");
+            txtNombre.requestFocus();
+        }else if (txtApellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Primer Apellido...");
+            txtApellido.requestFocus();
+        } else if (txtApe2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese Segundo Apellido...");
+            txtApellido.requestFocus();
         } else if (jdcNacimiento.getCalendar() == null) {
             JOptionPane.showMessageDialog(null, "Falta Fecha Nacimiento...");
         } else if (edadPesonal() < 18) {
@@ -348,16 +353,20 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Falta Fecha de Ingreso...");
         } else if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
-        } else if (txtCorreo.getText().isEmpty() && validarEmailIntemedia(txtCorreo.getText())) {
+            txtDireccion.requestFocus();
+        } else if (txtCorreo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Correo...");
+            txtCorreo.requestFocus();
+        } else if (validarEmailIntemedia(txtCorreo.getText()) == false) {
+            JOptionPane.showMessageDialog(null, "Email Incorreto...");
+            txtCorreo.requestFocus();
         } else if (txtTelefono.getText().isEmpty() || txtTelefono.getText().length() < 10) {
             JOptionPane.showMessageDialog(null, "Telefono Incorrecto...");
         } else if (cbxEmpleado.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado..");
         } else if (txtClave.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
-        }
-        if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
+        } else if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja la Ciudad");
         } else {
 
@@ -367,66 +376,50 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 idOfi = idOficina();
                 String sql = "";
                 String cedula, direccion, telefono, mail, id_tipo_personal;
-                String nombres = txtNombre.getText().toUpperCase();
-                String apellidos = txtApellido.getText().toUpperCase();
-                String[] sepNom = nombres.split(" ");
-                String[] sepApe = apellidos.split(" ");
-//                String nom1 = sepNom[0];
-//                String nom2 = sepNom[1];
-//                String ape1 = sepApe[0];
-//                String ape2 = sepApe[1];
-
-              
-                
-
-
-                char[] aux = txtClave.getPassword();
-                String clave = new String(aux);
-                if (sepNom[0].isEmpty()) {
-                  sepNom[0] = null;
-                } else if (sepNom[1].isEmpty()) {
-                    sepNom[1]= null;
-                } else if (sepApe[0].isEmpty()) {
-                    sepApe[0] = null;
-                } else if (sepApe[1].isEmpty()) {
-                    sepApe[1]= null;
-                }
-                direccion = txtDireccion.getText().toUpperCase();
-                telefono = txtTelefono.getText();
-                mail = txtCorreo.getText().toLowerCase();
-                cedula = txtCedula.getText();
-                id_tipo_personal = idTipoPersonal();
-                Date fec1 = jdcIngreso.getDate();
-                Date fec2 = jdcNacimiento.getDate();
-                Conexion cc = new Conexion();
-                Connection cn = cc.conexion();
-                sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
-                        + " values('" + cedula + "','" + sepNom[0] + "','" + sepNom[1] + "','" + sepApe[0] + "','" + sepApe[1] + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + clave + "')";
-                PreparedStatement psd = cn.prepareStatement(sql);
-                int n = psd.executeUpdate();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
-                PreparedStatement psd1 = cn.prepareStatement(sql1);
-             
-                int n2 = psd1.executeUpdate();
-                if (n > 0 && n2 > 0) {
-                    JOptionPane.showMessageDialog(this, "Guardado Correctamente");
-                    limpiarCampos();
-                    bloquearCampos();
+               
+               
+                   String dato="";
+                if(txtNom2.getText().isEmpty()){
+                    dato="Ninguno";
+                }else{
+                    dato=txtNom2.getText();
                 }
 
-                cn.close();
-            } catch (SQLException ex) {
+               
+                    direccion = txtDireccion.getText().toUpperCase();
+                    telefono = txtTelefono.getText();
+                    mail = txtCorreo.getText().toLowerCase();
+                    cedula = txtCedula.getText();
+                    id_tipo_personal = idTipoPersonal();
+                    Date fec1 = jdcIngreso.getDate();
+                    Date fec2 = jdcNacimiento.getDate();
+                    Conexion cc = new Conexion();
+                    Connection cn = cc.conexion();
+                    sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
+                            + " values('" + cedula + "','" + txtNombre.getText().toUpperCase() + "','" + dato.toUpperCase()+ "','" + txtApellido.getText().toUpperCase()+ "','" + txtApe2.getText().toUpperCase()+ "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + txtClave.getText() + "')";
+                    sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
+                    PreparedStatement psd = cn.prepareStatement(sql);
+                    PreparedStatement psd1 = cn.prepareStatement(sql1);
+                    int n = psd.executeUpdate();
+                    int n2 = psd1.executeUpdate();
+                    if (n > 0) {
+                        if (n2 > 0) {
+                            JOptionPane.showMessageDialog(this, "Guardado Correctamente");
+                            limpiarCampos();
+                            bloquearCampos();
+                            desactivarBotones();
+                        }
+                    }
+                    cn.close();
+                }catch (SQLException ex) {
                 Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             }
 
         }
 
-    }
+    
 
     public void cargarTablaPersonal(String dato) {
         try {
@@ -511,8 +504,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
 
     }
 
-   
-
     public void limpiarCampos() {
         txtCedula.setText("");
         txtNombre.setText("");
@@ -524,7 +515,9 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jdcIngreso.setDate(null);
         jdcNacimiento.setDate(null);
         cbxEmpleado.setSelectedIndex(0);
-        cbxEmpleado.setSelectedIndex(0);
+        cbxCiudad.setSelectedIndex(0);
+        txtApe2.setText("");
+        txtNom2.setText("");
     }
 
     public void activarBotones() {
@@ -565,6 +558,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         cbxEmpleado.setEnabled(false);
         txtClave.setEnabled(false);
         cbxCiudad.setEnabled(false);
+        txtApe2.setEnabled(false);
+        txtNom2.setEnabled(false);
     }
 
     public void activarCampos() {
@@ -579,6 +574,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         cbxEmpleado.setEnabled(true);
         txtClave.setEnabled(true);
         cbxCiudad.setEnabled(true);
+        txtApe2.setEnabled(true);
+        txtNom2.setEnabled(true);
     }
 
     public void bloquearCed() {
@@ -594,6 +591,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(false);
         txtClave.setEnabled(true);
         cbxCiudad.setEnabled(true);
+        txtApe2.setEnabled(false);
+        txtNom2.setEnabled(false);
     }
 
     public void soloNumeros(java.awt.event.KeyEvent evt) {
@@ -654,6 +653,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         btnSalir = new javax.swing.JButton();
         jLabel69 = new javax.swing.JLabel();
         cbxCiudad = new javax.swing.JComboBox<>();
+        jLabel67 = new javax.swing.JLabel();
+        jLabel70 = new javax.swing.JLabel();
+        txtNom2 = new javax.swing.JTextField();
+        txtApe2 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -677,10 +680,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         jLabel58.setText("Cedula :");
 
         jLabel59.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jLabel59.setText("Nombres :");
+        jLabel59.setText("Nombre 1 :");
 
         jLabel60.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jLabel60.setText("Apellidos :");
+        jLabel60.setText("Apellido 1:");
 
         jLabel61.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel61.setText("Fec. Nacimiento :");
@@ -800,17 +803,32 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
 
         cbxCiudad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECCIONE" }));
 
+        jLabel67.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel67.setText("Nombre 2 :");
+
+        jLabel70.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel70.setText("Apellido 2:");
+
+        txtNom2.setToolTipText("Opcional");
+        txtNom2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNom2KeyTyped(evt);
+            }
+        });
+
+        txtApe2.setToolTipText("");
+        txtApe2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApe2KeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jLabel58)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -842,20 +860,23 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
+                                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                                        .addComponent(jLabel68))
+                                    .addGroup(jPanel6Layout.createSequentialGroup()
                                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtNombre)
-                                            .addComponent(txtApellido)
                                             .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                                            .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING)))
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel64)
                                             .addComponent(jLabel66)
-                                            .addComponent(jLabel69)))
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                                        .addComponent(jLabel68))))
+                                            .addComponent(jLabel69)
+                                            .addComponent(jLabel67)
+                                            .addComponent(jLabel70)))))
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGap(87, 87, 87)
                                 .addComponent(jLabel65)
@@ -866,7 +887,14 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                             .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
                             .addComponent(txtClave)
                             .addComponent(txtTelefono)
-                            .addComponent(cbxCiudad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cbxCiudad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNom2)
+                            .addComponent(txtApe2)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(jLabel58)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -885,11 +913,15 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel59))
+                            .addComponent(jLabel59)
+                            .addComponent(jLabel67)
+                            .addComponent(txtNom2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel60))
+                            .addComponent(jLabel60)
+                            .addComponent(jLabel70)
+                            .addComponent(txtApe2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jdcNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1046,7 +1078,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             guardarPersonal();
-            //guardarPerOficina();
             cargarTablaPersonal("");
 
         } catch (ClassNotFoundException ex) {
@@ -1125,6 +1156,14 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         soloLetras(evt);        // TODO add your handling code here:
     }//GEN-LAST:event_txtDireccionKeyTyped
 
+    private void txtNom2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNom2KeyTyped
+        soloLetras(evt);
+    }//GEN-LAST:event_txtNom2KeyTyped
+
+    private void txtApe2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApe2KeyTyped
+        soloLetras(evt);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtApe2KeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -1187,8 +1226,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel64;
     private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
+    private javax.swing.JLabel jLabel67;
     private javax.swing.JLabel jLabel68;
     private javax.swing.JLabel jLabel69;
+    private javax.swing.JLabel jLabel70;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -1197,12 +1238,14 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JDateChooser jdcIngreso;
     private com.toedter.calendar.JDateChooser jdcNacimiento;
     private javax.swing.JTable tblPersonal;
+    private javax.swing.JTextField txtApe2;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCedula;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtNom2;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
