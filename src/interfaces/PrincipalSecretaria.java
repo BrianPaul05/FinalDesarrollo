@@ -8,6 +8,7 @@ package interfaces;
 import Conexion.Conexion;
 import Conexion.ImagenFondo;
 import static interfaces.PrimeraInterface.principal;
+import static interfaces.PrimeraInterface.ventanasAbiertas;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
@@ -23,6 +24,12 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.swing.JRViewer;
 import org.omg.CORBA.portable.InputStream;
 
 /**
@@ -107,7 +114,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         Rutas1 = new javax.swing.JButton();
         reportes1 = new javax.swing.JPanel();
         Viajes = new javax.swing.JButton();
-        Encomiendas = new javax.swing.JButton();
+        Empleados = new javax.swing.JButton();
         Unidades = new javax.swing.JButton();
         Encomiendas2 = new javax.swing.JButton();
         Encomiendas3 = new javax.swing.JButton();
@@ -346,25 +353,25 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         });
         reportes1.add(Viajes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 20));
 
-        Encomiendas.setBackground(new java.awt.Color(0, 0, 0));
-        Encomiendas.setForeground(new java.awt.Color(255, 255, 255));
-        Encomiendas.setText("Empleados");
-        Encomiendas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Encomiendas.setFocusable(false);
-        Encomiendas.addMouseListener(new java.awt.event.MouseAdapter() {
+        Empleados.setBackground(new java.awt.Color(0, 0, 0));
+        Empleados.setForeground(new java.awt.Color(255, 255, 255));
+        Empleados.setText("Empleados");
+        Empleados.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Empleados.setFocusable(false);
+        Empleados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                EncomiendasMouseEntered(evt);
+                EmpleadosMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                EncomiendasMouseExited(evt);
+                EmpleadosMouseExited(evt);
             }
         });
-        Encomiendas.addActionListener(new java.awt.event.ActionListener() {
+        Empleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EncomiendasActionPerformed(evt);
+                EmpleadosActionPerformed(evt);
             }
         });
-        reportes1.add(Encomiendas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 110, 20));
+        reportes1.add(Empleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 110, 20));
 
         Unidades.setBackground(new java.awt.Color(0, 0, 0));
         Unidades.setForeground(new java.awt.Color(255, 255, 255));
@@ -748,21 +755,29 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
 
     }//GEN-LAST:event_ViajesActionPerformed
 
-    private void EncomiendasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EncomiendasMouseEntered
+    private void EmpleadosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EmpleadosMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
         reportes1.setSize(110, 140);
-    }//GEN-LAST:event_EncomiendasMouseEntered
+    }//GEN-LAST:event_EmpleadosMouseEntered
 
-    private void EncomiendasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EncomiendasMouseExited
+    private void EmpleadosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EmpleadosMouseExited
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
-    }//GEN-LAST:event_EncomiendasMouseExited
+    }//GEN-LAST:event_EmpleadosMouseExited
+         Parametro1 pr1;
+    private void EmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmpleadosActionPerformed
+       if (ventanasAbiertas(pr1)) {
+            pr1 = new Parametro1();
+            principal.add(pr1);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = pr1.getSize();
+            pr1.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            pr1.setVisible(true);
+           
+        }
 
-    private void EncomiendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EncomiendasActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_EncomiendasActionPerformed
+    }//GEN-LAST:event_EmpleadosActionPerformed
 
     private void UnidadesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UnidadesMouseEntered
         // TODO add your handling code here:
@@ -776,8 +791,25 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     }//GEN-LAST:event_UnidadesMouseExited
 
     private void UnidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UnidadesActionPerformed
-        // TODO add your handling code here:
-
+     try {
+           Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            JInternalFrame internal = new JInternalFrame();
+            internal.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/bus2.png")));
+            JasperReport reporte = JasperCompileManager.compileReport("src/Reportes/busActiv.jrxml");
+            JasperPrint print = JasperFillManager.fillReport(reporte, null, cn);
+            //JasperViewer.viewReport(print, false);           
+            internal.getContentPane().add(new JRViewer(print));
+            internal.pack();
+            internal.setResizable(true);
+            internal.setClosable(true);
+            internal.setMaximizable(true);
+            internal.setSize(1000, 700);
+            PrincipalSecretaria.principal.add(internal);
+            internal.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(Parametro.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_UnidadesActionPerformed
 
     private void reportes1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportes1MouseEntered
@@ -892,12 +924,12 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
     }//GEN-LAST:event_Encomiendas5MouseExited
-    parametros p;
+    Parametro p;
     private void Encomiendas5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas5ActionPerformed
         // TODO add your handling code here:
 
         if (ventanasAbiertas(p)) {
-            p = new parametros();
+            p = new Parametro();
             principal.add(p);
             Dimension desktopSize = principal.getSize();
             Dimension internalSize = p.getSize();
@@ -1085,7 +1117,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     private javax.swing.JButton Buses;
     private javax.swing.JButton Clientes;
     private javax.swing.JButton Clientes1;
-    private javax.swing.JButton Encomiendas;
+    private javax.swing.JButton Empleados;
     private javax.swing.JButton Encomiendas2;
     private javax.swing.JButton Encomiendas3;
     private javax.swing.JButton Encomiendas5;

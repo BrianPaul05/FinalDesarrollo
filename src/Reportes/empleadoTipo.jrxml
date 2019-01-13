@@ -57,12 +57,12 @@ WHERE TIPO_PER = $P{ID_TIPO_PERSONAL}]]>
 				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
 			</staticText>
 			<image>
-				<reportElement x="1" y="1" width="97" height="59" uuid="5d7257c9-e81d-4bef-ad91-d0d89a292342"/>
-				<imageExpression><![CDATA["D:\\Mis documentos\\Escritorio\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
+				<reportElement x="0" y="1" width="97" height="59" uuid="a452095e-d772-4033-b96a-d7e642d5b6f8"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="451" y="1" width="126" height="65" uuid="8ea61ef9-a969-44cc-8765-128f91c3c6c8"/>
-				<imageExpression><![CDATA["D:\\Mis documentos\\Escritorio\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
+				<reportElement x="451" y="1" width="126" height="65" uuid="70f550ed-4446-48db-b2e1-1165e519e29b"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</title>

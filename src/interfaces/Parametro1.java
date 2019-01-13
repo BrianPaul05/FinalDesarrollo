@@ -5,19 +5,58 @@
  */
 package interfaces;
 
+import Conexion.Conexion;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 import javax.swing.UIManager;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.swing.JRViewer;
 
 /**
  *
  * @author Ronni
  */
-public class parametros extends javax.swing.JInternalFrame {
+public class Parametro1 extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form parametros
      */
-    public parametros() {
+    public Parametro1() {
         initComponents();
+    }
+
+    public void reporte() {
+
+        try {
+            Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            JInternalFrame internal = new JInternalFrame();
+            Map parametro = new HashMap();
+            internal.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png")));
+            parametro.put("ID_TIPO_PERSONAL", Integer.valueOf(txtParametro.getText()));
+            JasperReport reporte = JasperCompileManager.compileReport("src/Reportes/empleadoTipo.jrxml");
+            JasperPrint print = JasperFillManager.fillReport(reporte, parametro, cn);
+            //JasperViewer.viewReport(print, false);           
+            internal.getContentPane().add(new JRViewer(print));
+            internal.pack();
+            internal.setResizable(true);
+            internal.setClosable(true);
+            internal.setMaximizable(true);
+            internal.setSize(1000, 700);
+            PrincipalSecretaria.principal.add(internal);
+            internal.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(Parametro1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -31,22 +70,27 @@ public class parametros extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtParametro = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("PARÁMETRO");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtParametro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jButton1.setBackground(new java.awt.Color(204, 204, 204));
         jButton1.setText("ENVIAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(204, 204, 204));
         jButton2.setText("CANCELAR");
@@ -80,7 +124,7 @@ public class parametros extends javax.swing.JInternalFrame {
                         .addGap(49, 49, 49)
                         .addComponent(jLabel1)
                         .addGap(48, 48, 48)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtParametro, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(78, 78, 78)
                         .addComponent(jButton1)
@@ -95,7 +139,7 @@ public class parametros extends javax.swing.JInternalFrame {
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtParametro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -120,8 +164,12 @@ public class parametros extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-this.dispose();        // TODO add your handling code here:
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        reporte();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,20 +184,23 @@ this.dispose();        // TODO add your handling code here:
             UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
 
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(parametros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Parametro1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(parametros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Parametro1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(parametros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Parametro1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(parametros.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Parametro1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new parametros().setVisible(true);
+                new Parametro1().setVisible(true);
             }
         });
     }
@@ -160,6 +211,6 @@ this.dispose();        // TODO add your handling code here:
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtParametro;
     // End of variables declaration//GEN-END:variables
 }
