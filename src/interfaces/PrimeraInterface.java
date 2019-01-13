@@ -63,9 +63,9 @@ public class PrimeraInterface extends javax.swing.JFrame {
         boolean cerrada = true;
         while (i < activos.length && cerrada) {
             if (activos[i] == ventana) {
-                return false;
+              return false;
             } else {
-                activos[i].dispose();
+               activos[i].doDefaultCloseAction();
             }
             i++;
         }

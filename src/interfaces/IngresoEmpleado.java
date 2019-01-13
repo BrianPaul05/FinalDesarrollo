@@ -6,6 +6,7 @@
 package interfaces;
 
 import Conexion.Conexion;
+import com.placeholder.PlaceHolder;
 import static interfaces.PrimeraInterface.ventanasAbiertas;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,6 +47,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         this.setTitle("REGISTRAR EMPLEADOS");
         this.setIconifiable(true);
+         PlaceHolder holder = new PlaceHolder(txtNom2, "Segundo Nombre Opcional");
+        tblPersonal.getTableHeader().setEnabled(false);
 
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }

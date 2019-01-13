@@ -339,6 +339,26 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             }
         }
     }
+    
+     public void soloNumeros(java.awt.event.KeyEvent evt) {
+        char c;
+        c = evt.getKeyChar();
+        if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
+        }
+    }
+
+    public void soloLetras(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+
+        if ((c >= 33 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 255)) {
+            evt.consume();
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(this, "Ingrese solo Letras", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -669,6 +689,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             c = cad.charAt(0);
             evt.setKeyChar(c);
         }
+        soloLetras(evt);
     }//GEN-LAST:event_txtNombreOficinaKeyTyped
 
     private void txtUbicacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUbicacionKeyTyped
@@ -678,6 +699,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             c = cad.charAt(0);
             evt.setKeyChar(c);
         }
+        soloLetras(evt);
     }//GEN-LAST:event_txtUbicacionKeyTyped
 
     private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
@@ -690,6 +712,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             evt.consume();
             JOptionPane.showMessageDialog(rootPane, "SOLO NÚMEROS POR FAVOR", "Advertencia", JOptionPane.ERROR_MESSAGE);
         }
+        soloNumeros(evt);
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
     private void txtDireccionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDireccionKeyTyped
@@ -699,6 +722,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             c = cad.charAt(0);
             evt.setKeyChar(c);
         }
+        soloLetras(evt);
     }//GEN-LAST:event_txtDireccionKeyTyped
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
@@ -712,6 +736,7 @@ public class IngresoOficinas extends javax.swing.JInternalFrame {
             c = cad.charAt(0);
             evt.setKeyChar(c);
         }
+        soloLetras(evt);
     }//GEN-LAST:event_txtBuscarKeyTyped
 
     private void jButton_ActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ActualizarActionPerformed
