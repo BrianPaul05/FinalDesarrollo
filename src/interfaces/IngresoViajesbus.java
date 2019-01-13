@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author DELL GAMER
@@ -22,7 +21,8 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
      * Creates new form IngresoViajes
      */
     String c;
-     public IngresoViajesbus(String cedu) {
+
+    public IngresoViajesbus(String cedu) {
         initComponents();
         c = cedu;
         txtcedula.setText(c);
@@ -31,75 +31,100 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         cargarDestino();
         this.setIconifiable(true);
     }
- public String cargarOrigen(){
-     String orige = "";
-     try {
-         Connection cn = new Conexion().conexion();
-         String sql = "select  o.ubicacion "
-                 + "from oficinas o, personal_oficina po "
-                 + "where o.cod_ofi = po.cod_ofi_per "
-                 + "and po.ced_personal_per = '"+c+"' ";
-         Statement psd = cn.createStatement();
-         ResultSet rs = psd.executeQuery(sql);
-         while (rs.next()) {
-             orige = rs.getString("ubicacion");
-         }
-         return orige;
-     } catch (Exception e) {
-         JOptionPane.showMessageDialog(this, e);
-     }
-     return orige;
- }
- 
- public void cargarDestino(){
-     try {
-         Connection cn = new Conexion().conexion();
-         String sql = "Select ubicacion from oficinas where ubicacion<> '" +txtorigen.getText()+"' ";
-         Statement st = cn.createStatement();
-         ResultSet rs = st.executeQuery(sql);
-         jcbxDestino.addItem("Selecione...");
-         while(rs.next()){
-             jcbxDestino.addItem(rs.getString("ubicacion"));
-         }
-     } catch (Exception e) {
-         JOptionPane.showMessageDialog(this, e);
-     }
- }
-public void cargarBus(){
-    try {
-        Connection cn = new Conexion().conexion();
-        String sql = "Select num_bus from bus";
-        Statement st = cn.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        cbBus.addItem("Selecione...");
-        while(rs.next()){            
-            cbBus.addItem(rs.getString("num_bus"));
-        }        
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e);
+
+    public void cargarFrecuencia() {
+        if (jcbxDestino.getSelectedItem().equals("Selecione...")) {
+            jcbFrecuencia.removeAllItems();
+        } else {
+            try {
+                jcbFrecuencia.removeAllItems();
+                Connection cn = new Conexion().conexion();
+                String sql = "select f.hora_salida\n" +
+                                                "from frecuencias f, rutas r\n" +
+                                                "where f.cod_ruta_per = r.cod_ruta\n" +
+                                                "and r.cod_ofi_ori = (select cod_ofi\n" +
+"			from oficinas\n" +
+"			where ubicacion='"+txtorigen.getText()+"')\n" +
+                                                "and r.cod_ofi_des = (select cod_ofi\n" +
+"			from oficinas\n" +
+"			where ubicacion='"+jcbxDestino.getSelectedItem()+"')";
+                Statement st = cn.createStatement();
+                ResultSet rs = st.executeQuery(sql);
+                jcbFrecuencia.addItem("Selecione...");
+                while (rs.next()) {
+                    jcbFrecuencia.addItem(rs.getString("hora_salida"));
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e);
+            }
+        }
     }
-}
 
+    public String cargarOrigen() {
+        String orige = "";
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "select  o.ubicacion "
+                    + "from oficinas o, personal_oficina po "
+                    + "where o.cod_ofi = po.cod_ofi_per "
+                    + "and po.ced_personal_per = '" + c + "' ";
+            Statement psd = cn.createStatement();
+            ResultSet rs = psd.executeQuery(sql);
+            while (rs.next()) {
+                orige = rs.getString("ubicacion");
+            }
+            return orige;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+        return orige;
+    }
 
+    public void cargarDestino() {
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "Select ubicacion from oficinas where ubicacion<> '" + txtorigen.getText() + "' ";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            jcbxDestino.addItem("Selecione...");
+            while (rs.next()) {
+                jcbxDestino.addItem(rs.getString("ubicacion"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }
 
+    public void cargarBus() {
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "Select num_bus from bus";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            cbBus.addItem("Selecione...");
+            while (rs.next()) {
+                cbBus.addItem(rs.getString("num_bus"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }
 
-public String cargarPlaca(){
-    String placa ="";
-    try {
-        Connection cn = new Conexion().conexion();
-        String sql = "Select placa from bus where num_bus = '"+cbBus.getSelectedItem()+"'";
-        Statement st = cn.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        while(rs.next()){
-            placa= rs.getString("placa");
+    public String cargarPlaca() {
+        String placa = "";
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "Select placa from bus where num_bus = '" + cbBus.getSelectedItem() + "'";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                placa = rs.getString("placa");
+            }
+            return placa;
+        } catch (Exception e) {
         }
         return placa;
-    } catch (Exception e) {
     }
-    return placa;
-}
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -115,7 +140,7 @@ public String cargarPlaca(){
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jcbxHora_Salida = new javax.swing.JComboBox<>();
+        jcbFrecuencia = new javax.swing.JComboBox<>();
         cbBus = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -163,6 +188,11 @@ public String cargarPlaca(){
         jcbxDestino.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jcbxDestinoItemStateChanged(evt);
+            }
+        });
+        jcbxDestino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbxDestinoActionPerformed(evt);
             }
         });
 
@@ -256,7 +286,7 @@ public String cargarPlaca(){
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(txtorigen, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbFrecuencia, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +330,7 @@ public String cargarPlaca(){
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(jLabel2)
-                        .addComponent(jcbxHora_Salida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcbFrecuencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -351,17 +381,22 @@ public String cargarPlaca(){
     }//GEN-LAST:event_btnCancelar3ActionPerformed
 
     private void jbtnAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAsientoActionPerformed
-              
+
     }//GEN-LAST:event_jbtnAsientoActionPerformed
 
     private void cbBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBusActionPerformed
         // TODO add your handling code here:
         if (cbBus.getSelectedItem().equals("Selecione...")) {
             txtPlaca.setText("");
-        }else{
-        txtPlaca.setText(cargarPlaca());
+        } else {
+            txtPlaca.setText(cargarPlaca());
         }
     }//GEN-LAST:event_cbBusActionPerformed
+
+    private void jcbxDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbxDestinoActionPerformed
+        // TODO add your handling code here:
+            cargarFrecuencia();
+    }//GEN-LAST:event_jcbxDestinoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,8 +453,8 @@ public String cargarPlaca(){
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jbtnAsiento;
+    private javax.swing.JComboBox<String> jcbFrecuencia;
     private javax.swing.JComboBox<String> jcbxDestino;
-    private javax.swing.JComboBox<String> jcbxHora_Salida;
     private javax.swing.JLabel txtPlaca;
     private javax.swing.JLabel txtcedula;
     private javax.swing.JLabel txtorigen;

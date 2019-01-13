@@ -117,7 +117,6 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-
         return codigo;
     }
 
