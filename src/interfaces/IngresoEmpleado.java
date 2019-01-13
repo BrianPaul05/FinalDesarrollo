@@ -49,7 +49,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         this.setIconifiable(true);
         PlaceHolder holder = new PlaceHolder(txtNom2, "Segundo Nombre Opcional");
         tblPersonal.getTableHeader().setEnabled(false);
-     
+
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }
 
@@ -271,7 +271,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
         return id;
     }
-    
 
     public String fechaNacimiento() {
         String dia = Integer.toString(jdcNacimiento.getCalendar().get(Calendar.DAY_OF_MONTH));
@@ -295,18 +294,18 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         int anioActual = cal.get(Calendar.YEAR);
         return (anioActual - Integer.valueOf(year));
     }
-    
-   public boolean fechas(){
-       Date fecha= new Date();
-       Date fecha2= jdcIngreso.getDate();
-       if(fecha.after(fecha2)){
-           return true;     
-       }else{
-           
-           return false;
-       }
-   
-   }
+
+    public boolean fechas() {
+        Date fecha = new Date();
+        Date fecha2 = jdcIngreso.getDate();
+        if (fecha.after(fecha2)) {
+            return true;
+        } else {
+
+            return false;
+        }
+
+    }
 
     public void actualizarPersonal() throws ClassNotFoundException {
         if (txtDireccion.getText().isEmpty()) {
@@ -317,7 +316,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Telefono Incorrecto");
         } else if (cbxEmpleado.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado");
-        }else if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
+        } else if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja Oficina");
         } else if (txtClave.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
@@ -327,19 +326,19 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
                 String sql = "";
-                String sql1="UPDATE PERSONAL_OFICINA SET COD_OFI_PER='"+idOficina()+"'"
-                         + "where CED_PERSONAL_PER= '" + txtCedula.getText() + "'";
-                
+                String sql1 = "UPDATE PERSONAL_OFICINA SET COD_OFI_PER='" + idOficina() + "'"
+                        + "where CED_PERSONAL_PER= '" + txtCedula.getText() + "'";
+
                 sql = "UPDATE personal set DIR_PER_PER ='" + txtDireccion.getText().toUpperCase() + "',"
                         + "MAIL_PER = '" + txtCorreo.getText().toLowerCase() + "',"
                         + "TELF_PER = '" + txtTelefono.getText() + "',"
                         + "TIPO_PER = '" + idTipoPersonal() + "'"
                         + "where CED_PER= '" + txtCedula.getText() + "'";
                 PreparedStatement psd = cn.prepareStatement(sql);
-                 PreparedStatement psd2 = cn.prepareStatement(sql1);
+                PreparedStatement psd2 = cn.prepareStatement(sql1);
                 int n = psd.executeUpdate();
-                int n1=psd2.executeUpdate();
-                if (n > 0 && n1>0) {
+                int n1 = psd2.executeUpdate();
+                if (n > 0 && n1 > 0) {
                     JOptionPane.showMessageDialog(this, "Modificado Exitosamente....");
                     cargarTablaPersonal("");
                     bloquearCampos();
@@ -375,10 +374,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         } else if (jdcIngreso.getCalendar() == null) {
             JOptionPane.showMessageDialog(null, "Falta Fecha de Ingreso...");
             jdcNacimiento.requestFocus();
-        } else if(fechas()==false){
+        } else if (fechas() == false) {
             JOptionPane.showMessageDialog(null, "Fecha Ingreso no puede ser superior a la Actual..");
             jdcIngreso.requestFocus();
-        }else if (txtDireccion.getText().isEmpty()) {
+        } else if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
             txtDireccion.requestFocus();
         } else if (txtCorreo.getText().isEmpty()) {

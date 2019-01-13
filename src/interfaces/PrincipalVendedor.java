@@ -74,9 +74,11 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         boolean cerrada = true;
         while (i < activos.length && cerrada) {
             if (activos[i] == ventana) {
+                //cerrada = false;
                 return false;
             } else {
-                activos[i].dispose();
+
+                //activos[i].dispose();
             }
             i++;
         }
@@ -302,11 +304,11 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
         return cedula;
     }
- IngresoViajesbus iv;
+    IngresoViajesbus iv;
     private void fac1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac1ActionPerformed
         // TODO add your handling code here:
         String ced = cedulaEmpleado(codEncomiendaOficina);
-       
+
         if (ventanasAbiertas(iv)) {
             iv = new IngresoViajesbus(Login.usuario.getText());
             principal.add(iv);

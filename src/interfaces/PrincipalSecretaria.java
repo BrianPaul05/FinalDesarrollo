@@ -74,9 +74,11 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         boolean cerrada = true;
         while (i < activos.length && cerrada) {
             if (activos[i] == ventana) {
+                //cerrada = false;
                 return false;
             } else {
-                activos[i].dispose();
+
+                //activos[i].dispose();
             }
             i++;
         }
