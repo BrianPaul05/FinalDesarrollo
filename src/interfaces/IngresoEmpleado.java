@@ -332,10 +332,6 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
     }
 
-    
-    
-    
-    
     public void guardarPersonal() throws ClassNotFoundException {
         String estado = "S";
         if (txtCedula.getText().length() < 10) {
