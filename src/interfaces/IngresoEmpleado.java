@@ -47,9 +47,9 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/EmpleadoReg.png")));
         this.setTitle("REGISTRAR EMPLEADOS");
         this.setIconifiable(true);
-         PlaceHolder holder = new PlaceHolder(txtNom2, "Segundo Nombre Opcional");
+        PlaceHolder holder = new PlaceHolder(txtNom2, "Segundo Nombre Opcional");
         tblPersonal.getTableHeader().setEnabled(false);
-
+     
         // CONTROLAR LOS NOMBRES VECTOR Y  AL MOMENTO DE CARGAR   EN LOS CAMPOS TABLA/CAMPOS
     }
 
@@ -97,7 +97,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
     }
 
-    public String cargarNA(String dato1, String dato2) {
+    public String cargarNA(String dato1) {
         //  String nom1 = "";
         // String nom2 = "";  NOM1_PER,NOM2_PER
         try {
@@ -105,50 +105,46 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             String sql = "";
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
-            sql = "select " + dato1 + "," + dato2 + " from personal WHERE CED_PER = '" + txtCedula.getText() + "'";
+            sql = "select " + dato1 + " from personal WHERE CED_PER = '" + txtCedula.getText() + "'";
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
 
             while (rs.next()) {
                 //codmar.add(rs.getString("MAR_COD"));
                 dato1 = rs.getString(dato1);
-                dato2 = rs.getString(dato2);
-
             }
-
             cn.close();
             // Thread.sleep(150);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
-        return dato1 + " " + dato2;
+        return dato1;
     }
 
-    public String cargarClave() {
-        String dato = "";
-        try {
-
-            String sql = "";
-            Conexion cc = new Conexion();
-            Connection cn = cc.conexion();
-            sql = "select contrasena from personal WHERE CED_PER = '" + txtCedula.getText() + "'";
-            Statement psd = cn.createStatement();
-            ResultSet rs = psd.executeQuery(sql);
-
-            while (rs.next()) {
-                //codmar.add(rs.getString("MAR_COD"));
-                dato = rs.getString("contrasena");
-
-            }
-
-            cn.close();
-            // Thread.sleep(150);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        return dato;
-    }
-
+//    public String cargarClave() {
+//        String dato = "";
+//        try {
+//
+//            String sql = "";
+//            Conexion cc = new Conexion();
+//            Connection cn = cc.conexion();
+//            sql = "select contrasena from personal WHERE CED_PER = '" + txtCedula.getText() + "'";
+//            Statement psd = cn.createStatement();
+//            ResultSet rs = psd.executeQuery(sql);
+//
+//            while (rs.next()) {
+//                //codmar.add(rs.getString("MAR_COD"));
+//                dato = rs.getString("contrasena");
+//
+//            }
+//
+//            cn.close();
+//            // Thread.sleep(150);
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex);
+//        }
+//        return dato;
+//    }
     public Date cargarFecha(String dato) {
         Date fecha = null;
         try {
@@ -185,12 +181,15 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                     //  botonActualizar();
                     int fila = tblPersonal.getSelectedRow();//  tomar la  posicion
                     txtCedula.setText(tblPersonal.getValueAt(fila, 0).toString().trim());
-                    txtNombre.setText(cargarNA("NOM1_PER", "NOM2_PER"));
-                    txtApellido.setText(cargarNA("APE1_PER", "APE2_PER"));
+                    txtNombre.setText(cargarNA("NOM1_PER"));
+                    txtNom2.setText(cargarNA("NOM2_PER"));
+                    txtApellido.setText(cargarNA("APE1_PER"));
+                    txtApe2.setText(cargarNA("APE2_PER"));
                     txtDireccion.setText(tblPersonal.getValueAt(fila, 4).toString().trim());
                     txtTelefono.setText(tblPersonal.getValueAt(fila, 5).toString().trim());
-                    txtCorreo.setText(tblPersonal.getValueAt(fila, 6).toString().trim());
-                    txtClave.setText(cargarClave());
+                    cbxCiudad.setSelectedItem(tblPersonal.getValueAt(fila, 6).toString().trim());
+                    txtCorreo.setText(cargarNA("MAIL_PER"));
+                    txtClave.setText(cargarNA("contrasena"));
                     jdcIngreso.setDate(cargarFecha("FEC_ING_PER"));
                     jdcNacimiento.setDate(cargarFecha("FEC_NAC_PER"));
                     cbxEmpleado.setSelectedItem(cargarComboCargoPersonal());
@@ -272,6 +271,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
         return id;
     }
+    
 
     public String fechaNacimiento() {
         String dia = Integer.toString(jdcNacimiento.getCalendar().get(Calendar.DAY_OF_MONTH));
@@ -295,6 +295,18 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         int anioActual = cal.get(Calendar.YEAR);
         return (anioActual - Integer.valueOf(year));
     }
+    
+   public boolean fechas(){
+       Date fecha= new Date();
+       Date fecha2= jdcIngreso.getDate();
+       if(fecha.after(fecha2)){
+           return true;     
+       }else{
+           
+           return false;
+       }
+   
+   }
 
     public void actualizarPersonal() throws ClassNotFoundException {
         if (txtDireccion.getText().isEmpty()) {
@@ -305,6 +317,8 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Telefono Incorrecto");
         } else if (cbxEmpleado.getSelectedItem().equals("SELECCIONE")) {
             JOptionPane.showMessageDialog(null, "Escoja Tipo Empleado");
+        }else if (cbxCiudad.getSelectedItem().equals("SELECCIONE")) {
+            JOptionPane.showMessageDialog(null, "Escoja Oficina");
         } else if (txtClave.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese su Contraseña..");
         } else {
@@ -313,14 +327,19 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 Conexion cc = new Conexion();
                 Connection cn = cc.conexion();
                 String sql = "";
+                String sql1="UPDATE PERSONAL_OFICINA SET COD_OFI_PER='"+idOficina()+"'"
+                         + "where CED_PERSONAL_PER= '" + txtCedula.getText() + "'";
+                
                 sql = "UPDATE personal set DIR_PER_PER ='" + txtDireccion.getText().toUpperCase() + "',"
                         + "MAIL_PER = '" + txtCorreo.getText().toLowerCase() + "',"
                         + "TELF_PER = '" + txtTelefono.getText() + "',"
                         + "TIPO_PER = '" + idTipoPersonal() + "'"
                         + "where CED_PER= '" + txtCedula.getText() + "'";
                 PreparedStatement psd = cn.prepareStatement(sql);
+                 PreparedStatement psd2 = cn.prepareStatement(sql1);
                 int n = psd.executeUpdate();
-                if (n > 0) {
+                int n1=psd2.executeUpdate();
+                if (n > 0 && n1>0) {
                     JOptionPane.showMessageDialog(this, "Modificado Exitosamente....");
                     cargarTablaPersonal("");
                     bloquearCampos();
@@ -343,7 +362,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         } else if (txtNombre.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Nombres...");
             txtNombre.requestFocus();
-        }else if (txtApellido.getText().isEmpty()) {
+        } else if (txtApellido.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Primer Apellido...");
             txtApellido.requestFocus();
         } else if (txtApe2.getText().isEmpty()) {
@@ -355,7 +374,11 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Debe ser Mayor de Edad...");
         } else if (jdcIngreso.getCalendar() == null) {
             JOptionPane.showMessageDialog(null, "Falta Fecha de Ingreso...");
-        } else if (txtDireccion.getText().isEmpty()) {
+            jdcNacimiento.requestFocus();
+        } else if(fechas()==false){
+            JOptionPane.showMessageDialog(null, "Fecha Ingreso no puede ser superior a la Actual..");
+            jdcIngreso.requestFocus();
+        }else if (txtDireccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese Dirección...");
             txtDireccion.requestFocus();
         } else if (txtCorreo.getText().isEmpty()) {
@@ -380,62 +403,64 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 idOfi = idOficina();
                 String sql = "";
                 String cedula, direccion, telefono, mail, id_tipo_personal;
-               
-               
-                   String dato="";
-                if(txtNom2.getText().isEmpty()){
-                    dato="Ninguno";
-                }else{
-                    dato=txtNom2.getText();
+
+                String dato = "";
+                if (txtNom2.getText().isEmpty()) {
+                    dato = "Ninguno";
+                } else {
+                    dato = txtNom2.getText();
                 }
 
-               
-                    direccion = txtDireccion.getText().toUpperCase();
-                    telefono = txtTelefono.getText();
-                    mail = txtCorreo.getText().toLowerCase();
-                    cedula = txtCedula.getText();
-                    id_tipo_personal = idTipoPersonal();
-                    Date fec1 = jdcIngreso.getDate();
-                    Date fec2 = jdcNacimiento.getDate();
-                    Conexion cc = new Conexion();
-                    Connection cn = cc.conexion();
-                    sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
-                            + " values('" + cedula + "','" + txtNombre.getText().toUpperCase() + "','" + dato.toUpperCase()+ "','" + txtApellido.getText().toUpperCase()+ "','" + txtApe2.getText().toUpperCase()+ "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + txtClave.getText() + "')";
-                    sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
-                    PreparedStatement psd = cn.prepareStatement(sql);
-                    PreparedStatement psd1 = cn.prepareStatement(sql1);
-                    int n = psd.executeUpdate();
-                    int n2 = psd1.executeUpdate();
-                    if (n > 0) {
-                        if (n2 > 0) {
-                            JOptionPane.showMessageDialog(this, "Guardado Correctamente");
-                            limpiarCampos();
-                            bloquearCampos();
-                            desactivarBotones();
-                        }
+                direccion = txtDireccion.getText().toUpperCase();
+                telefono = txtTelefono.getText();
+                mail = txtCorreo.getText().toLowerCase();
+                cedula = txtCedula.getText();
+                id_tipo_personal = idTipoPersonal();
+                Date fec1 = jdcIngreso.getDate();
+                Date fec2 = jdcNacimiento.getDate();
+                Conexion cc = new Conexion();
+                Connection cn = cc.conexion();
+                sql = "INSERT INTO personal(CED_PER, NOM1_PER,NOM2_PER,APE1_PER,APE2_PER,FEC_NAC_PER,FEC_ING_PER,DIR_PER_PER,TIPO_PER,TELF_PER,MAIL_PER,ESTADO,CONTRASENA)"
+                        + " values('" + cedula + "','" + txtNombre.getText().toUpperCase() + "','" + dato.toUpperCase() + "','" + txtApellido.getText().toUpperCase() + "','" + txtApe2.getText().toUpperCase() + "','" + fec2 + "','" + fec1 + "','" + direccion + "','" + id_tipo_personal + "','" + telefono + "','" + mail + "','" + estado + "','" + txtClave.getText() + "')";
+                sql1 = "INSERT INTO PERSONAL_OFICINA(CED_PERSONAL_PER, COD_OFI_PER) values('" + cedula + "','" + idOfi + "')";
+                PreparedStatement psd = cn.prepareStatement(sql);
+                PreparedStatement psd1 = cn.prepareStatement(sql1);
+                int n = psd.executeUpdate();
+                int n2 = psd1.executeUpdate();
+                if (n > 0) {
+                    if (n2 > 0) {
+                        JOptionPane.showMessageDialog(this, "Guardado Correctamente");
+                        limpiarCampos();
+                        bloquearCampos();
+                        desactivarBotones();
                     }
-                    cn.close();
-                }catch (SQLException ex) {
+                }
+                cn.close();
+            } catch (SQLException ex) {
                 Logger.getLogger(IngresoEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
             }
 
         }
 
-    
+    }
 
     public void cargarTablaPersonal(String dato) {
         try {
-            String titulos[] = {"CÉDULA", "NOMBRE", "APELLIDO", "FECHA-INGRESO", "DIRECCIÓN", "TELEFONO", "CORREO"};
+            String titulos[] = {"CÉDULA", "NOMBRE", "APELLIDO", "FECHA-INGRESO", "DIRECCIÓN", "TELEFONO", "OFICINA"};
             String registro[] = new String[7];
             Conexion cc = new Conexion();
             Connection cn = cc.conexion();
             String sql = "";
 
-            sql = "SELECT CED_PER,NOM1_PER,APE1_PER,FEC_ING_PER,DIR_PER_PER,TELF_PER,MAIL_PER\n"
-                    + "FROM PERSONAL\n"
-                    + "WHERE ESTADO='S' and CED_PER LIKE'%" + dato + "%'";
+//            sql = "SELECT CED_PER,NOM1_PER,APE1_PER,FEC_ING_PER,DIR_PER_PER,TELF_PER,MAIL_PER\n"
+//                    + "FROM PERSONAL\n"
+//                    + "WHERE ESTADO='S' and CED_PER LIKE'%" + dato + "%'";
+            sql = "SELECT p.CED_PER,p.NOM1_PER,p.APE1_PER,p.FEC_ING_PER,p.DIR_PER_PER,p.TELF_PER,o.UBICACION\n"
+                    + " from personal p ,personal_oficina po ,oficinas o\n"
+                    + " where p.ESTADO='S' and  p.CED_PER LIKE'%" + dato + "%'\n"
+                    + " and p.ced_per=po.ced_personal_per\n"
+                    + " and po.cod_ofi_per=o.cod_ofi";
+
             modelo = new DefaultTableModel(null, titulos);
             Statement psd = cn.createStatement();
             ResultSet rs = psd.executeQuery(sql);
@@ -446,7 +471,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 registro[3] = rs.getString("FEC_ING_PER");
                 registro[4] = rs.getString("DIR_PER_PER");
                 registro[5] = rs.getString("TELF_PER");
-                registro[6] = rs.getString("MAIL_PER");
+                registro[6] = rs.getString("UBICACION");
                 modelo.addRow(registro);
             }
             tblPersonal.setModel(modelo);
@@ -847,72 +872,68 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel61)
+                            .addComponent(jLabel59)
+                            .addComponent(jLabel60)
+                            .addComponent(jLabel62)
+                            .addComponent(jLabel63)
+                            .addComponent(jLabel65)
+                            .addComponent(jLabel58))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGap(42, 42, 42)
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                                                .addGap(18, 18, 18))
+                                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addComponent(txtApellido)
+                                                .addGap(141, 141, 141))
+                                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                                .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                                .addGap(146, 146, 146)))
                                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel59)
-                                                .addComponent(jLabel60))
-                                            .addComponent(jLabel62)
-                                            .addComponent(jLabel63)))
+                                            .addComponent(jLabel66)
+                                            .addComponent(jLabel64, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel70, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel67, javax.swing.GroupLayout.Alignment.LEADING)))
                                     .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jLabel61)))
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel69)
+                                            .addComponent(jLabel68))))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                                        .addComponent(jLabel68))
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jdcNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jdcIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING)))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel64)
-                                            .addComponent(jLabel66)
-                                            .addComponent(jLabel69)
-                                            .addComponent(jLabel67)
-                                            .addComponent(jLabel70)))))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(87, 87, 87)
-                                .addComponent(jLabel65)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxEmpleado, 0, 144, Short.MAX_VALUE)
-                            .addComponent(txtClave)
-                            .addComponent(txtTelefono)
-                            .addComponent(cbxCiudad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNom2)
-                            .addComponent(txtApe2)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jLabel58)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(cbxEmpleado, 0, 172, Short.MAX_VALUE)
+                                    .addComponent(txtClave)
+                                    .addComponent(cbxCiudad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtApe2)
+                                    .addComponent(txtNom2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel58)
-                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(16, 16, 16)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel58))
+                .addGap(10, 10, 10)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel61)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(10, 10, 10)
                         .addComponent(jLabel62))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -920,42 +941,43 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                             .addComponent(jLabel59)
                             .addComponent(jLabel67)
                             .addComponent(txtNom2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(10, 10, 10)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel60)
                             .addComponent(jLabel70)
                             .addComponent(txtApe2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jdcNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdcNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel64))
+                        .addGap(10, 10, 10)
                         .addComponent(jdcIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(cbxEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel64)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
                         .addComponent(jLabel66)))
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(10, 10, 10)
                         .addComponent(jLabel63))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(10, 10, 10)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel68)
-                                .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel65)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel69)
-                    .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel68)))))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel69)
+                        .addComponent(cbxCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel65))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
@@ -1049,7 +1071,7 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
