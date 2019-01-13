@@ -7,6 +7,7 @@ package interfaces;
 
 import Conexion.Conexion;
 import Conexion.ImagenFondo;
+import static interfaces.PrimeraInterface.principal;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import org.omg.CORBA.portable.InputStream;
@@ -55,6 +57,7 @@ public class PrincipalVendedor extends javax.swing.JFrame {
             this.dispose();
         }
     }
+
     private void cerrarSesion() {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int op = JOptionPane.showConfirmDialog(null, "¿Desea cerrar sesión actual?", "Advertencia", dialogButton);
@@ -63,6 +66,21 @@ public class PrincipalVendedor extends javax.swing.JFrame {
             l.setVisible(true);
             this.dispose();
         }
+    }
+
+    public static boolean ventanasAbiertas(Object ventana) {
+        JInternalFrame[] activos = principal.getAllFrames();
+        int i = 0;
+        boolean cerrada = true;
+        while (i < activos.length && cerrada) {
+            if (activos[i] == ventana) {
+                return false;
+            } else {
+                activos[i].dispose();
+            }
+            i++;
+        }
+        return cerrada;
     }
 
     /**
@@ -288,12 +306,15 @@ public class PrincipalVendedor extends javax.swing.JFrame {
     private void fac1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac1ActionPerformed
         // TODO add your handling code here:
         String ced = cedulaEmpleado(codEncomiendaOficina);
-        IngresoViajesbus iv = new IngresoViajesbus(Login.usuario.getText());
-        principal.add(iv);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = iv.getSize();
-        iv.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        iv.setVisible(true);
+        IngresoViajesbus iv = null;
+        if (ventanasAbiertas(iv)) {
+            iv = new IngresoViajesbus(Login.usuario.getText());
+            principal.add(iv);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = iv.getSize();
+            iv.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            iv.setVisible(true);
+        }
     }//GEN-LAST:event_fac1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -303,22 +324,22 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
     private void menuFacturacion1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130,60);
+        usuario.setSize(130, 60);
     }//GEN-LAST:event_menuFacturacion1MouseEntered
 
     private void menuFacturacion1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseExited
         // TODO add your handling code here:
-        usuario.setSize(0,0);
+        usuario.setSize(0, 0);
     }//GEN-LAST:event_menuFacturacion1MouseExited
 
     private void fac3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130,60);
+        usuario.setSize(130, 60);
     }//GEN-LAST:event_fac3MouseEntered
 
     private void fac3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseExited
         // TODO add your handling code here:
-        usuario.setSize(0,0);
+        usuario.setSize(0, 0);
     }//GEN-LAST:event_fac3MouseExited
 
     private void fac4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseClicked
@@ -328,12 +349,12 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
     private void fac4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130,60);
+        usuario.setSize(130, 60);
     }//GEN-LAST:event_fac4MouseEntered
 
     private void fac4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseExited
         // TODO add your handling code here:
-        usuario.setSize(0,0);
+        usuario.setSize(0, 0);
     }//GEN-LAST:event_fac4MouseExited
 
     private void fac3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseClicked
@@ -383,7 +404,7 @@ public class PrincipalVendedor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     public static javax.swing.JButton menuFacturacion1;
-    private javax.swing.JDesktopPane principal;
+    public static javax.swing.JDesktopPane principal;
     private javax.swing.JLabel txtUsuaio;
     public static javax.swing.JPanel usuario;
     // End of variables declaration//GEN-END:variables
