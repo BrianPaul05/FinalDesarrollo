@@ -55,6 +55,15 @@ public class PrincipalVendedor extends javax.swing.JFrame {
             this.dispose();
         }
     }
+    private void cerrarSesion() {
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int op = JOptionPane.showConfirmDialog(null, "¿Desea cerrar sesión actual?", "Advertencia", dialogButton);
+        if (op == 0) {
+            Login l = new Login();
+            l.setVisible(true);
+            this.dispose();
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,12 +76,13 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         principal = new javax.swing.JDesktopPane();
-        Facturacion = new javax.swing.JPanel();
-        fac1 = new javax.swing.JButton();
-        fac2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        menuFacturacion = new javax.swing.JButton();
         txtUsuaio = new javax.swing.JLabel();
+        fac1 = new javax.swing.JButton();
+        menuFacturacion1 = new javax.swing.JButton();
+        usuario = new javax.swing.JPanel();
+        fac3 = new javax.swing.JButton();
+        fac4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -98,13 +108,10 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         principal.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
         principal.setPreferredSize(new java.awt.Dimension(771, 529));
 
-        Facturacion.setBackground(new java.awt.Color(0, 0, 0));
-        Facturacion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                FacturacionMouseEntered(evt);
-            }
-        });
-        Facturacion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+
+        txtUsuaio.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtUsuaio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-circle.png"))); // NOI18N
 
         fac1.setBackground(new java.awt.Color(0, 0, 0));
         fac1.setForeground(new java.awt.Color(255, 255, 255));
@@ -125,90 +132,109 @@ public class PrincipalVendedor extends javax.swing.JFrame {
                 fac1ActionPerformed(evt);
             }
         });
-        Facturacion.add(fac1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
 
-        fac2.setBackground(new java.awt.Color(0, 0, 0));
-        fac2.setForeground(new java.awt.Color(255, 255, 255));
-        fac2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/encmiendas.png"))); // NOI18N
-        fac2.setText("Encomiendas");
-        fac2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        fac2.setFocusable(false);
-        fac2.addMouseListener(new java.awt.event.MouseAdapter() {
+        menuFacturacion1.setBackground(new java.awt.Color(0, 153, 255));
+        menuFacturacion1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        menuFacturacion1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/arrow-down-drop-circle-outline.png"))); // NOI18N
+        menuFacturacion1.setToolTipText("");
+        menuFacturacion1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        menuFacturacion1.setFocusable(false);
+        menuFacturacion1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fac2MouseEntered(evt);
+                menuFacturacion1MouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                fac2MouseExited(evt);
+                menuFacturacion1MouseExited(evt);
             }
         });
-        fac2.addActionListener(new java.awt.event.ActionListener() {
+        menuFacturacion1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fac2ActionPerformed(evt);
+                menuFacturacion1ActionPerformed(evt);
             }
         });
-        Facturacion.add(fac2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
-
-        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
-
-        menuFacturacion.setBackground(new java.awt.Color(0, 0, 0));
-        menuFacturacion.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        menuFacturacion.setForeground(new java.awt.Color(255, 255, 255));
-        menuFacturacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cloud-print.png"))); // NOI18N
-        menuFacturacion.setText("Facturación");
-        menuFacturacion.setToolTipText("");
-        menuFacturacion.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        menuFacturacion.setFocusable(false);
-        menuFacturacion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                menuFacturacionMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                menuFacturacionMouseExited(evt);
-            }
-        });
-        menuFacturacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuFacturacionActionPerformed(evt);
-            }
-        });
-
-        txtUsuaio.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        txtUsuaio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-circle.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(menuFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 998, Short.MAX_VALUE)
-                .addComponent(txtUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(fac1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 420, Short.MAX_VALUE)
+                .addComponent(txtUsuaio, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(menuFacturacion1)
+                .addGap(22, 22, 22))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuFacturacion)
             .addComponent(txtUsuaio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(fac1)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(menuFacturacion1))
         );
 
-        principal.setLayer(Facturacion, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        usuario.setBackground(new java.awt.Color(0, 153, 255));
+        usuario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        fac3.setBackground(new java.awt.Color(0, 153, 255));
+        fac3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-edit.png"))); // NOI18N
+        fac3.setText("Configuraciónes");
+        fac3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        fac3.setFocusable(false);
+        fac3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fac3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fac3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fac3MouseExited(evt);
+            }
+        });
+        usuario.add(fac3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
+
+        fac4.setBackground(new java.awt.Color(0, 153, 255));
+        fac4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/salir.png"))); // NOI18N
+        fac4.setText("Cerrar Sesión");
+        fac4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        fac4.setFocusable(false);
+        fac4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fac4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fac4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fac4MouseExited(evt);
+            }
+        });
+        usuario.add(fac4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
+
         principal.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        principal.setLayer(usuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout principalLayout = new javax.swing.GroupLayout(principal);
         principal.setLayout(principalLayout);
         principalLayout.setHorizontalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(principalLayout.createSequentialGroup()
-                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(principalLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Facturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(660, Short.MAX_VALUE))
+                .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(500, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -229,56 +255,12 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuFacturacionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacionMouseEntered
-
-        //jButton6.setToolTipText("Reportes existentes");
-        Facturacion.setSize(130, 60);
-
-    }//GEN-LAST:event_menuFacturacionMouseEntered
-
-    private void menuFacturacionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacionMouseExited
-        // TODO add your handling code here:
-        Facturacion.setSize(0, 0);
-    }//GEN-LAST:event_menuFacturacionMouseExited
-
-    private void menuFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFacturacionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuFacturacionActionPerformed
-
-    private void fac2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac2MouseEntered
-        // TODO add your handling code here:
-       // Clientes.setToolTipText("Detalle de averias");
-        Facturacion.setSize(130, 60);
-    }//GEN-LAST:event_fac2MouseEntered
-
-    private void fac2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac2MouseExited
-        // TODO add your handling code here:
-        Facturacion.setSize(0, 0);
-    }//GEN-LAST:event_fac2MouseExited
-
-    private void fac2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac2ActionPerformed
-        // TODO add your handling code here:
-        IngresoEncomienda ie = new IngresoEncomienda(codEncomiendaOficina);
-        principal.add(ie);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = ie.getSize();
-        ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        ie.setVisible(true);
-    }//GEN-LAST:event_fac2ActionPerformed
-
-    private void FacturacionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FacturacionMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FacturacionMouseEntered
-
     private void fac1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac1MouseEntered
         // TODO add your handling code here:
-        //Clientes.setToolTipText("Detalle de averias");
-        Facturacion.setSize(130, 60);
     }//GEN-LAST:event_fac1MouseEntered
 
     private void fac1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac1MouseExited
         // TODO add your handling code here:
-        Facturacion.setSize(0, 0);
     }//GEN-LAST:event_fac1MouseExited
 
     private String cedulaEmpleado(String codOficina) {
@@ -319,6 +301,50 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         salir();
     }//GEN-LAST:event_formWindowClosing
 
+    private void menuFacturacion1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseEntered
+        // TODO add your handling code here:
+        usuario.setSize(130,60);
+    }//GEN-LAST:event_menuFacturacion1MouseEntered
+
+    private void menuFacturacion1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseExited
+        // TODO add your handling code here:
+        usuario.setSize(0,0);
+    }//GEN-LAST:event_menuFacturacion1MouseExited
+
+    private void fac3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseEntered
+        // TODO add your handling code here:
+        usuario.setSize(130,60);
+    }//GEN-LAST:event_fac3MouseEntered
+
+    private void fac3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseExited
+        // TODO add your handling code here:
+        usuario.setSize(0,0);
+    }//GEN-LAST:event_fac3MouseExited
+
+    private void fac4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseClicked
+        // TODO add your handling code here:
+        cerrarSesion();
+    }//GEN-LAST:event_fac4MouseClicked
+
+    private void fac4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseEntered
+        // TODO add your handling code here:
+        usuario.setSize(130,60);
+    }//GEN-LAST:event_fac4MouseEntered
+
+    private void fac4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseExited
+        // TODO add your handling code here:
+        usuario.setSize(0,0);
+    }//GEN-LAST:event_fac4MouseExited
+
+    private void fac3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseClicked
+        // TODO add your handling code here:
+        cerrarSesion();
+    }//GEN-LAST:event_fac3MouseClicked
+
+    private void menuFacturacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFacturacion1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuFacturacion1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -351,13 +377,14 @@ public class PrincipalVendedor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public static javax.swing.JPanel Facturacion;
     public static javax.swing.JButton fac1;
-    public static javax.swing.JButton fac2;
+    public static javax.swing.JButton fac3;
+    public static javax.swing.JButton fac4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    public static javax.swing.JButton menuFacturacion;
+    public static javax.swing.JButton menuFacturacion1;
     private javax.swing.JDesktopPane principal;
     private javax.swing.JLabel txtUsuaio;
+    public static javax.swing.JPanel usuario;
     // End of variables declaration//GEN-END:variables
 }
