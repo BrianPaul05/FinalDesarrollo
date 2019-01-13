@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import org.omg.CORBA.portable.InputStream;
@@ -54,6 +55,21 @@ public class PrimeraInterface extends javax.swing.JFrame {
         if (op == 0) {
             this.dispose();
         }
+    }
+
+    public static boolean ventanasAbiertas(Object ventana) {
+        JInternalFrame[] activos = principal.getAllFrames();
+        int i = 0;
+        boolean cerrada = true;
+        while (i < activos.length && cerrada) {
+            if (activos[i] == ventana) {
+                return false;
+            } else {
+                activos[i].dispose();
+            }
+            i++;
+        }
+        return cerrada;
     }
 
     /**
@@ -712,7 +728,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
 
         IngresoClientes c = null;
-
+         if (ventanasAbiertas(c)) {
         try {
             c = new IngresoClientes();
         } catch (ClassNotFoundException ex) {
@@ -724,6 +740,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
         Dimension internalSize = c.getSize();
         c.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
         c.setVisible(true);
+         }
     }//GEN-LAST:event_ClientesActionPerformed
 
     private void RutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RutasMouseEntered
@@ -739,12 +756,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void RutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RutasActionPerformed
         // TODO add your handling code here:
-        Rutas r = new Rutas();
+        Rutas r = null;
+         if (ventanasAbiertas(r)) {
+        r=new Rutas();
         principal.add(r);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = r.getSize();
         r.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
         r.setVisible(true);
+         }
     }//GEN-LAST:event_RutasActionPerformed
 
     private void reportesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportesMouseEntered
@@ -816,12 +836,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void fac2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac2ActionPerformed
         // TODO add your handling code here:
-        IngresoEncomienda ie = new IngresoEncomienda(codEncomiendaOficina);
+        IngresoEncomienda ie = null;
+         if (ventanasAbiertas(ie)) {
+        ie=new IngresoEncomienda(codEncomiendaOficina);
         principal.add(ie);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = ie.getSize();
         ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
         ie.setVisible(true);
+         }
     }//GEN-LAST:event_fac2ActionPerformed
 
     private void FacturacionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FacturacionMouseEntered
@@ -842,12 +865,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void BusesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BusesActionPerformed
         // TODO add your handling code here:
-        IngresoBus ib = new IngresoBus();
+        IngresoBus ib = null;
+        if (ventanasAbiertas(ib)) {
+            ib= new IngresoBus();
         principal.add(ib);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = ib.getSize();
         ib.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
         ib.setVisible(true);
+         }
     }//GEN-LAST:event_BusesActionPerformed
 
     private void empleadosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_empleadosMouseEntered
@@ -882,12 +908,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void oficinasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oficinasActionPerformed
         // TODO add your handling code here:
-        IngresoOficinas o = new IngresoOficinas();
+        IngresoOficinas o =null;
+        if (ventanasAbiertas(o)) {
+            o= new IngresoOficinas();
         principal.add(o);
         Dimension desktopSize = principal.getSize();
         Dimension internalSize = o.getSize();
         o.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
         o.setVisible(true);
+        }
     }//GEN-LAST:event_oficinasActionPerformed
 
     private void Encomiendas2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas2MouseEntered
@@ -933,12 +962,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void Encomiendas5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas5ActionPerformed
         // TODO add your handling code here:
-        parametros p = new parametros();
-        principal.add(p);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = p.getSize();
-        p.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        p.setVisible(true);
+        parametros p = null;
+        if (ventanasAbiertas(p)) {
+            p = new parametros();
+            principal.add(p);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = p.getSize();
+            p.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            p.setVisible(true);
+        }
     }//GEN-LAST:event_Encomiendas5ActionPerformed
 
     private void Encomiendas6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas6MouseEntered
@@ -992,12 +1024,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private void fac1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fac1ActionPerformed
         // TODO add your handling code here:
         String ced = cedulaEmpleado(codEncomiendaOficina);
-        IngresoViajesbus iv = new IngresoViajesbus(Login.usuario.getText());
-        principal.add(iv);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = iv.getSize();
-        iv.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        iv.setVisible(true);
+        IngresoViajesbus iv = null;
+        if (ventanasAbiertas(iv)) {
+            iv = new IngresoViajesbus(Login.usuario.getText());
+            principal.add(iv);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = iv.getSize();
+            iv.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            iv.setVisible(true);
+        }
     }//GEN-LAST:event_fac1ActionPerformed
 
     private void reportesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportesMouseExited
@@ -1021,14 +1056,19 @@ public class PrimeraInterface extends javax.swing.JFrame {
         reportes2.setSize(0, 0);
     }//GEN-LAST:event_Clientes1MouseExited
 
+
     private void Clientes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clientes1ActionPerformed
         // TODO add your handling code here:
-        IngresoEmpleado ie = new IngresoEmpleado();
-        principal.add(ie);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = ie.getSize();
-        ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        ie.setVisible(true);
+
+        IngresoEmpleado ie = null;
+        if (ventanasAbiertas(ie)) {
+            ie = new IngresoEmpleado();
+            principal.add(ie);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = ie.getSize();
+            ie.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            ie.setVisible(true);
+        }
     }//GEN-LAST:event_Clientes1ActionPerformed
 
     private void Rutas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Rutas1MouseEntered
@@ -1044,12 +1084,15 @@ public class PrimeraInterface extends javax.swing.JFrame {
 
     private void Rutas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Rutas1ActionPerformed
         // TODO add your handling code here:
-        TipoPersonal tp = new TipoPersonal();
-        principal.add(tp);
-        Dimension desktopSize = principal.getSize();
-        Dimension internalSize = tp.getSize();
-        tp.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
-        tp.setVisible(true);
+        TipoPersonal tp = null;
+        if (ventanasAbiertas(tp)) {
+            tp = new TipoPersonal();
+            principal.add(tp);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = tp.getSize();
+            tp.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            tp.setVisible(true);
+        }
     }//GEN-LAST:event_Rutas1ActionPerformed
 
     private void reportes2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportes2MouseEntered
@@ -1136,7 +1179,7 @@ public class PrimeraInterface extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     public static javax.swing.JButton menuFacturacion;
     private javax.swing.JButton oficinas;
-    private javax.swing.JDesktopPane principal;
+    public static javax.swing.JDesktopPane principal;
     private javax.swing.JPanel reportes;
     private javax.swing.JPanel reportes1;
     private javax.swing.JPanel reportes2;

@@ -6,6 +6,7 @@
 package interfaces;
 
 import Conexion.Conexion;
+import static interfaces.PrimeraInterface.ventanasAbiertas;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -331,6 +332,10 @@ public class IngresoEmpleado extends javax.swing.JInternalFrame {
         }
     }
 
+    
+    
+    
+    
     public void guardarPersonal() throws ClassNotFoundException {
         String estado = "S";
         if (txtCedula.getText().length() < 10) {
