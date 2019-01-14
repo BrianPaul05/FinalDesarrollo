@@ -116,8 +116,8 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         Viajes = new javax.swing.JButton();
         Empleados = new javax.swing.JButton();
         Unidades = new javax.swing.JButton();
-        Encomiendas2 = new javax.swing.JButton();
-        Encomiendas3 = new javax.swing.JButton();
+        Oficinas = new javax.swing.JButton();
+        rutas = new javax.swing.JButton();
         Encomiendas5 = new javax.swing.JButton();
         Encomiendas6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -393,45 +393,45 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         });
         reportes1.add(Unidades, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 110, 20));
 
-        Encomiendas2.setBackground(new java.awt.Color(0, 0, 0));
-        Encomiendas2.setForeground(new java.awt.Color(255, 255, 255));
-        Encomiendas2.setText("Oficinas");
-        Encomiendas2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Encomiendas2.setFocusable(false);
-        Encomiendas2.addMouseListener(new java.awt.event.MouseAdapter() {
+        Oficinas.setBackground(new java.awt.Color(0, 0, 0));
+        Oficinas.setForeground(new java.awt.Color(255, 255, 255));
+        Oficinas.setText("Oficinas");
+        Oficinas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Oficinas.setFocusable(false);
+        Oficinas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                Encomiendas2MouseEntered(evt);
+                OficinasMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                Encomiendas2MouseExited(evt);
+                OficinasMouseExited(evt);
             }
         });
-        Encomiendas2.addActionListener(new java.awt.event.ActionListener() {
+        Oficinas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Encomiendas2ActionPerformed(evt);
+                OficinasActionPerformed(evt);
             }
         });
-        reportes1.add(Encomiendas2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 110, 20));
+        reportes1.add(Oficinas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 110, 20));
 
-        Encomiendas3.setBackground(new java.awt.Color(0, 0, 0));
-        Encomiendas3.setForeground(new java.awt.Color(255, 255, 255));
-        Encomiendas3.setText("Rutas");
-        Encomiendas3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Encomiendas3.setFocusable(false);
-        Encomiendas3.addMouseListener(new java.awt.event.MouseAdapter() {
+        rutas.setBackground(new java.awt.Color(0, 0, 0));
+        rutas.setForeground(new java.awt.Color(255, 255, 255));
+        rutas.setText("Rutas");
+        rutas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        rutas.setFocusable(false);
+        rutas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                Encomiendas3MouseEntered(evt);
+                rutasMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                Encomiendas3MouseExited(evt);
+                rutasMouseExited(evt);
             }
         });
-        Encomiendas3.addActionListener(new java.awt.event.ActionListener() {
+        rutas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Encomiendas3ActionPerformed(evt);
+                rutasActionPerformed(evt);
             }
         });
-        reportes1.add(Encomiendas3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 110, 20));
+        reportes1.add(rutas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 110, 20));
 
         Encomiendas5.setBackground(new java.awt.Color(0, 0, 0));
         Encomiendas5.setForeground(new java.awt.Color(255, 255, 255));
@@ -884,35 +884,72 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_oficinasActionPerformed
 
-    private void Encomiendas2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas2MouseEntered
+    private void OficinasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OficinasMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
         reportes1.setSize(110, 140);
-    }//GEN-LAST:event_Encomiendas2MouseEntered
+    }//GEN-LAST:event_OficinasMouseEntered
 
-    private void Encomiendas2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas2MouseExited
+    private void OficinasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OficinasMouseExited
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
-    }//GEN-LAST:event_Encomiendas2MouseExited
+    }//GEN-LAST:event_OficinasMouseExited
 
-    private void Encomiendas2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Encomiendas2ActionPerformed
+    private void OficinasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OficinasActionPerformed
+      try {
+           Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            JInternalFrame internal = new JInternalFrame();
+            internal.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/bus2.png")));
+            JasperReport reporte = JasperCompileManager.compileReport("src/Reportes/oficinasV.jrxml");
+            JasperPrint print = JasperFillManager.fillReport(reporte, null, cn);
+            //JasperViewer.viewReport(print, false);           
+            internal.getContentPane().add(new JRViewer(print));
+            internal.pack();
+            internal.setResizable(true);
+            internal.setClosable(true);
+            internal.setMaximizable(true);
+            internal.setSize(1000, 700);
+            PrincipalSecretaria.principal.add(internal);
+            internal.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(Parametro.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-    private void Encomiendas3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas3MouseEntered
+    }//GEN-LAST:event_OficinasActionPerformed
+
+    private void rutasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rutasMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
         reportes1.setSize(110, 140);
-    }//GEN-LAST:event_Encomiendas3MouseEntered
+    }//GEN-LAST:event_rutasMouseEntered
 
-    private void Encomiendas3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas3MouseExited
+    private void rutasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rutasMouseExited
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
-    }//GEN-LAST:event_Encomiendas3MouseExited
+    }//GEN-LAST:event_rutasMouseExited
 
-    private void Encomiendas3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Encomiendas3ActionPerformed
+    private void rutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rutasActionPerformed
+        try {
+           Conexion cc = new Conexion();
+            Connection cn = cc.conexion();
+            JInternalFrame internal = new JInternalFrame();
+            internal.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/bus2.png")));
+            JasperReport reporte = JasperCompileManager.compileReport("src/Reportes/rutasV.jrxml");
+            JasperPrint print = JasperFillManager.fillReport(reporte, null, cn);
+            //JasperViewer.viewReport(print, false);           
+            internal.getContentPane().add(new JRViewer(print));
+            internal.pack();
+            internal.setResizable(true);
+            internal.setClosable(true);
+            internal.setMaximizable(true);
+            internal.setSize(1000, 700);
+            PrincipalSecretaria.principal.add(internal);
+            internal.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(Parametro.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_rutasActionPerformed
 
     private void Encomiendas5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas5MouseEntered
         // TODO add your handling code here:
@@ -1118,10 +1155,9 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     private javax.swing.JButton Clientes;
     private javax.swing.JButton Clientes1;
     private javax.swing.JButton Empleados;
-    private javax.swing.JButton Encomiendas2;
-    private javax.swing.JButton Encomiendas3;
     private javax.swing.JButton Encomiendas5;
     private javax.swing.JButton Encomiendas6;
+    private javax.swing.JButton Oficinas;
     private javax.swing.JButton Rutas;
     private javax.swing.JButton Rutas1;
     private javax.swing.JButton Unidades;
@@ -1139,6 +1175,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     private javax.swing.JPanel reportes;
     private javax.swing.JPanel reportes1;
     private javax.swing.JPanel reportes2;
+    private javax.swing.JButton rutas;
     private javax.swing.JLabel txtUsuaio;
     public static javax.swing.JPanel usuario;
     // End of variables declaration//GEN-END:variables

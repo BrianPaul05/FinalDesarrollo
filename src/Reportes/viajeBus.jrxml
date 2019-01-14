@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d4616e7-2bea-49cc-afaf-be1a7010fed5">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PLACA_BUS" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select viajes.cod_viaje, bus.placa, bus.num_bus, bus.capacidad_bus, oficinas.nom_ofi, oficinas.nom_ofi, frecuencias.hora_salida, c.nom_ofi  as origen, c1.nom_ofi as destino, rutas.precio 
+from viajes, bus, oficinas, frecuencias, rutas
+ join oficinas c on (rutas.cod_ofi_ori =c.cod_ofi )
+ join oficinas c1 on (rutas.cod_ofi_des =c1.cod_ofi )
+where bus.cod_bus = viajes.cod_bus_via 
+and viajes.cod_fre_via = frecuencias.cod_fre
+and rutas.cod_ofi_ori = oficinas.cod_ofi
+and rutas.cod_ofi_des = oficinas.cod_ofi
+and rutas.cod_ruta = frecuencias.cod_ruta_per
+and bus.placa = $P{PLACA_BUS}]]>
+	</queryString>
+	<field name="cod_viaje" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="num_bus" class="java.lang.String"/>
+	<field name="capacidad_bus" class="java.lang.Integer"/>
+	<field name="nom_ofi" class="java.lang.String"/>
+	<field name="hora_salida" class="java.lang.String"/>
+	<field name="origen" class="java.lang.String"/>
+	<field name="destino" class="java.lang.String"/>
+	<field name="precio" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="134" y="19" width="275" height="20" uuid="18670577-31d5-40ef-b46f-cfa80eb32872"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIAJA TRANQUILO JUNTO A NOSOTROS]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="97" height="59" uuid="4b80ea87-592f-4fe0-beac-120bb13c8c4a"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\sk.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="130" y="39" width="279" height="20" uuid="6c1cc61e-59a9-40e6-9b9d-8d4f402bfa29"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono : 03-2565658 Celular : 09956238545]]></text>
+			</staticText>
+			<image>
+				<reportElement x="448" y="0" width="126" height="65" uuid="fe14b03c-52d1-41c3-8fbf-2024130ddc46"/>
+				<imageExpression><![CDATA["D:\\Varios\\FinalDesa\\FinalDesarrollo\\src\\Imagenes\\buses.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="95" y="-1" width="353" height="20" uuid="aa5779e3-edc9-47af-86a0-22f76a483954"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COOPERATIVA DE TRANSPORTE SKY WAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="59" width="551" height="19" uuid="3fe2c9e2-4bea-4028-9206-f3b9db00f854"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="78" splitType="Stretch">
+			<line>
+				<reportElement x="208" y="65" width="100" height="1" uuid="ab60fcc8-822b-4209-86f4-2b45ee622607"/>
+			</line>
+			<line>
+				<reportElement x="109" y="65" width="100" height="1" uuid="97883f31-e9ec-4e3d-97f2-e4c427af12fd"/>
+			</line>
+			<staticText>
+				<reportElement x="326" y="39" width="87" height="20" uuid="b9ac7077-de3f-4c4c-9fe5-7e9d43f46f0a"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAPACIDAD :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="471" y="65" width="100" height="1" uuid="a7a6dd39-b509-4a08-940b-5660b4ac363f"/>
+			</line>
+			<line>
+				<reportElement x="405" y="65" width="100" height="1" uuid="d4b05c96-1cc6-43f0-a828-50c47760b197"/>
+			</line>
+			<line>
+				<reportElement x="9" y="65" width="100" height="1" uuid="28c08545-bf9a-41ea-973a-f8fc4c79e9a7"/>
+			</line>
+			<line>
+				<reportElement x="306" y="65" width="100" height="1" uuid="e268070a-c04e-48e4-b52b-7ca6d3332346"/>
+			</line>
+			<staticText>
+				<reportElement x="161" y="16" width="153" height="20" uuid="0e78b82d-1b73-4066-96eb-b82e54f8817d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIAJES DEL BUS CON PLACA :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="39" width="60" height="20" uuid="65dec029-a856-444f-b5db-a255cff4a89d"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N.- BUS :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="139" y="39" width="100" height="20" uuid="d4a5e1ee-2e6b-43da-a113-c9dfe989b792"/>
+				<textFieldExpression><![CDATA[$F{num_bus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="39" width="100" height="20" uuid="b4218b0d-46cc-495f-a20c-c11e4e046cd5"/>
+				<textFieldExpression><![CDATA[$F{capacidad_bus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="16" width="100" height="20" uuid="2dbc6355-a1b4-4e9c-b222-12888a48e50f"/>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="332" y="0" width="81" height="20" uuid="6b6ed570-0d51-45e3-adc3-848384d0207d"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALIDA_HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="0" width="51" height="20" uuid="5ecfe4a6-029e-400e-bd9a-14faad9559c4"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N.- VIAJE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="0" width="60" height="20" uuid="e020ea17-1f38-46a1-b902-9eaccd840b31"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRECIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="0" width="50" height="20" uuid="c300efa3-ac25-4fe1-bdc9-a0d7f147c63e"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESTINO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="0" width="51" height="20" uuid="68b5ece2-5272-499f-a0b5-a1ce07412ed6"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORIGEN]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="97" y="0" width="75" height="20" uuid="7e06df00-d863-4c91-a67b-b4bc48eff724"/>
+				<textFieldExpression><![CDATA[$F{origen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="9" y="0" width="70" height="20" uuid="19469243-2d53-41ed-9843-7e841e6758c0"/>
+				<textFieldExpression><![CDATA[$F{cod_viaje}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="213" y="0" width="64" height="20" uuid="44ceb0c4-3926-40c9-9330-727daa8b434c"/>
+				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="0" width="87" height="20" uuid="9f4df81b-dcaf-460b-b7ce-5aff0001e9db"/>
+				<textFieldExpression><![CDATA[$F{hora_salida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="58" height="20" uuid="83fc344c-a6bf-451d-a9c3-e5df0bcee74a"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="427" y="19" width="128" height="10" uuid="5274a5f9-3856-44e3-9aa4-6b58f0bcb8ac"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Celular : 09956238545]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="427" y="29" width="124" height="13" uuid="3dbb84af-b037-4f41-b836-478f90b98887"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono : 03-2565658]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="551" height="19" uuid="8331d0df-ccf8-482e-8f71-d28376117ee3"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="194" height="10" uuid="ac89ee1f-0e18-433a-abc0-cf97439b293c"/>
+				<textElement>
+					<font fontName="Copperplate Gothic Light" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Matriz : ambato - terminal terrestre]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -59,6 +60,14 @@ public class Parametro1 extends javax.swing.JInternalFrame {
 
     }
 
+      public void soloNumeros(java.awt.event.KeyEvent evt) {
+        char c;
+        c = evt.getKeyChar();
+        if ((c >= 32 && c <= 47) || (c >= 58 && c <= 255)) {
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "ERROR Ingrese solo Números");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -83,6 +92,11 @@ public class Parametro1 extends javax.swing.JInternalFrame {
         jLabel1.setText("PARÁMETRO");
 
         txtParametro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtParametro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtParametroKeyTyped(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(204, 204, 204));
         jButton1.setText("ENVIAR");
@@ -170,6 +184,10 @@ public class Parametro1 extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         reporte();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtParametroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtParametroKeyTyped
+        soloNumeros(evt);
+    }//GEN-LAST:event_txtParametroKeyTyped
 
     /**
      * @param args the command line arguments
