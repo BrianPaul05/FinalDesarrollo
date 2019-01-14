@@ -8,7 +8,6 @@ package interfaces;
 import Conexion.Conexion;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,10 +15,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 /**
  *
@@ -31,6 +27,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
      * Creates new form IngresoViajes
      */
     String c;
+    int codFrecuencia;
 
     public IngresoViajesbus(String cedu) {
         initComponents();
@@ -62,7 +59,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         return orige;
     }
 
-    public void cargarDestino() {
+    private void cargarDestino() {
         try {
             Connection cn = new Conexion().conexion();
             String sql = "Select ubicacion from oficinas where ubicacion <> '" + txtOrigen.getText() + "' ";
@@ -77,7 +74,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         }
     }
 
-    public void cargarNumeroBus() {
+    private void cargarNumeroBus() {
         try {
             Connection cn = new Conexion().conexion();
             String sql = "Select num_bus from bus";
@@ -147,6 +144,22 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         return codRuta;
     }
 
+    private Integer obtCodigoFrecuencia(int codRuta) {
+        int codigo = 0;
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "SELECT COD_FRE FROM FRECUENCIAS WHERE COD_RUTA_PER = '" + codRuta + "'";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                codigo = rs.getInt("COD_FRE");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+        return codigo;
+    }
+
     private void cargarFrecuencia(int codRuta) {
         jcbxHora_Salida.removeAllItems();
         jcbxHora_Salida.addItem("Seleccione");
@@ -207,7 +220,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         }
     }
 
-    public java.sql.Date convetirdorFecha(Date Ingreso) {
+    private java.sql.Date convetirdorFecha(Date Ingreso) {
         /*
         Convierte la fecha de jDataChooser al formato 2018-12-27
          */
@@ -224,6 +237,23 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         año = Integer.toString(c.get(Calendar.YEAR));
         fecha = año + "-" + mes + "-" + dia;
         return fecha;
+    }
+
+    private String obtCodigoBus(String placa) {
+        String codigo = "";
+        try {
+            Connection cn = new Conexion().conexion();
+            String sql = "SELECT COD_BUS FROM BUS WHERE PLACA = '" + placa + "'";
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                codigo = rs.getString("COD_BUS");
+            }
+            cn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+        return codigo;
     }
 
     private Integer obtenerCapacidadBus(String placa, String num) {
@@ -488,7 +518,7 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
         codDes = obtCodigoOfinicina(jcbxDestino.getSelectedItem().toString());
         codRuta = obtCodigoRuta(codOri, codDes);
         cargarFrecuencia(codRuta);
-
+        codFrecuencia = obtCodigoFrecuencia(codRuta);
     }//GEN-LAST:event_jcbxDestinoItemStateChanged
 
     private void btnNuevo3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevo3ActionPerformed
@@ -504,38 +534,35 @@ public class IngresoViajesbus extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelar3ActionPerformed
 
     private void jbtnAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAsientoActionPerformed
-        try {
-            java.sql.Date FEC_SALIDA;
-            FEC_SALIDA = convetirdorFecha(jDateChooser1_Salida.getDate());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date1 = sdf.parse(FEC_SALIDA.toString());
-            Object[] datos = new Object[7];
-            datos[0] = date1;
-            datos[1] = jcbxHora_Salida.getSelectedItem().toString() ;
-            datos[2] = txtOrigen.getText();
-            datos[3] = jcbxDestino.getSelectedItem().toString();
-            datos[4] = txtPlaca.getText();
-            datos[5] = txtCedulaVendedor.getText();      
-            int cap = obtenerCapacidadBus(txtPlaca.getText(), jcbNumeroBus.getSelectedItem().toString());
-            switch (cap) {
-                case 42: {
-                    Asientos42 a = new Asientos42(datos);
-                    a.setVisible(true);
-                    break;
-                }
-                case 45: {
-                    Asientos45 a = new Asientos45(datos);
-                    a.setVisible(true);
-                    break;
-                }
-                default: {
-                    Asientos48 a = new Asientos48(datos);
-                    a.setVisible(true);
-                    break;
-                }
+        java.sql.Date fecSalidaViaje;
+        fecSalidaViaje = convetirdorFecha(jDateChooser1_Salida.getDate());
+        Object[] datos = new Object[9];
+        datos[0] = fecSalidaViaje;
+        datos[1] = jcbxHora_Salida.getSelectedItem().toString();
+        datos[2] = txtOrigen.getText();
+        datos[3] = jcbxDestino.getSelectedItem().toString();
+        datos[4] = obtCodigoBus(txtPlaca.getText());
+        datos[5] = txtCedulaVendedor.getText();
+        // datos[6] ocupao en la interfaz asientos
+        datos[7] = codFrecuencia;
+        // datos[8] ocupao en la interfaz asientos
+        int cap = obtenerCapacidadBus(txtPlaca.getText(), jcbNumeroBus.getSelectedItem().toString());
+        switch (cap) {
+            case 42: {
+                Asientos42 a = new Asientos42(datos);
+                a.setVisible(true);
+                break;
             }
-        } catch (ParseException ex) {
-            Logger.getLogger(IngresoViajesbus.class.getName()).log(Level.SEVERE, null, ex);
+            case 45: {
+                Asientos45 a = new Asientos45(datos);
+                a.setVisible(true);
+                break;
+            }
+            default: {
+                Asientos48 a = new Asientos48(datos);
+                a.setVisible(true);
+                break;
+            }
         }
     }//GEN-LAST:event_jbtnAsientoActionPerformed
 
