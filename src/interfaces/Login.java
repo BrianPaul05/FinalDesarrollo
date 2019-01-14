@@ -344,7 +344,7 @@ public class Login extends javax.swing.JFrame {
 
         boolean condicion = comprobarCuenta(usuario.getText(), contraseña.getText());
         if (condicion) {
-            if ("ADMINISTRA".equals(tipoPersonal())) {
+            if ("ADMINISTRADOR".equals(tipoPersonal())) {
                 String codOfi = obtenerCodigoOficina(usuario.getText());
                 String[] nombre = obtenerNombre();
                 PrimeraInterface pi = new PrimeraInterface(codOfi, nombre);
