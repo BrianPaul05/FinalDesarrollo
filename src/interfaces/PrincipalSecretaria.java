@@ -126,7 +126,6 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         jButton9 = new javax.swing.JButton();
         menuFacturacion1 = new javax.swing.JButton();
         usuario = new javax.swing.JPanel();
-        fac3 = new javax.swing.JButton();
         fac4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -565,21 +564,6 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         usuario.setBackground(new java.awt.Color(0, 153, 255));
         usuario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        fac3.setBackground(new java.awt.Color(0, 153, 255));
-        fac3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-edit.png"))); // NOI18N
-        fac3.setText("Configuraciónes");
-        fac3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        fac3.setFocusable(false);
-        fac3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fac3MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                fac3MouseExited(evt);
-            }
-        });
-        usuario.add(fac3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
-
         fac4.setBackground(new java.awt.Color(0, 153, 255));
         fac4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/salir.png"))); // NOI18N
         fac4.setText("Cerrar Sesión");
@@ -596,7 +580,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
                 fac4MouseExited(evt);
             }
         });
-        usuario.add(fac4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
+        usuario.add(fac4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
 
         principal.setLayer(reportes, javax.swing.JLayeredPane.DEFAULT_LAYER);
         principal.setLayer(reportes2, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1090,19 +1074,9 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Rutas1MouseClicked
 
-    private void fac3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseEntered
-        // TODO add your handling code here:
-        usuario.setSize(130, 60);
-    }//GEN-LAST:event_fac3MouseEntered
-
-    private void fac3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseExited
-        // TODO add your handling code here:
-        usuario.setSize(0, 0);
-    }//GEN-LAST:event_fac3MouseExited
-
     private void fac4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130, 60);
+        usuario.setSize(130, 30);
     }//GEN-LAST:event_fac4MouseEntered
 
     private void fac4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseExited
@@ -1112,7 +1086,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
 
     private void menuFacturacion1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130, 60);
+        usuario.setSize(130, 30);
     }//GEN-LAST:event_menuFacturacion1MouseEntered
 
     private void menuFacturacion1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseExited
@@ -1171,7 +1145,6 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     private javax.swing.JButton Unidades;
     private javax.swing.JButton Viajes;
     private javax.swing.JButton empleados;
-    public static javax.swing.JButton fac3;
     public static javax.swing.JButton fac4;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton9;

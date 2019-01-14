@@ -101,7 +101,6 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         fac1 = new javax.swing.JButton();
         menuFacturacion1 = new javax.swing.JButton();
         usuario = new javax.swing.JPanel();
-        fac3 = new javax.swing.JButton();
         fac4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -199,24 +198,6 @@ public class PrincipalVendedor extends javax.swing.JFrame {
         usuario.setBackground(new java.awt.Color(0, 153, 255));
         usuario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        fac3.setBackground(new java.awt.Color(0, 153, 255));
-        fac3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/account-edit.png"))); // NOI18N
-        fac3.setText("Configuraciónes");
-        fac3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        fac3.setFocusable(false);
-        fac3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fac3MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fac3MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                fac3MouseExited(evt);
-            }
-        });
-        usuario.add(fac3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
-
         fac4.setBackground(new java.awt.Color(0, 153, 255));
         fac4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/salir.png"))); // NOI18N
         fac4.setText("Cerrar Sesión");
@@ -233,7 +214,7 @@ public class PrincipalVendedor extends javax.swing.JFrame {
                 fac4MouseExited(evt);
             }
         });
-        usuario.add(fac4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 130, 30));
+        usuario.add(fac4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
 
         principal.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         principal.setLayer(usuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -326,23 +307,13 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
     private void menuFacturacion1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130, 60);
+        usuario.setSize(130, 30);
     }//GEN-LAST:event_menuFacturacion1MouseEntered
 
     private void menuFacturacion1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFacturacion1MouseExited
         // TODO add your handling code here:
         usuario.setSize(0, 0);
     }//GEN-LAST:event_menuFacturacion1MouseExited
-
-    private void fac3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseEntered
-        // TODO add your handling code here:
-        usuario.setSize(130, 60);
-    }//GEN-LAST:event_fac3MouseEntered
-
-    private void fac3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseExited
-        // TODO add your handling code here:
-        usuario.setSize(0, 0);
-    }//GEN-LAST:event_fac3MouseExited
 
     private void fac4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseClicked
         // TODO add your handling code here:
@@ -351,18 +322,13 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
     private void fac4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseEntered
         // TODO add your handling code here:
-        usuario.setSize(130, 60);
+        usuario.setSize(130, 30);
     }//GEN-LAST:event_fac4MouseEntered
 
     private void fac4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac4MouseExited
         // TODO add your handling code here:
         usuario.setSize(0, 0);
     }//GEN-LAST:event_fac4MouseExited
-
-    private void fac3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fac3MouseClicked
-        // TODO add your handling code here:
-        cerrarSesion();
-    }//GEN-LAST:event_fac3MouseClicked
 
     private void menuFacturacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFacturacion1ActionPerformed
         // TODO add your handling code here:
@@ -401,7 +367,6 @@ public class PrincipalVendedor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton fac1;
-    public static javax.swing.JButton fac3;
     public static javax.swing.JButton fac4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
