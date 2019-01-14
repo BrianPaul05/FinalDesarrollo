@@ -118,7 +118,7 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         Unidades = new javax.swing.JButton();
         Oficinas = new javax.swing.JButton();
         rutas = new javax.swing.JButton();
-        Encomiendas5 = new javax.swing.JButton();
+        Otros = new javax.swing.JButton();
         Encomiendas6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
@@ -433,25 +433,25 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         });
         reportes1.add(rutas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 110, 20));
 
-        Encomiendas5.setBackground(new java.awt.Color(0, 0, 0));
-        Encomiendas5.setForeground(new java.awt.Color(255, 255, 255));
-        Encomiendas5.setText("Varios");
-        Encomiendas5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Encomiendas5.setFocusable(false);
-        Encomiendas5.addMouseListener(new java.awt.event.MouseAdapter() {
+        Otros.setBackground(new java.awt.Color(0, 0, 0));
+        Otros.setForeground(new java.awt.Color(255, 255, 255));
+        Otros.setText("Varios");
+        Otros.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Otros.setFocusable(false);
+        Otros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                Encomiendas5MouseEntered(evt);
+                OtrosMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                Encomiendas5MouseExited(evt);
+                OtrosMouseExited(evt);
             }
         });
-        Encomiendas5.addActionListener(new java.awt.event.ActionListener() {
+        Otros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Encomiendas5ActionPerformed(evt);
+                OtrosActionPerformed(evt);
             }
         });
-        reportes1.add(Encomiendas5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 110, 20));
+        reportes1.add(Otros, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 110, 20));
 
         Encomiendas6.setBackground(new java.awt.Color(0, 0, 0));
         Encomiendas6.setForeground(new java.awt.Color(255, 255, 255));
@@ -749,9 +749,17 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
     }//GEN-LAST:event_ViajesMouseExited
-
+ parametroFecha1 fc;
     private void ViajesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViajesActionPerformed
-        // TODO add your handling code here:
+       if (ventanasAbiertas(fc)) {
+            fc = new parametroFecha1();
+            principal.add(fc);
+            Dimension desktopSize = principal.getSize();
+            Dimension internalSize = fc.getSize();
+            fc.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
+            fc.setVisible(true);
+           
+        }
 
     }//GEN-LAST:event_ViajesActionPerformed
 
@@ -951,29 +959,29 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_rutasActionPerformed
 
-    private void Encomiendas5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas5MouseEntered
+    private void OtrosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OtrosMouseEntered
         // TODO add your handling code here:
         Clientes.setToolTipText("Detalle de averias");
         reportes1.setSize(110, 140);
-    }//GEN-LAST:event_Encomiendas5MouseEntered
+    }//GEN-LAST:event_OtrosMouseEntered
 
-    private void Encomiendas5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas5MouseExited
+    private void OtrosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OtrosMouseExited
         // TODO add your handling code here:
         reportes1.setSize(0, 0);
-    }//GEN-LAST:event_Encomiendas5MouseExited
-    Parametro p;
-    private void Encomiendas5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Encomiendas5ActionPerformed
+    }//GEN-LAST:event_OtrosMouseExited
+    Parametro4 p;
+    private void OtrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OtrosActionPerformed
         // TODO add your handling code here:
 
         if (ventanasAbiertas(p)) {
-            p = new Parametro();
+            p = new Parametro4();
             principal.add(p);
             Dimension desktopSize = principal.getSize();
             Dimension internalSize = p.getSize();
             p.setLocation((desktopSize.width - internalSize.width) / 2, (desktopSize.height - internalSize.height) / 2);
             p.setVisible(true);
         }
-    }//GEN-LAST:event_Encomiendas5ActionPerformed
+    }//GEN-LAST:event_OtrosActionPerformed
 
     private void Encomiendas6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Encomiendas6MouseEntered
         // TODO add your handling code here:
@@ -1155,9 +1163,9 @@ public class PrincipalSecretaria extends javax.swing.JFrame {
     private javax.swing.JButton Clientes;
     private javax.swing.JButton Clientes1;
     private javax.swing.JButton Empleados;
-    private javax.swing.JButton Encomiendas5;
     private javax.swing.JButton Encomiendas6;
     private javax.swing.JButton Oficinas;
+    private javax.swing.JButton Otros;
     private javax.swing.JButton Rutas;
     private javax.swing.JButton Rutas1;
     private javax.swing.JButton Unidades;
