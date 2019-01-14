@@ -4,18 +4,17 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[select rutas.cod_ruta, c.nom_ofi  as origen, c1.nom_ofi as destino,  rutas.precio, rutas.descripcion
-from  oficinas, frecuencias, rutas
- join oficinas c on (rutas.cod_ofi_ori =c.cod_ofi )
- join oficinas c1 on (rutas.cod_ofi_des =c1.cod_ofi )
-where rutas.cod_ofi_ori = oficinas.cod_ofi
-and rutas.cod_ofi_des = oficinas.cod_ofi
-and rutas.cod_ruta = frecuencias.cod_ruta_per
-and rutas.estado = 'S']]>
+		<![CDATA[select r.Cod_Ruta,c.ubicacion  as origen,c1.ubicacion as destino,f.hora_salida,r.precio,r.Descripcion
+from  frecuencias f, rutas r
+join oficinas c on (r.cod_ofi_ori =c.cod_ofi) 
+join oficinas c1 on (r.cod_ofi_des =c1.cod_ofi)
+where  r.Estado='S'
+and r.Cod_Ruta=f.Cod_Ruta_Per]]>
 	</queryString>
 	<field name="cod_ruta" class="java.lang.Integer"/>
 	<field name="origen" class="java.lang.String"/>
 	<field name="destino" class="java.lang.String"/>
+	<field name="hora_salida" class="java.lang.String"/>
 	<field name="precio" class="java.math.BigDecimal"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<background>
@@ -114,23 +113,23 @@ and rutas.estado = 'S']]>
 	<detail>
 		<band height="35" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="08622411-0899-431d-bd60-96f9414306f8"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="d8f26df9-532b-42c9-bca7-13ff17dc3b88"/>
 				<textFieldExpression><![CDATA[$F{cod_ruta}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="111" y="0" width="100" height="20" uuid="2fd0b29e-3150-4dcd-92f3-6a98c6a00edd"/>
+				<reportElement x="111" y="0" width="100" height="20" uuid="049ba05b-3619-4021-a7ad-215c6daff799"/>
 				<textFieldExpression><![CDATA[$F{origen}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="227" y="0" width="100" height="20" uuid="a6ad98cb-c660-4ea8-bd4f-c3837f716780"/>
+				<reportElement x="227" y="0" width="100" height="20" uuid="e3630723-7bde-4370-b4fc-39ec5f5fa144"/>
 				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="351" y="0" width="100" height="20" uuid="671696eb-9aff-4b0f-a50f-04b81a745b47"/>
+				<reportElement x="351" y="0" width="100" height="20" uuid="d1ffaeb8-3ddd-49d5-8281-769d244ad4c6"/>
 				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="464" y="0" width="100" height="20" uuid="b244a545-4362-4e63-92fc-14c0ed2a6618"/>
+				<reportElement x="464" y="0" width="100" height="20" uuid="81fca6ce-6487-43c8-9fdd-7f765878cdee"/>
 				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
 		</band>

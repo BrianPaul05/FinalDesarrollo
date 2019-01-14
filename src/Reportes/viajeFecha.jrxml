@@ -7,27 +7,23 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select viajes.cod_viaje, bus.placa, bus.num_bus, bus.capacidad_bus, oficinas.nom_ofi, frecuencias.hora_salida, c.nom_ofi  as origen, c1.nom_ofi as destino, rutas.precio 
-from viajes, bus, oficinas, frecuencias, rutas
- join oficinas c on (rutas.cod_ofi_ori =c.cod_ofi )
- join oficinas c1 on (rutas.cod_ofi_des =c1.cod_ofi )
-where bus.cod_bus = viajes.cod_bus_via 
-and viajes.cod_fre_via = frecuencias.cod_fre
-and rutas.cod_ofi_ori = oficinas.cod_ofi
-and rutas.cod_ofi_des = oficinas.cod_ofi
-and rutas.cod_ruta = frecuencias.cod_ruta_per
-AND bus.ESTADO = 'S'
-and viajes.fec_viaje = $P{FECHA_VIAJE}]]>
+		<![CDATA[select v.Cod_Viaje ,b.Placa,b.num_bus,b.capacidad_bus, v.cod_viaje,c.ubicacion  as origen,c1.ubicacion as destino,f.hora_salida,r.precio,v.Fec_Viaje
+from bus b, viajes v, frecuencias f, rutas r
+ join oficinas c on (r.cod_ofi_ori =c.cod_ofi) 
+ join oficinas c1 on (r.cod_ofi_des =c1.cod_ofi)
+  WHERE b.cod_bus=v.Cod_Bus_Via
+  and  r.cod_ruta= f.cod_ruta_per  and f.cod_fre=v.cod_fre_via
+  and v.Fec_Viaje=$P{FECHA_VIAJE}]]>
 	</queryString>
 	<field name="cod_viaje" class="java.lang.Integer"/>
 	<field name="placa" class="java.lang.String"/>
 	<field name="num_bus" class="java.lang.String"/>
 	<field name="capacidad_bus" class="java.lang.Integer"/>
-	<field name="nom_ofi" class="java.lang.String"/>
-	<field name="hora_salida" class="java.lang.String"/>
 	<field name="origen" class="java.lang.String"/>
 	<field name="destino" class="java.lang.String"/>
+	<field name="hora_salida" class="java.lang.String"/>
 	<field name="precio" class="java.math.BigDecimal"/>
+	<field name="fec_viaje" class="java.sql.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -81,8 +77,8 @@ and viajes.fec_viaje = $P{FECHA_VIAJE}]]>
 				<text><![CDATA[VIAJES DE LA FECHA :]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="272" y="0" width="100" height="20" uuid="9acc7b00-732b-4d55-b590-938da6c127fe"/>
-				<textFieldExpression><![CDATA[$P{FECHA_VIAJE}]]></textFieldExpression>
+				<reportElement x="272" y="0" width="100" height="20" uuid="d0e2398e-4394-4be9-a355-0c8eb93b0e4b"/>
+				<textFieldExpression><![CDATA[$F{fec_viaje}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -96,7 +92,7 @@ and viajes.fec_viaje = $P{FECHA_VIAJE}]]>
 				<text><![CDATA[HORA_SALIDA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="0" width="72" height="20" uuid="35be6381-79ad-4da1-9f07-f846e179c12a"/>
+				<reportElement x="61" y="0" width="60" height="20" uuid="35be6381-79ad-4da1-9f07-f846e179c12a"/>
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
@@ -149,35 +145,35 @@ and viajes.fec_viaje = $P{FECHA_VIAJE}]]>
 	<detail>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="50" height="20" uuid="dd915557-fbd1-4cf8-8004-98238dad77ca"/>
+				<reportElement x="4" y="0" width="46" height="20" uuid="cee66083-8aa0-43d9-b250-db93c2a59142"/>
 				<textFieldExpression><![CDATA[$F{cod_viaje}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="50" y="0" width="71" height="20" uuid="786c99e5-43bb-4d06-8e48-b721d60ea06d"/>
+				<reportElement x="50" y="0" width="71" height="20" uuid="2674b5a9-4f09-4e58-bb11-efca5578ddc2"/>
 				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="121" y="0" width="43" height="20" uuid="682fadff-afb1-424b-bd05-c39f1fd6289e"/>
+				<reportElement x="122" y="0" width="42" height="20" uuid="b9eb8da4-f582-4394-a430-8f9195bc5b38"/>
 				<textFieldExpression><![CDATA[$F{num_bus}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="164" y="0" width="80" height="20" uuid="da6e8205-b918-4576-93d8-9f48dfc47866"/>
+				<reportElement x="164" y="0" width="80" height="20" uuid="532e6a29-aa39-472b-9b82-5ee723375ddf"/>
 				<textFieldExpression><![CDATA[$F{capacidad_bus}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="244" y="0" width="79" height="20" uuid="e659dc5e-3e09-402d-871a-0ea64dbcf8d3"/>
+				<reportElement x="244" y="0" width="79" height="20" uuid="ad19ae65-b2cc-4688-8c67-336a904c72ae"/>
 				<textFieldExpression><![CDATA[$F{origen}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="323" y="0" width="67" height="20" uuid="51a14d1a-702e-4e85-a1eb-da1216067afb"/>
+				<reportElement x="323" y="0" width="67" height="20" uuid="50301658-a65e-4422-b71f-a6e59f4640b6"/>
 				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="393" y="0" width="86" height="20" uuid="d3399713-d8a1-46a3-922b-ce970497d901"/>
+				<reportElement x="393" y="0" width="86" height="20" uuid="9100c0bf-cbe5-4041-a8b4-bef377cd8617"/>
 				<textFieldExpression><![CDATA[$F{hora_salida}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="487" y="0" width="66" height="20" uuid="9fb9803d-e377-41f7-bbc9-58d719dcb96b"/>
+				<reportElement x="487" y="0" width="66" height="20" uuid="7b9dc543-1e95-4d1a-8ae5-98ce98c1a207"/>
 				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 			</textField>
 		</band>
